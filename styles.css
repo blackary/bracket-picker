@@ -1,0 +1,899 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap");
+
+:root {
+  --bg: #fff8ec;
+  --bg-alt: #eef8ff;
+  --ink: #23303d;
+  --ink-soft: #5c6a79;
+  --panel: rgba(255, 255, 255, 0.92);
+  --panel-strong: rgba(255, 255, 255, 0.98);
+  --border: rgba(35, 48, 61, 0.09);
+  --shadow: 0 28px 60px rgba(33, 39, 58, 0.12);
+  --shadow-soft: 0 18px 38px rgba(33, 39, 58, 0.08);
+  --sun: #ffb646;
+  --melon: #ff8a5b;
+  --mint: #6fd6a9;
+  --sky: #67b7ff;
+  --violet: #c98cff;
+  --pill: #f5efe2;
+  --success: #24a76d;
+  --danger: #e05a63;
+  --hero-gradient:
+    radial-gradient(circle at top left, rgba(255, 182, 70, 0.24), transparent 30%),
+    radial-gradient(circle at top right, rgba(103, 183, 255, 0.22), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(111, 214, 169, 0.2), transparent 30%),
+    linear-gradient(135deg, #fff9ef 0%, #fffdf8 48%, #eff8ff 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Nunito", sans-serif;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 182, 70, 0.26), transparent 18%),
+    radial-gradient(circle at 88% 12%, rgba(201, 140, 255, 0.22), transparent 15%),
+    radial-gradient(circle at 18% 82%, rgba(111, 214, 169, 0.24), transparent 20%),
+    linear-gradient(180deg, #fff7eb 0%, #fffef9 42%, #edf7ff 100%);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.page-shell {
+  position: relative;
+  width: min(1440px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 28px 0 40px;
+}
+
+.page-glow {
+  position: fixed;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(90px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.page-glow--one {
+  top: 4rem;
+  left: -6rem;
+  width: 15rem;
+  height: 15rem;
+  background: rgba(255, 182, 70, 0.44);
+}
+
+.page-glow--two {
+  top: 10rem;
+  right: -4rem;
+  width: 14rem;
+  height: 14rem;
+  background: rgba(103, 183, 255, 0.36);
+}
+
+.page-glow--three {
+  bottom: 2rem;
+  left: 50%;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(111, 214, 169, 0.3);
+  transform: translateX(-50%);
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.9fr);
+  gap: 24px;
+  padding: 28px;
+  background: var(--hero-gradient);
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -60px -90px auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 182, 70, 0.5), rgba(255, 182, 70, 0) 65%);
+}
+
+.hero h1 {
+  margin: 0;
+  font: 800 clamp(2.35rem, 5vw, 4.2rem) / 0.95 "Baloo 2", cursive;
+  letter-spacing: -0.03em;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero__lede {
+  max-width: 46rem;
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  box-shadow: inset 0 0 0 1px rgba(35, 48, 61, 0.06);
+}
+
+.chip::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+.chip--sunny {
+  color: #9b5900;
+  background: rgba(255, 182, 70, 0.26);
+}
+
+.chip--mint {
+  color: #126845;
+  background: rgba(111, 214, 169, 0.28);
+}
+
+.chip--blue {
+  color: #1c58a2;
+  background: rgba(103, 183, 255, 0.24);
+}
+
+.hero__status {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.hero-card {
+  border: 1px solid rgba(35, 48, 61, 0.08);
+  border-radius: 24px;
+  padding: 18px 18px 16px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-card--accent {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(255, 245, 220, 0.92));
+}
+
+.hero-card__label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-card__value {
+  margin: 10px 0 6px;
+  font-size: 1.12rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.hero-card__note {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: end;
+  padding: 22px 24px;
+  margin-top: 18px;
+}
+
+.toolbar__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+
+.toolbar__group--grow {
+  flex: 1 1 320px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  min-width: 190px;
+}
+
+.field--grow {
+  width: 100%;
+}
+
+.field__label {
+  color: var(--ink-soft);
+  font-size: 0.87rem;
+  font-weight: 800;
+}
+
+.field__control {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid rgba(35, 48, 61, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  box-shadow: inset 0 1px 2px rgba(35, 48, 61, 0.04);
+}
+
+.field__control:focus-visible {
+  outline: 3px solid rgba(103, 183, 255, 0.3);
+  outline-offset: 2px;
+}
+
+.button {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #334155, #1f2f40);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  box-shadow: 0 16px 26px rgba(35, 48, 61, 0.16);
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    opacity 120ms ease;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 32px rgba(35, 48, 61, 0.18);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button--ghost {
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(35, 48, 61, 0.1);
+}
+
+.button--accent {
+  background: linear-gradient(180deg, #ff914d, #ff6a4d);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.8fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.matchup-panel {
+  padding: 24px;
+}
+
+.matchup-panel__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.matchup-panel h2 {
+  margin: 0;
+  font: 800 clamp(1.7rem, 3vw, 2.5rem) / 1 "Baloo 2", cursive;
+}
+
+.matchup-panel__hint {
+  margin: 10px 0 0;
+  max-width: 48rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.progress-card {
+  min-width: min(290px, 100%);
+  padding: 18px;
+  border: 1px solid rgba(35, 48, 61, 0.08);
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(255, 182, 70, 0.14), rgba(103, 183, 255, 0.12));
+}
+
+.progress-card__label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.progress-card__value {
+  margin: 8px 0 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.progress-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(35, 48, 61, 0.08);
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ffb646, #ff7a59 45%, #5fc0ff);
+  transition: width 240ms ease;
+}
+
+.round-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.round-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--pill);
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.round-pill strong {
+  display: inline-flex;
+  min-width: 2.2rem;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.round-pill.is-current {
+  background: rgba(255, 182, 70, 0.28);
+}
+
+.matchup-stage {
+  min-height: 460px;
+  margin-top: 18px;
+}
+
+.matchup-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.matchup-board__center {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  padding-top: 36px;
+}
+
+.versus-badge {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border: 8px solid rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffb646, #ff7a59);
+  color: white;
+  font: 800 1.35rem / 1 "Baloo 2", cursive;
+  box-shadow: 0 18px 28px rgba(255, 122, 89, 0.26);
+}
+
+.versus-caption {
+  max-width: 120px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.team-card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  border: 0;
+  border-radius: 28px;
+  background: var(--panel-strong);
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.team-card:hover:not(:disabled) {
+  transform: translateY(-2px) rotate(-0.4deg);
+  box-shadow: 0 24px 38px rgba(33, 39, 58, 0.14);
+}
+
+.team-card:focus-visible {
+  outline: 4px solid rgba(103, 183, 255, 0.28);
+  outline-offset: 2px;
+}
+
+.team-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(140deg, var(--team-glow), rgba(255, 255, 255, 0.5));
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.team-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.team-card__seed,
+.team-card__sticker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.team-card__seed {
+  background: var(--team-tint);
+  color: var(--team-color);
+}
+
+.team-card__sticker {
+  background: rgba(35, 48, 61, 0.06);
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+}
+
+.team-card__crest {
+  display: grid;
+  place-items: center;
+  width: clamp(108px, 24vw, 148px);
+  height: clamp(108px, 24vw, 148px);
+  margin: 0 auto;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at top left, var(--team-tint), rgba(255, 255, 255, 0.95) 65%);
+  box-shadow: inset 0 0 0 1px rgba(35, 48, 61, 0.05);
+}
+
+.team-card__crest img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+}
+
+.team-card__name {
+  margin: 0;
+  font: 800 clamp(1.45rem, 3vw, 2rem) / 1.05 "Baloo 2", cursive;
+  text-align: center;
+}
+
+.team-card__conference {
+  margin: 6px 0 0;
+  color: var(--ink-soft);
+  font-weight: 800;
+  text-align: center;
+}
+
+.team-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.team-card__badge {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(35, 48, 61, 0.05);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.team-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.stat-chip {
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(35, 48, 61, 0.04);
+}
+
+.stat-chip__label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-chip__value {
+  margin: 6px 0 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.team-card__button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(35, 48, 61, 0.94), rgba(35, 48, 61, 0.88));
+  color: white;
+  font-weight: 800;
+}
+
+.team-card.is-picked {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 42px rgba(33, 39, 58, 0.16);
+}
+
+.team-card.is-picked .team-card__button {
+  background: linear-gradient(180deg, #2ca76f, #178558);
+}
+
+.team-card.is-picked .team-card__button::before {
+  content: "Picked! ";
+}
+
+.empty-state,
+.summary-card {
+  border: 1px dashed rgba(35, 48, 61, 0.15);
+  border-radius: 28px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.empty-state h3,
+.summary-card h3 {
+  margin: 0;
+  font: 800 1.8rem / 1 "Baloo 2", cursive;
+}
+
+.empty-state p,
+.summary-card p {
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.champion-card {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  margin-top: 18px;
+  padding: 20px;
+  border-radius: 24px;
+  background:
+    linear-gradient(145deg, rgba(255, 182, 70, 0.22), rgba(255, 255, 255, 0.86));
+  text-align: center;
+}
+
+.champion-card__logo {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.champion-card__logo img {
+  width: 74%;
+  height: 74%;
+  object-fit: contain;
+}
+
+.nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.sidebar {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.sidebar-card {
+  padding: 22px;
+}
+
+.sidebar-card__title {
+  margin: 0 0 16px;
+  font: 800 1.4rem / 1 "Baloo 2", cursive;
+}
+
+.snapshot {
+  display: grid;
+  gap: 14px;
+}
+
+.snapshot__hero {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    linear-gradient(160deg, rgba(103, 183, 255, 0.16), rgba(255, 255, 255, 0.94));
+}
+
+.snapshot__label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.snapshot__value {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.mini-team {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.mini-team__logo {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.mini-team__logo img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.mini-team__name {
+  margin: 0;
+  font-weight: 800;
+}
+
+.mini-team__meta {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.stack-list {
+  display: grid;
+  gap: 10px;
+}
+
+.stack-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(35, 48, 61, 0.04);
+}
+
+.stack-item__label {
+  margin: 0;
+  font-weight: 800;
+}
+
+.stack-item__meta {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.stack-item__count {
+  min-width: 3.4rem;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  text-align: center;
+  font-weight: 800;
+}
+
+.recent-empty {
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 20;
+  min-width: min(320px, calc(100vw - 32px));
+  max-width: 420px;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: rgba(35, 48, 61, 0.94);
+  color: white;
+  box-shadow: 0 22px 38px rgba(33, 39, 58, 0.28);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1120px) {
+  .hero,
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .matchup-board {
+    grid-template-columns: 1fr;
+  }
+
+  .matchup-board__center {
+    order: -1;
+    padding-top: 0;
+  }
+
+  .versus-badge {
+    width: 74px;
+    height: 74px;
+  }
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: min(100vw - 18px, 100%);
+    padding-top: 12px;
+  }
+
+  .hero,
+  .toolbar,
+  .matchup-panel,
+  .sidebar-card {
+    padding: 18px;
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .toolbar__group,
+  .field {
+    width: 100%;
+  }
+
+  .button,
+  .field__control {
+    width: 100%;
+  }
+
+  .team-card {
+    padding: 16px;
+  }
+
+  .team-card__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-row {
+    flex-direction: column;
+  }
+}

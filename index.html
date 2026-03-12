@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lil' Bracket Buddy 2026</title>
+    <meta
+      name="description"
+      content="A kid-friendly 2026 March Madness bracket picker with logos, one matchup at a time, local saves, and export tools."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="page-glow page-glow--one" aria-hidden="true"></div>
+      <div class="page-glow page-glow--two" aria-hidden="true"></div>
+      <div class="page-glow page-glow--three" aria-hidden="true"></div>
+
+      <header class="panel hero">
+        <div class="hero__copy">
+          <p class="eyebrow">2026 March Madness picker</p>
+          <h1>Lil' Bracket Buddy</h1>
+          <p class="hero__lede">
+            Pick winners one game at a time with giant logos, bright colors, and
+            easy stats that make every matchup feel like a mini showdown.
+          </p>
+          <div class="hero__chips">
+            <span class="chip chip--sunny">One matchup at a time</span>
+            <span class="chip chip--mint">All picks saved on this device</span>
+            <span class="chip chip--blue">Export poster + JSON</span>
+          </div>
+        </div>
+
+        <div class="hero__status">
+          <div class="hero-card">
+            <p class="hero-card__label">Bracket status</p>
+            <p class="hero-card__value" id="sourceStatus">Loading bracket...</p>
+            <p class="hero-card__note" id="sourceNote"></p>
+          </div>
+          <div class="hero-card hero-card--accent">
+            <p class="hero-card__label">Pro tip</p>
+            <p class="hero-card__value">Tap the mascot logo team you like best.</p>
+            <p class="hero-card__note">
+              You can always go back and change a pick later.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel toolbar">
+        <div class="toolbar__group">
+          <label class="field">
+            <span class="field__label">Saved brackets</span>
+            <select id="bracketSelect" class="field__control"></select>
+          </label>
+          <button id="newBracketButton" class="button">New bracket</button>
+          <button id="deleteBracketButton" class="button button--ghost">
+            Delete
+          </button>
+        </div>
+
+        <div class="toolbar__group toolbar__group--grow">
+          <label class="field field--grow">
+            <span class="field__label">Bracket name</span>
+            <input
+              id="bracketNameInput"
+              class="field__control"
+              type="text"
+              maxlength="40"
+              placeholder="Name this bracket"
+              spellcheck="false"
+            />
+          </label>
+        </div>
+
+        <div class="toolbar__group">
+          <button id="resetButton" class="button button--ghost">Reset picks</button>
+          <button id="exportJsonButton" class="button">Export JSON</button>
+          <button id="exportImageButton" class="button button--accent">
+            Export poster
+          </button>
+        </div>
+      </section>
+
+      <main class="layout">
+        <section class="panel matchup-panel">
+          <div class="matchup-panel__header">
+            <div>
+              <p class="eyebrow" id="matchupEyebrow">Loading...</p>
+              <h2 id="matchupTitle">Getting the next matchup ready</h2>
+              <p class="matchup-panel__hint" id="matchupHint"></p>
+            </div>
+
+            <div class="progress-card">
+              <p class="progress-card__label">Bracket progress</p>
+              <p class="progress-card__value" id="progressCount">0 / 67 picks</p>
+              <div class="progress-bar" aria-hidden="true">
+                <span class="progress-bar__fill" id="progressFill"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="round-pills" id="roundPills"></div>
+          <div class="matchup-stage" id="matchupStage"></div>
+
+          <div class="nav-row">
+            <button id="prevGameButton" class="button button--ghost">
+              Previous matchup
+            </button>
+            <button id="clearPickButton" class="button button--ghost">
+              Clear this pick
+            </button>
+            <button id="nextGameButton" class="button">Next matchup</button>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel sidebar-card">
+            <h3 class="sidebar-card__title">Bracket snapshot</h3>
+            <div id="snapshotCard"></div>
+          </section>
+
+          <section class="panel sidebar-card">
+            <h3 class="sidebar-card__title">Round progress</h3>
+            <div id="roundProgress"></div>
+          </section>
+
+          <section class="panel sidebar-card">
+            <h3 class="sidebar-card__title">Recent picks</h3>
+            <div id="recentPicks"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
