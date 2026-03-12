@@ -906,6 +906,7 @@ async function exportPoster() {
   drawPosterHeader(ctx, bracket, width);
   await drawPosterChampion(ctx, bracket, width);
   await drawPosterFinalFour(ctx, bracket, width);
+  drawPosterRoundSummary(ctx, bracket, width);
   drawPosterRounds(ctx, bracket, width);
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
@@ -1098,11 +1099,44 @@ async function drawPosterFinalFour(ctx, bracket, width) {
   }
 }
 
+function drawPosterRoundSummary(ctx, bracket, width) {
+  const tallies = getRoundTallies(bracket);
+  const columns = 4;
+  const gap = 14;
+  const cardWidth = (width - 160 - gap * (columns - 1)) / columns;
+  const cardHeight = 78;
+  const startX = 80;
+  const startY = 736;
+
+  for (const [index, tally] of tallies.entries()) {
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    const x = startX + column * (cardWidth + gap);
+    const y = startY + row * (cardHeight + gap);
+
+    ctx.fillStyle = "rgba(255,255,255,0.82)";
+    roundRect(ctx, x, y, cardWidth, cardHeight, 24);
+    ctx.fill();
+
+    ctx.fillStyle = tally.picked === tally.total ? "rgba(111, 214, 169, 0.24)" : "rgba(255, 182, 70, 0.18)";
+    roundRect(ctx, x + 12, y + 12, cardWidth - 24, cardHeight - 24, 18);
+    ctx.fill();
+
+    ctx.fillStyle = "#5c6a79";
+    ctx.font = '800 16px "Nunito"';
+    ctx.fillText(tally.label, x + 18, y + 30);
+
+    ctx.fillStyle = "#23303d";
+    ctx.font = '800 28px "Baloo 2"';
+    ctx.fillText(`${tally.picked}/${tally.total}`, x + 18, y + 62);
+  }
+}
+
 function drawPosterRounds(ctx, bracket, width) {
   const sections = [
-    { x: 80, y: 772, width: 430, rounds: [0, 1] },
-    { x: 585, y: 772, width: 430, rounds: [2, 3] },
-    { x: 1090, y: 772, width: 430, rounds: [4, 5, 6] },
+    { x: 80, y: 940, width: 430, rounds: [0, 1] },
+    { x: 585, y: 940, width: 430, rounds: [2, 3] },
+    { x: 1090, y: 940, width: 430, rounds: [4, 5, 6] },
   ];
 
   for (const section of sections) {
@@ -1124,29 +1158,56 @@ function drawPosterRounds(ctx, bracket, width) {
 }
 
 function drawPosterRoundSection(ctx, { x, y, width, label, games, bracket }) {
-  const rowHeight = 34;
+  const rowHeight = 26;
+  const headerHeight = 58;
+  const footerPadding = 14;
+  const sectionHeight = headerHeight + games.length * rowHeight + footerPadding;
+  const pickedCount = games.filter((game) => Boolean(bracket.picks[game.id])).length;
 
   ctx.fillStyle = "rgba(255,255,255,0.84)";
-  roundRect(ctx, x, y, width, 50 + games.length * rowHeight, 28);
+  roundRect(ctx, x, y, width, sectionHeight, 28);
   ctx.fill();
 
   ctx.fillStyle = "#23303d";
   ctx.font = '800 30px "Baloo 2"';
   ctx.fillText(label, x + 20, y + 34);
 
-  let cursorY = y + 66;
-  ctx.font = '700 17px "Nunito"';
+  ctx.fillStyle = "rgba(35, 48, 61, 0.08)";
+  roundRect(ctx, x + width - 104, y + 16, 84, 28, 14);
+  ctx.fill();
+
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 16px "Nunito"';
+  ctx.fillText(`${pickedCount}/${games.length}`, x + width - 84, y + 35);
+
+  let cursorY = y + headerHeight;
 
   for (const game of games) {
-    const winner = bracket.picks[game.id] ? state.teamsById[bracket.picks[game.id]] : null;
-    const line = `${game.region === "Final Four" ? "" : `${game.region} • `}${game.title}: ${winner ? winner.name : "Waiting for pick"}`;
+    const entry = buildPosterEntry(game, bracket);
 
-    ctx.fillStyle = winner ? "#23303d" : "#6f7a85";
-    drawWrappedText(ctx, line, x + 20, cursorY, width - 40, 22, 2);
+    ctx.fillStyle = "rgba(35, 48, 61, 0.04)";
+    roundRect(ctx, x + 14, cursorY - 16, width - 28, rowHeight - 4, 14);
+    ctx.fill();
+
+    ctx.fillStyle = entry.picked ? entry.color : "rgba(35, 48, 61, 0.14)";
+    ctx.beginPath();
+    ctx.arc(x + 30, cursorY - 4, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#5c6a79";
+    ctx.font = '800 14px "Nunito"';
+    ctx.fillText(entry.label, x + 44, cursorY + 1);
+
+    ctx.fillStyle = entry.picked ? "#23303d" : "#7a858f";
+    ctx.font = '800 14px "Nunito"';
+    ctx.textAlign = "right";
+    ctx.fillText(truncateText(ctx, entry.value, 220), x + width - 28, cursorY + 1);
+    ctx.textAlign = "left";
+
     cursorY += rowHeight;
   }
 
-  return y + 50 + games.length * rowHeight;
+  return y + sectionHeight;
 }
 
 function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
@@ -1176,6 +1237,88 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
     const isLastVisibleLine = index === maxLines - 1 && lines.length > maxLines;
     ctx.fillText(isLastVisibleLine ? `${line}...` : line, x, y + index * lineHeight);
   });
+}
+
+function buildPosterEntry(game, bracket) {
+  const winnerId = bracket.picks[game.id] || null;
+  const winner = winnerId ? state.teamsById[winnerId] : null;
+  const themeSource = winner || resolveGame(game, bracket.picks).top || resolveGame(game, bracket.picks).bottom;
+  const theme = themeSource ? getThemeForTeam(themeSource) : CHAMPIONSHIP_THEME;
+
+  return {
+    label: getPosterGameLabel(game),
+    value: winner ? winner.name : "Open",
+    picked: Boolean(winner),
+    color: theme.color,
+  };
+}
+
+function getPosterGameLabel(game) {
+  if (game.round === 0) {
+    return `${regionAbbr(game.region)} ${game.seedLine}`;
+  }
+
+  if (game.round === 1) {
+    const seeds = getPosterSeedPair(game);
+    return `${regionAbbr(game.region)} ${seeds}`;
+  }
+
+  if (game.round === 2) {
+    return `${regionAbbr(game.region)} R2-${extractSequence(game)}`;
+  }
+
+  if (game.round === 3) {
+    return `${regionAbbr(game.region)} S16-${extractSequence(game)}`;
+  }
+
+  if (game.round === 4) {
+    return `${regionAbbr(game.region)} Champ`;
+  }
+
+  if (game.round === 5) {
+    return `Semi ${extractSequence(game)}`;
+  }
+
+  return "Title";
+}
+
+function getPosterSeedPair(game) {
+  const seeds = game.slots.map((slot) => {
+    if (slot.type === "team") {
+      return state.teamsById[slot.teamId]?.seed ?? "?";
+    }
+
+    const sourceGame = state.gamesById.get(slot.gameId);
+    return sourceGame?.seedLine ?? "?";
+  });
+
+  return `${seeds[0]}/${seeds[1]}`;
+}
+
+function regionAbbr(region) {
+  return (
+    {
+      East: "E",
+      Midwest: "MW",
+      South: "S",
+      West: "W",
+      "Final Four": "FF",
+      "National Championship": "NC",
+    }[region] || region
+  );
+}
+
+function truncateText(ctx, text, maxWidth) {
+  if (ctx.measureText(text).width <= maxWidth) {
+    return text;
+  }
+
+  let trimmed = text;
+  while (trimmed.length > 1 && ctx.measureText(`${trimmed}...`).width > maxWidth) {
+    trimmed = trimmed.slice(0, -1);
+  }
+
+  return `${trimmed}...`;
 }
 
 function roundRect(ctx, x, y, width, height, radius) {
