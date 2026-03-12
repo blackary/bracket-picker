@@ -470,12 +470,20 @@ function renderMatchup(bracket, context) {
 
   elements.matchupStage.innerHTML = `
     <div class="matchup-board">
-      ${renderTeamCard(matchup.top, currentGame, pickedTeamId)}
-      <div class="matchup-board__center">
-        <div class="versus-badge">VS</div>
-        <p class="versus-caption">Winner moves on to the next round</p>
+      <div class="matchup-lane matchup-lane--left">
+        ${renderTeamCard(matchup.top, currentGame, pickedTeamId, "left")}
       </div>
-      ${renderTeamCard(matchup.bottom, currentGame, pickedTeamId)}
+      <div class="matchup-board__center">
+        <p class="versus-track__round">${escapeHtml(currentGame.roundLabel)}</p>
+        <div class="versus-badge">VS</div>
+        <div class="versus-track">
+          <p class="versus-caption">${escapeHtml(currentGame.region)}</p>
+          <p class="versus-track__note">Winner jumps to ${escapeHtml(getAdvancementLabel(currentGame.round))}</p>
+        </div>
+      </div>
+      <div class="matchup-lane matchup-lane--right">
+        ${renderTeamCard(matchup.bottom, currentGame, pickedTeamId, "right")}
+      </div>
     </div>
   `;
 
@@ -505,15 +513,16 @@ function renderCompletedState(champion) {
   `;
 }
 
-function renderTeamCard(team, game, pickedTeamId) {
+function renderTeamCard(team, game, pickedTeamId, side) {
   const theme = getThemeForTeam(team);
   const sticker = getTeamSticker(team);
   const badges = getTeamBadges(team);
   const isPicked = pickedTeamId === team.id;
+  const pulseText = isPicked ? "Locked in" : "Tap to advance";
 
   return `
     <button
-      class="team-card ${isPicked ? "is-picked" : ""}"
+      class="team-card team-card--${side} ${isPicked ? "is-picked" : ""}"
       type="button"
       data-team-pick="${escapeAttribute(team.id)}"
       style="--team-color:${theme.color};--team-glow:${theme.glow};--team-tint:${hexToRgba(theme.color, 0.18)}"
@@ -527,7 +536,7 @@ function renderTeamCard(team, game, pickedTeamId) {
         <img src="${escapeAttribute(team.logo)}" alt="${escapeAttribute(team.name)} logo" />
       </div>
 
-      <div>
+      <div class="team-card__body">
         <h3 class="team-card__name">${escapeHtml(team.name)}</h3>
         <p class="team-card__conference">${escapeHtml(team.conference)} • ${escapeHtml(team.record)}</p>
       </div>
@@ -543,7 +552,10 @@ function renderTeamCard(team, game, pickedTeamId) {
         ${renderStatChip("SOS", `#${team.sos}`)}
       </div>
 
-      <span class="team-card__button">${isPicked ? "Advance this team" : "Pick this team"}</span>
+      <div class="team-card__footer">
+        <span class="team-card__pulse">${escapeHtml(pulseText)}</span>
+        <span class="team-card__button">${isPicked ? "Picked winner" : "Pick this team"}</span>
+      </div>
     </button>
   `;
 }
@@ -1468,4 +1480,18 @@ function getPreviewLabel(game, picks) {
   }
 
   return game.title;
+}
+
+function getAdvancementLabel(round) {
+  return (
+    {
+      0: "the first round",
+      1: "the second round",
+      2: "the Sweet 16",
+      3: "the Elite 8",
+      4: "the Final Four",
+      5: "the championship game",
+      6: "the trophy",
+    }[round] || "the next round"
+  );
 }

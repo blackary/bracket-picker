@@ -19,7 +19,10 @@
       <header class="panel hero">
         <div class="hero__copy">
           <p class="eyebrow">2026 March Madness picker</p>
-          <h1>Lil' Bracket Buddy</h1>
+          <div class="hero__headline">
+            <h1>Lil' Bracket Buddy</h1>
+            <span class="hero__burst">Kid mode</span>
+          </div>
           <p class="hero__lede">
             Pick winners one game at a time with giant logos, bright colors, and
             easy stats that make every matchup feel like a mini showdown.
@@ -29,9 +32,28 @@
             <span class="chip chip--mint">All picks saved on this device</span>
             <span class="chip chip--blue">Export poster + JSON</span>
           </div>
+          <div class="hero__deck" aria-hidden="true">
+            <span class="hero__deck-card hero__deck-card--orange"></span>
+            <span class="hero__deck-card hero__deck-card--blue"></span>
+            <span class="hero__deck-card hero__deck-card--green"></span>
+          </div>
         </div>
 
         <div class="hero__status">
+          <div class="hero-scoreboard" aria-hidden="true">
+            <div class="hero-scoreboard__tile">
+              <span class="hero-scoreboard__number">68</span>
+              <span class="hero-scoreboard__label">Teams</span>
+            </div>
+            <div class="hero-scoreboard__tile">
+              <span class="hero-scoreboard__number">67</span>
+              <span class="hero-scoreboard__label">Picks</span>
+            </div>
+            <div class="hero-scoreboard__tile">
+              <span class="hero-scoreboard__number">All</span>
+              <span class="hero-scoreboard__label">Logos</span>
+            </div>
+          </div>
           <div class="hero-card">
             <p class="hero-card__label">Bracket status</p>
             <p class="hero-card__value" id="sourceStatus">Loading bracket...</p>
@@ -85,7 +107,7 @@
       <main class="layout">
         <section class="panel matchup-panel">
           <div class="matchup-panel__header">
-            <div>
+            <div class="matchup-panel__copy">
               <p class="eyebrow" id="matchupEyebrow">Loading...</p>
               <h2 id="matchupTitle">Getting the next matchup ready</h2>
               <p class="matchup-panel__hint" id="matchupHint"></p>
