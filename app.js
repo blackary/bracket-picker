@@ -1,10 +1,11 @@
-const STORAGE_KEY = "lil-bracket-buddy.v1";
+const STORAGE_KEY = "bracket-parade.v1";
+const LEGACY_STORAGE_KEYS = ["lil-bracket-buddy.v1"];
 const MAX_BRACKET_NAME = 40;
 const DEFAULT_BRACKET_NAMES = [
-  "Superstar Bracket",
-  "Mascot Magic Bracket",
-  "Snack Time Bracket",
-  "Buzzer Beater Bracket",
+  "Victory Parade",
+  "Mascot March",
+  "Halftime Heroes",
+  "Buzzer Beater",
 ];
 
 const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
@@ -115,7 +116,7 @@ function buildChildrenByGame(games) {
 
 function loadStore() {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = readStoredState();
     if (!raw) {
       return { brackets: [], currentBracketId: null };
     }
@@ -132,6 +133,19 @@ function loadStore() {
   } catch {
     return { brackets: [], currentBracketId: null };
   }
+}
+
+function readStoredState() {
+  const candidateKeys = [STORAGE_KEY, ...LEGACY_STORAGE_KEYS];
+
+  for (const key of candidateKeys) {
+    const raw = window.localStorage.getItem(key);
+    if (raw) {
+      return raw;
+    }
+  }
+
+  return null;
 }
 
 function normalizeBracket(bracket) {
@@ -968,7 +982,7 @@ function drawPosterBackground(ctx, width, height) {
 function drawPosterHeader(ctx, bracket, width) {
   ctx.fillStyle = "#23303d";
   ctx.font = '800 72px "Baloo 2"';
-  ctx.fillText("Lil' Bracket Buddy", 80, 110);
+  ctx.fillText("Bracket Parade", 80, 110);
 
   ctx.fillStyle = "#5c6a79";
   ctx.font = '800 22px "Nunito"';

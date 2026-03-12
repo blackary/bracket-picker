@@ -1,4 +1,4 @@
-# Lil' Bracket Buddy
+# Bracket Parade
 
 A kid-friendly static March Madness bracket picker for 2026 with:
 

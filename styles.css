@@ -1,4 +1,50 @@
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Bungee&family=Nunito:wght@500;700;800;900&display=swap");
+@font-face {
+  font-family: "Bungee";
+  src: url("assets/fonts/bungee-400.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Baloo 2";
+  src: url("assets/fonts/baloo-2-800.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("assets/fonts/nunito-500.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("assets/fonts/nunito-700.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("assets/fonts/nunito-800.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 800;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Nunito";
+  src: url("assets/fonts/nunito-900.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+}
 
 :root {
   --paper: #f6ead1;
@@ -24,6 +70,7 @@
   --pill: #f4ebda;
   --success: #28a96d;
   --danger: #dd5b62;
+  font-synthesis: none;
 }
 
 *,
@@ -35,6 +82,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -182,12 +230,32 @@ img {
 .hero__copy {
   position: relative;
   min-width: 0;
+  padding-bottom: 82px;
+}
+
+.hero__brand {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+}
+
+.hero__mark {
+  width: clamp(78px, 8.6vw, 98px);
+  height: clamp(78px, 8.6vw, 98px);
+  flex-shrink: 0;
+  filter: drop-shadow(0 14px 24px rgba(31, 42, 58, 0.14));
+  transform: rotate(-7deg);
+}
+
+.hero__title {
+  min-width: 0;
 }
 
 .hero__headline {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   gap: 18px;
 }
 
@@ -1285,6 +1353,21 @@ img {
 
   .hero__headline {
     gap: 12px;
+  }
+
+  .hero__brand {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 10px;
+  }
+
+  .hero__mark {
+    width: 74px;
+    height: 74px;
+  }
+
+  .hero__copy {
+    padding-bottom: 0;
   }
 
   .hero h1 {

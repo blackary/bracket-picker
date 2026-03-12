@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Bracket Parade icon</title>
+  <desc id="desc">A bright tournament badge with bracket lines, a basketball, and a star.</desc>
+  <defs>
+    <linearGradient id="paper" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff8ee" />
+      <stop offset="1" stop-color="#eef7ff" />
+    </linearGradient>
+    <linearGradient id="trim" x1="18" y1="0" x2="110" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb63f" />
+      <stop offset="0.45" stop-color="#ff8c42" />
+      <stop offset="0.72" stop-color="#63b7ff" />
+      <stop offset="1" stop-color="#6fdaa7" />
+    </linearGradient>
+    <linearGradient id="ball" x1="42" y1="42" x2="86" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffc857" />
+      <stop offset="1" stop-color="#ff8c42" />
+    </linearGradient>
+  </defs>
+
+  <rect x="11" y="11" width="106" height="106" rx="28" fill="url(#paper)" stroke="#24344d" stroke-width="6" />
+  <path d="M22 28h84" fill="none" stroke="url(#trim)" stroke-linecap="round" stroke-width="10" />
+
+  <g fill="none" stroke="#24344d" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
+    <path d="M23 45h18v14h14" />
+    <path d="M23 83h18V69h14" />
+    <path d="M105 45H87v14H73" />
+    <path d="M105 83H87V69H73" />
+  </g>
+
+  <circle cx="64" cy="64" r="24" fill="url(#ball)" stroke="#24344d" stroke-width="6" />
+  <g fill="none" stroke="#24344d" stroke-linecap="round" stroke-width="4">
+    <path d="M50 46c8 4 13 10 14 18 1 8-1 14-5 22" />
+    <path d="M78 46c-8 4-13 10-14 18-1 8 1 14 5 22" />
+    <path d="M64 40c-3 8-3 16 0 24" />
+    <path d="M54 85c7 2 13 2 20 0" />
+  </g>
+
+  <path
+    d="M102 37l4 8 9 1-6 6 2 9-9-5-8 5 1-9-6-6 9-1z"
+    fill="#ffef8d"
+    stroke="#24344d"
+    stroke-linejoin="round"
+    stroke-width="4"
+  />
+
+  <path
+    d="M36 96l12-7 16 7 16-7 12 7"
+    fill="none"
+    stroke="url(#trim)"
+    stroke-linecap="round"
+    stroke-width="8"
+  />
+</svg>
