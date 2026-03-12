@@ -1,0 +1,2944 @@
+{
+  "meta": {
+    "tournamentId": "2026-men-cbs-projected-2026-03-12",
+    "season": 2026,
+    "tournament": "NCAA Men's Basketball Tournament",
+    "officialBracket": false,
+    "sourceName": "CBS Sports Bracketology",
+    "sourceUrl": "https://www.cbssports.com/college-basketball/bracketology/",
+    "sourceUpdatedLabel": "Mar 12, 11:06am ET",
+    "generatedAt": "2026-03-12T22:46:34.010Z",
+    "note": "The official 2026 NCAA men's bracket was not available on March 12, 2026. This dataset uses the current CBS Sports projected field and projected first-round matchups."
+  },
+  "regions": [
+    {
+      "name": "East",
+      "color": "#ff8a5b",
+      "glow": "#ffd699"
+    },
+    {
+      "name": "Midwest",
+      "color": "#45b36b",
+      "glow": "#c7f0a4"
+    },
+    {
+      "name": "South",
+      "color": "#3b82f6",
+      "glow": "#bbd8ff"
+    },
+    {
+      "name": "West",
+      "color": "#a855f7",
+      "glow": "#f0c7ff"
+    }
+  ],
+  "teams": {
+    "ARIZ": {
+      "id": "ARIZ",
+      "code": "ARIZ",
+      "name": "Arizona",
+      "slug": "arizona",
+      "logo": "assets/logos/ariz.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21335.svg",
+      "pageSlug": "arizona-wildcats",
+      "record": "30-2",
+      "wins": 30,
+      "losses": 2,
+      "conference": "Big 12",
+      "net": 3,
+      "quad1": "15-2",
+      "quad2": "7-0",
+      "quad3": "1-0",
+      "quad4": "7-0",
+      "sos": 9,
+      "nextGame": "Mar 13, 7:00pm ET",
+      "nextOpponent": "vs Iowa St.",
+      "region": "West",
+      "seed": 1,
+      "isPlayIn": false
+    },
+    "ARK": {
+      "id": "ARK",
+      "code": "ARK",
+      "name": "Arkansas",
+      "slug": "arkansas",
+      "logo": "assets/logos/ark.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21353.svg",
+      "pageSlug": "arkansas-razorbacks",
+      "record": "23-8",
+      "wins": 23,
+      "losses": 8,
+      "conference": "SEC",
+      "net": 18,
+      "quad1": "6-8",
+      "quad2": "7-0",
+      "quad3": "4-0",
+      "quad4": "6-0",
+      "sos": 7,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 5,
+      "isPlayIn": false
+    },
+    "AUBURN": {
+      "id": "AUBURN",
+      "code": "AUBURN",
+      "name": "Auburn",
+      "slug": "auburn",
+      "logo": "assets/logos/auburn.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21354.svg",
+      "pageSlug": "auburn-tigers",
+      "record": "17-16",
+      "wins": 17,
+      "losses": 16,
+      "conference": "SEC",
+      "net": 38,
+      "quad1": "4-12",
+      "quad2": "3-2",
+      "quad3": "4-1",
+      "quad4": "6-0",
+      "sos": 5,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 11,
+      "isPlayIn": true
+    },
+    "BAMA": {
+      "id": "BAMA",
+      "code": "BAMA",
+      "name": "Alabama",
+      "slug": "alabama",
+      "logo": "assets/logos/bama.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21352.svg",
+      "pageSlug": "alabama-crimson-tide",
+      "record": "23-8",
+      "wins": 23,
+      "losses": 8,
+      "conference": "SEC",
+      "net": 17,
+      "quad1": "7-7",
+      "quad2": "9-1",
+      "quad3": "5-0",
+      "quad4": "2-0",
+      "sos": 4,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 3,
+      "isPlayIn": false
+    },
+    "BYU": {
+      "id": "BYU",
+      "code": "BYU",
+      "name": "BYU",
+      "slug": "byu",
+      "logo": "assets/logos/byu.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21424.svg",
+      "pageSlug": "byu-cougars",
+      "record": "23-10",
+      "wins": 23,
+      "losses": 10,
+      "conference": "Big 12",
+      "net": 23,
+      "quad1": "7-9",
+      "quad2": "7-1",
+      "quad3": "4-0",
+      "quad4": "5-0",
+      "sos": 11,
+      "nextGame": "Mar 12, 7:00pm ET",
+      "nextOpponent": "@ Houston",
+      "region": "West",
+      "seed": 6,
+      "isPlayIn": false
+    },
+    "CLEM": {
+      "id": "CLEM",
+      "code": "CLEM",
+      "name": "Clemson",
+      "slug": "clemson",
+      "logo": "assets/logos/clem.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21129.svg",
+      "pageSlug": "clemson-tigers",
+      "record": "23-9",
+      "wins": 23,
+      "losses": 9,
+      "conference": "ACC",
+      "net": 36,
+      "quad1": "5-5",
+      "quad2": "7-4",
+      "quad3": "4-0",
+      "quad4": "7-0",
+      "sos": 75,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "@ N. Carolina",
+      "region": "East",
+      "seed": 8,
+      "isPlayIn": false
+    },
+    "DUKE": {
+      "id": "DUKE",
+      "code": "DUKE",
+      "name": "Duke",
+      "slug": "duke",
+      "logo": "assets/logos/duke.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21130.svg",
+      "pageSlug": "duke-blue-devils",
+      "record": "29-2",
+      "wins": 29,
+      "losses": 2,
+      "conference": "ACC",
+      "net": 1,
+      "quad1": "15-2",
+      "quad2": "5-0",
+      "quad3": "2-0",
+      "quad4": "7-0",
+      "sos": 6,
+      "nextGame": "Mar 12, 7:00pm ET",
+      "nextOpponent": "vs Florida St.",
+      "region": "East",
+      "seed": 1,
+      "isPlayIn": false
+    },
+    "FLA": {
+      "id": "FLA",
+      "code": "FLA",
+      "name": "Florida",
+      "slug": "florida",
+      "logo": "assets/logos/fla.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21355.svg",
+      "pageSlug": "florida-gators",
+      "record": "25-6",
+      "wins": 25,
+      "losses": 6,
+      "conference": "SEC",
+      "net": 4,
+      "quad1": "11-5",
+      "quad2": "6-1",
+      "quad3": "3-0",
+      "quad4": "5-0",
+      "sos": 8,
+      "nextGame": "Mar 13, 1:00pm ET",
+      "nextOpponent": "vs Kentucky",
+      "region": "South",
+      "seed": 1,
+      "isPlayIn": false
+    },
+    "FURMAN": {
+      "id": "FURMAN",
+      "code": "FURMAN",
+      "name": "Furman",
+      "slug": "furman",
+      "logo": "assets/logos/furman.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21370.svg",
+      "pageSlug": "furman-paladins",
+      "record": "22-12",
+      "wins": 22,
+      "losses": 12,
+      "conference": "Southern",
+      "net": 186,
+      "quad1": "0-1",
+      "quad2": "0-2",
+      "quad3": "5-5",
+      "quad4": "14-4",
+      "sos": 216,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 15,
+      "isPlayIn": false
+    },
+    "GONZAG": {
+      "id": "GONZAG",
+      "code": "GONZAG",
+      "name": "Gonzaga",
+      "slug": "gonzaga",
+      "logo": "assets/logos/gonzag.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21415.svg",
+      "pageSlug": "gonzaga-bulldogs",
+      "record": "30-3",
+      "wins": 30,
+      "losses": 3,
+      "conference": "West Coast",
+      "net": 6,
+      "quad1": "7-2",
+      "quad2": "4-0",
+      "quad3": "11-1",
+      "quad4": "8-0",
+      "sos": 86,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 4,
+      "isPlayIn": false
+    },
+    "HIGHPT": {
+      "id": "HIGHPT",
+      "code": "HIGHPT",
+      "name": "High Point",
+      "slug": "high-point",
+      "logo": "assets/logos/highpt.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21189.svg",
+      "pageSlug": "high-point-panthers",
+      "record": "30-4",
+      "wins": 30,
+      "losses": 4,
+      "conference": "Big South",
+      "net": 74,
+      "quad1": "0-0",
+      "quad2": "0-2",
+      "quad3": "5-2",
+      "quad4": "22-0",
+      "sos": 318,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 13,
+      "isPlayIn": false
+    },
+    "HOFSTRA": {
+      "id": "HOFSTRA",
+      "code": "HOFSTRA",
+      "name": "Hofstra",
+      "slug": "hofstra",
+      "logo": "assets/logos/hofstra.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21154.svg",
+      "pageSlug": "hofstra-pride",
+      "record": "24-10",
+      "wins": 24,
+      "losses": 10,
+      "conference": "Coastal Athletic",
+      "net": 87,
+      "quad1": "0-1",
+      "quad2": "2-2",
+      "quad3": "10-4",
+      "quad4": "10-3",
+      "sos": 128,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 13,
+      "isPlayIn": false
+    },
+    "HOU": {
+      "id": "HOU",
+      "code": "HOU",
+      "name": "Houston",
+      "slug": "houston",
+      "logo": "assets/logos/hou.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21237.svg",
+      "pageSlug": "houston-cougars",
+      "record": "26-5",
+      "wins": 26,
+      "losses": 5,
+      "conference": "Big 12",
+      "net": 7,
+      "quad1": "8-5",
+      "quad2": "9-0",
+      "quad3": "4-0",
+      "quad4": "5-0",
+      "sos": 30,
+      "nextGame": "Mar 12, 7:00pm ET",
+      "nextOpponent": "vs BYU",
+      "region": "South",
+      "seed": 2,
+      "isPlayIn": false
+    },
+    "HOW": {
+      "id": "HOW",
+      "code": "HOW",
+      "name": "Howard",
+      "slug": "howard",
+      "logo": "assets/logos/how.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21289.svg",
+      "pageSlug": "howard-bison",
+      "record": "21-10",
+      "wins": 21,
+      "losses": 10,
+      "conference": "MEAC",
+      "net": 200,
+      "quad1": "0-2",
+      "quad2": "1-2",
+      "quad3": "1-0",
+      "quad4": "15-6",
+      "sos": 360,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 16,
+      "isPlayIn": true
+    },
+    "IDAHO": {
+      "id": "IDAHO",
+      "code": "IDAHO",
+      "name": "Idaho",
+      "slug": "idaho",
+      "logo": "assets/logos/idaho.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21217.svg",
+      "pageSlug": "idaho-vandals",
+      "record": "21-14",
+      "wins": 21,
+      "losses": 14,
+      "conference": "Big Sky",
+      "net": 142,
+      "quad1": "0-0",
+      "quad2": "0-4",
+      "quad3": "9-7",
+      "quad4": "9-3",
+      "sos": 312,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 15,
+      "isPlayIn": false
+    },
+    "ILL": {
+      "id": "ILL",
+      "code": "ILL",
+      "name": "Illinois",
+      "slug": "illinois",
+      "logo": "assets/logos/ill.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21190.svg",
+      "pageSlug": "illinois-fighting-illini",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "Big Ten",
+      "net": 5,
+      "quad1": "7-7",
+      "quad2": "6-0",
+      "quad3": "6-0",
+      "quad4": "5-0",
+      "sos": 13,
+      "nextGame": "Mar 13, 2:30pm ET",
+      "nextOpponent": "vs Wisconsin",
+      "region": "West",
+      "seed": 2,
+      "isPlayIn": false
+    },
+    "IOWA": {
+      "id": "IOWA",
+      "code": "IOWA",
+      "name": "Iowa",
+      "slug": "iowa",
+      "logo": "assets/logos/iowa.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21192.svg",
+      "pageSlug": "iowa-hawkeyes",
+      "record": "21-12",
+      "wins": 21,
+      "losses": 12,
+      "conference": "Big Ten",
+      "net": 25,
+      "quad1": "4-9",
+      "quad2": "5-2",
+      "quad3": "6-1",
+      "quad4": "6-0",
+      "sos": 69,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 9,
+      "isPlayIn": false
+    },
+    "IOWAST": {
+      "id": "IOWAST",
+      "code": "IOWAST",
+      "name": "Iowa St.",
+      "slug": "iowa-st",
+      "logo": "assets/logos/iowast.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21203.svg",
+      "pageSlug": "iowa-state-cyclones",
+      "record": "27-6",
+      "wins": 27,
+      "losses": 6,
+      "conference": "Big 12",
+      "net": 8,
+      "quad1": "8-6",
+      "quad2": "10-0",
+      "quad3": "2-0",
+      "quad4": "7-0",
+      "sos": 58,
+      "nextGame": "Mar 13, 7:00pm ET",
+      "nextOpponent": "@ Arizona",
+      "region": "Midwest",
+      "seed": 3,
+      "isPlayIn": false
+    },
+    "KANSAS": {
+      "id": "KANSAS",
+      "code": "KANSAS",
+      "name": "Kansas",
+      "slug": "kansas",
+      "logo": "assets/logos/kansas.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21204.svg",
+      "pageSlug": "kansas-jayhawks",
+      "record": "22-9",
+      "wins": 22,
+      "losses": 9,
+      "conference": "Big 12",
+      "net": 19,
+      "quad1": "8-8",
+      "quad2": "7-1",
+      "quad3": "4-0",
+      "quad4": "3-0",
+      "sos": 1,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "vs TCU",
+      "region": "East",
+      "seed": 5,
+      "isPlayIn": false
+    },
+    "LEHIGH": {
+      "id": "LEHIGH",
+      "code": "LEHIGH",
+      "name": "Lehigh",
+      "slug": "lehigh",
+      "logo": "assets/logos/lehigh.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21350.svg",
+      "pageSlug": "lehigh-mountain-hawks",
+      "record": "18-16",
+      "wins": 18,
+      "losses": 16,
+      "conference": "Patriot",
+      "net": 275,
+      "quad1": "0-2",
+      "quad2": "0-2",
+      "quad3": "1-4",
+      "quad4": "15-8",
+      "sos": 293,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 16,
+      "isPlayIn": true
+    },
+    "LIU": {
+      "id": "LIU",
+      "code": "LIU",
+      "name": "LIU",
+      "slug": "liu",
+      "logo": "assets/logos/liu.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21316.svg",
+      "pageSlug": "liu-sharks",
+      "record": "24-10",
+      "wins": 24,
+      "losses": 10,
+      "conference": "Northeast",
+      "net": 196,
+      "quad1": "0-2",
+      "quad2": "0-2",
+      "quad3": "1-3",
+      "quad4": "23-3",
+      "sos": 349,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 16,
+      "isPlayIn": false
+    },
+    "LVILLE": {
+      "id": "LVILLE",
+      "code": "LVILLE",
+      "name": "Louisville",
+      "slug": "louisville",
+      "logo": "assets/logos/lville.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21238.svg",
+      "pageSlug": "louisville-cardinals",
+      "record": "23-10",
+      "wins": 23,
+      "losses": 10,
+      "conference": "ACC",
+      "net": 14,
+      "quad1": "7-10",
+      "quad2": "5-0",
+      "quad3": "4-0",
+      "quad4": "7-0",
+      "sos": 23,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 5,
+      "isPlayIn": false
+    },
+    "MARYCA": {
+      "id": "MARYCA",
+      "code": "MARYCA",
+      "name": "Saint Mary's",
+      "slug": "saint-mary-s",
+      "logo": "assets/logos/maryca.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21422.svg",
+      "pageSlug": "saint-marys-gaels",
+      "record": "27-5",
+      "wins": 27,
+      "losses": 5,
+      "conference": "West Coast",
+      "net": 22,
+      "quad1": "1-4",
+      "quad2": "8-1",
+      "quad3": "10-0",
+      "quad4": "7-0",
+      "sos": 52,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 9,
+      "isPlayIn": false
+    },
+    "MCNSE": {
+      "id": "MCNSE",
+      "code": "MCNSE",
+      "name": "McNeese",
+      "slug": "mcneese",
+      "logo": "assets/logos/mcnse.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21377.svg",
+      "pageSlug": "mcneese-cowboys",
+      "record": "28-5",
+      "wins": 28,
+      "losses": 5,
+      "conference": "Southland",
+      "net": 57,
+      "quad1": "0-2",
+      "quad2": "2-2",
+      "quad3": "8-0",
+      "quad4": "16-1",
+      "sos": 192,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 12,
+      "isPlayIn": false
+    },
+    "MIAMI": {
+      "id": "MIAMI",
+      "code": "MIAMI",
+      "name": "Miami",
+      "slug": "miami",
+      "logo": "assets/logos/miami.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21163.svg",
+      "pageSlug": "miami-fla-hurricanes",
+      "record": "25-7",
+      "wins": 25,
+      "losses": 7,
+      "conference": "ACC",
+      "net": 32,
+      "quad1": "6-5",
+      "quad2": "6-2",
+      "quad3": "3-0",
+      "quad4": "10-0",
+      "sos": 114,
+      "nextGame": "Mar 13, 7:00pm ET",
+      "nextOpponent": "@ Virginia",
+      "region": "East",
+      "seed": 7,
+      "isPlayIn": false
+    },
+    "MIAOH": {
+      "id": "MIAOH",
+      "code": "MIAOH",
+      "name": "Miami (Ohio)",
+      "slug": "miami-ohio",
+      "logo": "assets/logos/miaoh.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21271.svg",
+      "pageSlug": "miami-ohio-redhawks",
+      "record": "Ohio)",
+      "wins": null,
+      "losses": null,
+      "conference": "Mid-American",
+      "net": 54,
+      "quad1": "0-0",
+      "quad2": "2-0",
+      "quad3": "11-0",
+      "quad4": "15-1",
+      "sos": 239,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 10,
+      "isPlayIn": false
+    },
+    "MICH": {
+      "id": "MICH",
+      "code": "MICH",
+      "name": "Michigan",
+      "slug": "michigan",
+      "logo": "assets/logos/mich.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21193.svg",
+      "pageSlug": "michigan-wolverines",
+      "record": "29-2",
+      "wins": 29,
+      "losses": 2,
+      "conference": "Big Ten",
+      "net": 2,
+      "quad1": "14-2",
+      "quad2": "7-0",
+      "quad3": "6-0",
+      "quad4": "2-0",
+      "sos": 3,
+      "nextGame": "Mar 13, 12:00pm ET",
+      "nextOpponent": "vs Ohio St.",
+      "region": "Midwest",
+      "seed": 1,
+      "isPlayIn": false
+    },
+    "MICHST": {
+      "id": "MICHST",
+      "code": "MICHST",
+      "name": "Michigan St.",
+      "slug": "michigan-st",
+      "logo": "assets/logos/michst.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21194.svg",
+      "pageSlug": "michigan-st-spartans",
+      "record": "25-6",
+      "wins": 25,
+      "losses": 6,
+      "conference": "Big Ten",
+      "net": 11,
+      "quad1": "9-5",
+      "quad2": "5-1",
+      "quad3": "7-0",
+      "quad4": "4-0",
+      "sos": 12,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 2,
+      "isPlayIn": false
+    },
+    "MIZZOU": {
+      "id": "MIZZOU",
+      "code": "MIZZOU",
+      "name": "Missouri",
+      "slug": "missouri",
+      "logo": "assets/logos/mizzou.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21206.svg",
+      "pageSlug": "missouri-tigers",
+      "record": "20-12",
+      "wins": 20,
+      "losses": 12,
+      "conference": "SEC",
+      "net": 59,
+      "quad1": "5-7",
+      "quad2": "4-5",
+      "quad3": "3-0",
+      "quad4": "8-0",
+      "sos": 81,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 11,
+      "isPlayIn": false
+    },
+    "NCST": {
+      "id": "NCST",
+      "code": "NCST",
+      "name": "NC State",
+      "slug": "nc-state",
+      "logo": "assets/logos/ncst.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21135.svg",
+      "pageSlug": "nc-state-wolfpack",
+      "record": "20-13",
+      "wins": 20,
+      "losses": 13,
+      "conference": "ACC",
+      "net": 35,
+      "quad1": "5-8",
+      "quad2": "6-4",
+      "quad3": "5-0",
+      "quad4": "4-1",
+      "sos": 18,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 9,
+      "isPlayIn": false
+    },
+    "NDAKST": {
+      "id": "NDAKST",
+      "code": "NDAKST",
+      "name": "N. Dakota St.",
+      "slug": "n-dakota-st",
+      "logo": "assets/logos/ndakst.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/160983.svg",
+      "pageSlug": "north-dakota-state-bison",
+      "record": "27-7",
+      "wins": 27,
+      "losses": 7,
+      "conference": "Summit League",
+      "net": 115,
+      "quad1": "0-0",
+      "quad2": "0-1",
+      "quad3": "5-4",
+      "quad4": "19-2",
+      "sos": 329,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 14,
+      "isPlayIn": false
+    },
+    "NEB": {
+      "id": "NEB",
+      "code": "NEB",
+      "name": "Nebraska",
+      "slug": "nebraska",
+      "logo": "assets/logos/neb.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21207.svg",
+      "pageSlug": "nebraska-cornhuskers",
+      "record": "26-5",
+      "wins": 26,
+      "losses": 5,
+      "conference": "Big Ten",
+      "net": 12,
+      "quad1": "8-5",
+      "quad2": "7-0",
+      "quad3": "5-0",
+      "quad4": "6-0",
+      "sos": 55,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 3,
+      "isPlayIn": false
+    },
+    "NIOWA": {
+      "id": "NIOWA",
+      "code": "NIOWA",
+      "name": "N. Iowa",
+      "slug": "n-iowa",
+      "logo": "assets/logos/niowa.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21310.svg",
+      "pageSlug": "northern-iowa-panthers",
+      "record": "23-12",
+      "wins": 23,
+      "losses": 12,
+      "conference": "Missouri Valley",
+      "net": 71,
+      "quad1": "0-3",
+      "quad2": "4-4",
+      "quad3": "7-5",
+      "quad4": "11-0",
+      "sos": 113,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 12,
+      "isPlayIn": false
+    },
+    "NOVA": {
+      "id": "NOVA",
+      "code": "NOVA",
+      "name": "Villanova",
+      "slug": "villanova",
+      "logo": "assets/logos/nova.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21171.svg",
+      "pageSlug": "villanova-wildcats",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "Big East",
+      "net": 33,
+      "quad1": "2-6",
+      "quad2": "8-0",
+      "quad3": "9-1",
+      "quad4": "5-0",
+      "sos": 42,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "vs Georgetown",
+      "region": "South",
+      "seed": 7,
+      "isPlayIn": false
+    },
+    "OHIOST": {
+      "id": "OHIOST",
+      "code": "OHIOST",
+      "name": "Ohio St.",
+      "slug": "ohio-st",
+      "logo": "assets/logos/ohiost.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21197.svg",
+      "pageSlug": "ohio-state-buckeyes",
+      "record": "21-11",
+      "wins": 21,
+      "losses": 11,
+      "conference": "Big Ten",
+      "net": 30,
+      "quad1": "4-10",
+      "quad2": "6-1",
+      "quad3": "5-0",
+      "quad4": "6-0",
+      "sos": 31,
+      "nextGame": "Mar 13, 12:00pm ET",
+      "nextOpponent": "@ Michigan",
+      "region": "West",
+      "seed": 8,
+      "isPlayIn": false
+    },
+    "PURDUE": {
+      "id": "PURDUE",
+      "code": "PURDUE",
+      "name": "Purdue",
+      "slug": "purdue",
+      "logo": "assets/logos/purdue.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21199.svg",
+      "pageSlug": "purdue-boilermakers",
+      "record": "23-8",
+      "wins": 23,
+      "losses": 8,
+      "conference": "Big Ten",
+      "net": 10,
+      "quad1": "8-8",
+      "quad2": "6-0",
+      "quad3": "6-0",
+      "quad4": "3-0",
+      "sos": 14,
+      "nextGame": "Mar 12, 6:30pm ET",
+      "nextOpponent": "vs Northwestern",
+      "region": "South",
+      "seed": 3,
+      "isPlayIn": false
+    },
+    "PVAM": {
+      "id": "PVAM",
+      "code": "PVAM",
+      "name": "Prairie View",
+      "slug": "prairie-view",
+      "logo": "assets/logos/pvam.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21394.svg",
+      "pageSlug": "prairie-view-am-panthers",
+      "record": "16-17",
+      "wins": 16,
+      "losses": 17,
+      "conference": "SWAC",
+      "net": 310,
+      "quad1": "0-3",
+      "quad2": "0-2",
+      "quad3": "0-1",
+      "quad4": "12-11",
+      "sos": 353,
+      "nextGame": "Mar 13, 2:00pm ET",
+      "nextOpponent": "@ Alabama A&M",
+      "region": "Midwest",
+      "seed": 16,
+      "isPlayIn": true
+    },
+    "QUEENC": {
+      "id": "QUEENC",
+      "code": "QUEENC",
+      "name": "Queens",
+      "slug": "queens",
+      "logo": "assets/logos/queenc.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/161390.svg",
+      "pageSlug": "queens-university-royals",
+      "record": "21-13",
+      "wins": 21,
+      "losses": 13,
+      "conference": "Atlantic Sun",
+      "net": 190,
+      "quad1": "0-5",
+      "quad2": "0-0",
+      "quad3": "2-4",
+      "quad4": "18-4",
+      "sos": 255,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 16,
+      "isPlayIn": false
+    },
+    "SAMHOU": {
+      "id": "SAMHOU",
+      "code": "SAMHOU",
+      "name": "Sam Houston",
+      "slug": "sam-houston",
+      "logo": "assets/logos/samhou.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21381.svg",
+      "pageSlug": "sam-houston-bearkats",
+      "record": "22-10",
+      "wins": 22,
+      "losses": 10,
+      "conference": "Conference USA",
+      "net": 100,
+      "quad1": "0-2",
+      "quad2": "0-2",
+      "quad3": "10-5",
+      "quad4": "9-1",
+      "sos": 171,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 13,
+      "isPlayIn": false
+    },
+    "SFLA": {
+      "id": "SFLA",
+      "code": "SFLA",
+      "name": "South Florida",
+      "slug": "south-florida",
+      "logo": "assets/logos/sfla.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21243.svg",
+      "pageSlug": "south-florida-bulls",
+      "record": "23-8",
+      "wins": 23,
+      "losses": 8,
+      "conference": "American",
+      "net": 47,
+      "quad1": "2-3",
+      "quad2": "5-2",
+      "quad3": "6-3",
+      "quad4": "9-0",
+      "sos": 59,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 12,
+      "isPlayIn": false
+    },
+    "SIENA": {
+      "id": "SIENA",
+      "code": "SIENA",
+      "name": "Siena",
+      "slug": "siena",
+      "logo": "assets/logos/siena.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21262.svg",
+      "pageSlug": "siena-saints",
+      "record": "23-11",
+      "wins": 23,
+      "losses": 11,
+      "conference": "MAAC",
+      "net": 182,
+      "quad1": "0-1",
+      "quad2": "0-0",
+      "quad3": "2-6",
+      "quad4": "21-4",
+      "sos": 277,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 15,
+      "isPlayIn": false
+    },
+    "SMU": {
+      "id": "SMU",
+      "code": "SMU",
+      "name": "SMU",
+      "slug": "smu",
+      "logo": "assets/logos/smu.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21433.svg",
+      "pageSlug": "smu-mustangs",
+      "record": "20-13",
+      "wins": 20,
+      "losses": 13,
+      "conference": "ACC",
+      "net": 37,
+      "quad1": "4-9",
+      "quad2": "5-4",
+      "quad3": "5-0",
+      "quad4": "6-0",
+      "sos": 19,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 11,
+      "isPlayIn": true
+    },
+    "SNCLRA": {
+      "id": "SNCLRA",
+      "code": "SNCLRA",
+      "name": "Santa Clara",
+      "slug": "santa-clara",
+      "logo": "assets/logos/snclra.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21421.svg",
+      "pageSlug": "santa-clara-broncos",
+      "record": "26-8",
+      "wins": 26,
+      "losses": 8,
+      "conference": "West Coast",
+      "net": 40,
+      "quad1": "2-6",
+      "quad2": "6-1",
+      "quad3": "10-0",
+      "quad4": "7-1",
+      "sos": 46,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 11,
+      "isPlayIn": true
+    },
+    "STJOHN": {
+      "id": "STJOHN",
+      "code": "STJOHN",
+      "name": "St. John's",
+      "slug": "st-john-s",
+      "logo": "assets/logos/stjohn.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21169.svg",
+      "pageSlug": "st-johns-red-storm",
+      "record": "26-6",
+      "wins": 26,
+      "losses": 6,
+      "conference": "Big East",
+      "net": 21,
+      "quad1": "3-5",
+      "quad2": "11-0",
+      "quad3": "9-1",
+      "quad4": "3-0",
+      "sos": 25,
+      "nextGame": "Mar 13, 5:30pm ET",
+      "nextOpponent": "vs Seton Hall",
+      "region": "East",
+      "seed": 6,
+      "isPlayIn": false
+    },
+    "STLOU": {
+      "id": "STLOU",
+      "code": "STLOU",
+      "name": "Saint Louis",
+      "slug": "saint-louis",
+      "logo": "assets/logos/stlou.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21244.svg",
+      "pageSlug": "saint-louis-billikens",
+      "record": "27-4",
+      "wins": 27,
+      "losses": 4,
+      "conference": "Atlantic 10",
+      "net": 28,
+      "quad1": "2-1",
+      "quad2": "4-2",
+      "quad3": "7-1",
+      "quad4": "13-0",
+      "sos": 107,
+      "nextGame": "Mar 13, 11:30am ET",
+      "nextOpponent": "vs George Wash.",
+      "region": "West",
+      "seed": 10,
+      "isPlayIn": false
+    },
+    "TCU": {
+      "id": "TCU",
+      "code": "TCU",
+      "name": "TCU",
+      "slug": "tcu",
+      "logo": "assets/logos/tcu.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21434.svg",
+      "pageSlug": "tcu-horned-frogs",
+      "record": "22-10",
+      "wins": 22,
+      "losses": 10,
+      "conference": "Big 12",
+      "net": 39,
+      "quad1": "6-6",
+      "quad2": "7-2",
+      "quad3": "2-1",
+      "quad4": "7-1",
+      "sos": 66,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "@ Kansas",
+      "region": "West",
+      "seed": 9,
+      "isPlayIn": false
+    },
+    "TENN": {
+      "id": "TENN",
+      "code": "TENN",
+      "name": "Tennessee",
+      "slug": "tennessee",
+      "logo": "assets/logos/tenn.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21362.svg",
+      "pageSlug": "tennessee-volunteers",
+      "record": "22-10",
+      "wins": 22,
+      "losses": 10,
+      "conference": "SEC",
+      "net": 20,
+      "quad1": "5-9",
+      "quad2": "6-1",
+      "quad3": "3-0",
+      "quad4": "7-0",
+      "sos": 21,
+      "nextGame": "Mar 13, 3:30pm ET",
+      "nextOpponent": "@ Vanderbilt",
+      "region": "South",
+      "seed": 6,
+      "isPlayIn": false
+    },
+    "TEXAM": {
+      "id": "TEXAM",
+      "code": "TEXAM",
+      "name": "Texas A&M",
+      "slug": "texas-aandm",
+      "logo": "assets/logos/texam.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21211.svg",
+      "pageSlug": "texas-am-aggies",
+      "record": "21-10",
+      "wins": 21,
+      "losses": 10,
+      "conference": "SEC",
+      "net": 42,
+      "quad1": "5-7",
+      "quad2": "4-3",
+      "quad3": "4-0",
+      "quad4": "8-0",
+      "sos": 95,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "vs Oklahoma",
+      "region": "South",
+      "seed": 10,
+      "isPlayIn": false
+    },
+    "TEXAS": {
+      "id": "TEXAS",
+      "code": "TEXAS",
+      "name": "Texas",
+      "slug": "texas",
+      "logo": "assets/logos/texas.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21210.svg",
+      "pageSlug": "texas-longhorns",
+      "record": "18-14",
+      "wins": 18,
+      "losses": 14,
+      "conference": "SEC",
+      "net": 43,
+      "quad1": "6-9",
+      "quad2": "1-4",
+      "quad3": "3-1",
+      "quad4": "7-0",
+      "sos": 56,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 10,
+      "isPlayIn": false
+    },
+    "TNST": {
+      "id": "TNST",
+      "code": "TNST",
+      "name": "Tennessee St.",
+      "slug": "tennessee-st",
+      "logo": "assets/logos/tnst.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21333.svg",
+      "pageSlug": "tennessee-state-tigers",
+      "record": "23-9",
+      "wins": 23,
+      "losses": 9,
+      "conference": "Ohio Valley",
+      "net": 173,
+      "quad1": "0-2",
+      "quad2": "1-0",
+      "quad3": "3-1",
+      "quad4": "16-6",
+      "sos": 273,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 15,
+      "isPlayIn": false
+    },
+    "TROY": {
+      "id": "TROY",
+      "code": "TROY",
+      "name": "Troy",
+      "slug": "troy",
+      "logo": "assets/logos/troy.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21414.svg",
+      "pageSlug": "troy-trojans",
+      "record": "22-11",
+      "wins": 22,
+      "losses": 11,
+      "conference": "Sun Belt",
+      "net": 126,
+      "quad1": "1-0",
+      "quad2": "2-1",
+      "quad3": "4-7",
+      "quad4": "13-3",
+      "sos": 162,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 14,
+      "isPlayIn": false
+    },
+    "TXTECH": {
+      "id": "TXTECH",
+      "code": "TXTECH",
+      "name": "Texas Tech",
+      "slug": "texas-tech",
+      "logo": "assets/logos/txtech.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21212.svg",
+      "pageSlug": "texas-tech-red-raiders",
+      "record": "22-10",
+      "wins": 22,
+      "losses": 10,
+      "conference": "Big 12",
+      "net": 15,
+      "quad1": "7-9",
+      "quad2": "5-1",
+      "quad3": "7-0",
+      "quad4": "3-0",
+      "sos": 2,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 4,
+      "isPlayIn": false
+    },
+    "UCF": {
+      "id": "UCF",
+      "code": "UCF",
+      "name": "UCF",
+      "slug": "ucf",
+      "logo": "assets/logos/ucf.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21406.svg",
+      "pageSlug": "ucf-knights",
+      "record": "21-11",
+      "wins": 21,
+      "losses": 11,
+      "conference": "Big 12",
+      "net": 50,
+      "quad1": "5-8",
+      "quad2": "6-3",
+      "quad3": "4-0",
+      "quad4": "6-0",
+      "sos": 28,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "South",
+      "seed": 11,
+      "isPlayIn": false
+    },
+    "UCIRV": {
+      "id": "UCIRV",
+      "code": "UCIRV",
+      "name": "UC Irvine",
+      "slug": "uc-irvine",
+      "logo": "assets/logos/ucirv.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21214.svg",
+      "pageSlug": "uc-irvine-anteaters",
+      "record": "22-10",
+      "wins": 22,
+      "losses": 10,
+      "conference": "Big West",
+      "net": 117,
+      "quad1": "0-0",
+      "quad2": "1-4",
+      "quad3": "5-6",
+      "quad4": "14-0",
+      "sos": 157,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 14,
+      "isPlayIn": false
+    },
+    "UCLA": {
+      "id": "UCLA",
+      "code": "UCLA",
+      "name": "UCLA",
+      "slug": "ucla",
+      "logo": "assets/logos/ucla.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21341.svg",
+      "pageSlug": "ucla-bruins",
+      "record": "21-10",
+      "wins": 21,
+      "losses": 10,
+      "conference": "Big Ten",
+      "net": 34,
+      "quad1": "4-7",
+      "quad2": "5-3",
+      "quad3": "5-0",
+      "quad4": "7-0",
+      "sos": 53,
+      "nextGame": "Mar 12, 9:00pm ET",
+      "nextOpponent": "vs Rutgers",
+      "region": "South",
+      "seed": 8,
+      "isPlayIn": false
+    },
+    "UCONN": {
+      "id": "UCONN",
+      "code": "UCONN",
+      "name": "UConn",
+      "slug": "uconn",
+      "logo": "assets/logos/uconn.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21161.svg",
+      "pageSlug": "connecticut-huskies",
+      "record": "27-4",
+      "wins": 27,
+      "losses": 4,
+      "conference": "Big East",
+      "net": 9,
+      "quad1": "7-2",
+      "quad2": "9-1",
+      "quad3": "6-1",
+      "quad4": "5-0",
+      "sos": 25,
+      "nextGame": "Mar 12, 7:00pm ET",
+      "nextOpponent": "vs Xavier",
+      "region": "Midwest",
+      "seed": 2,
+      "isPlayIn": false
+    },
+    "UGA": {
+      "id": "UGA",
+      "code": "UGA",
+      "name": "Georgia",
+      "slug": "georgia",
+      "logo": "assets/logos/uga.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21356.svg",
+      "pageSlug": "georgia-bulldogs",
+      "record": "22-9",
+      "wins": 22,
+      "losses": 9,
+      "conference": "SEC",
+      "net": 31,
+      "quad1": "6-7",
+      "quad2": "6-1",
+      "quad3": "1-1",
+      "quad4": "9-0",
+      "sos": 63,
+      "nextGame": "Mar 12, 7:00pm ET",
+      "nextOpponent": "vs Ole Miss",
+      "region": "Midwest",
+      "seed": 7,
+      "isPlayIn": false
+    },
+    "UK": {
+      "id": "UK",
+      "code": "UK",
+      "name": "Kentucky",
+      "slug": "kentucky",
+      "logo": "assets/logos/uk.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21357.svg",
+      "pageSlug": "kentucky-wildcats",
+      "record": "21-12",
+      "wins": 21,
+      "losses": 12,
+      "conference": "SEC",
+      "net": 27,
+      "quad1": "5-10",
+      "quad2": "7-2",
+      "quad3": "3-0",
+      "quad4": "6-0",
+      "sos": 15,
+      "nextGame": "Mar 13, 1:00pm ET",
+      "nextOpponent": "@ Florida",
+      "region": "West",
+      "seed": 7,
+      "isPlayIn": false
+    },
+    "UMBC": {
+      "id": "UMBC",
+      "code": "UMBC",
+      "name": "UMBC",
+      "slug": "umbc",
+      "logo": "assets/logos/umbc.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21323.svg",
+      "pageSlug": "umbc-retrievers",
+      "record": "23-8",
+      "wins": 23,
+      "losses": 8,
+      "conference": "America East",
+      "net": 202,
+      "quad1": "0-2",
+      "quad2": "0-2",
+      "quad3": "0-1",
+      "quad4": "21-3",
+      "sos": 363,
+      "nextGame": "Mar 14, 11:00am ET",
+      "nextOpponent": "vs Vermont",
+      "region": "South",
+      "seed": 16,
+      "isPlayIn": true
+    },
+    "UNC": {
+      "id": "UNC",
+      "code": "UNC",
+      "name": "N. Carolina",
+      "slug": "n-carolina",
+      "logo": "assets/logos/unc.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21134.svg",
+      "pageSlug": "north-carolina-tar-heels",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "ACC",
+      "net": 24,
+      "quad1": "6-7",
+      "quad2": "5-0",
+      "quad3": "8-0",
+      "quad4": "5-0",
+      "sos": 9,
+      "nextGame": "Mar 12, 9:30pm ET",
+      "nextOpponent": "vs Clemson",
+      "region": "West",
+      "seed": 5,
+      "isPlayIn": false
+    },
+    "UTAHST": {
+      "id": "UTAHST",
+      "code": "UTAHST",
+      "name": "Utah St.",
+      "slug": "utah-st",
+      "logo": "assets/logos/utahst.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21224.svg",
+      "pageSlug": "utah-state-aggies",
+      "record": "26-6",
+      "wins": 26,
+      "losses": 6,
+      "conference": "Mountain West",
+      "net": 29,
+      "quad1": "3-4",
+      "quad2": "9-1",
+      "quad3": "8-1",
+      "quad4": "5-0",
+      "sos": 51,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "Midwest",
+      "seed": 8,
+      "isPlayIn": false
+    },
+    "UTVALL": {
+      "id": "UTVALL",
+      "code": "UTVALL",
+      "name": "Utah Valley",
+      "slug": "utah-valley",
+      "logo": "assets/logos/utvall.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/447003.svg",
+      "pageSlug": "utah-valley-wolverines",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "WAC",
+      "net": 83,
+      "quad1": "0-2",
+      "quad2": "0-1",
+      "quad3": "9-2",
+      "quad4": "12-2",
+      "sos": 168,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "West",
+      "seed": 13,
+      "isPlayIn": false
+    },
+    "UVA": {
+      "id": "UVA",
+      "code": "UVA",
+      "name": "Virginia",
+      "slug": "virginia",
+      "logo": "assets/logos/uva.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21136.svg",
+      "pageSlug": "virginia-cavaliers",
+      "record": "28-4",
+      "wins": 28,
+      "losses": 4,
+      "conference": "ACC",
+      "net": 13,
+      "quad1": "7-3",
+      "quad2": "9-1",
+      "quad3": "5-0",
+      "quad4": "7-0",
+      "sos": 70,
+      "nextGame": "Mar 13, 7:00pm ET",
+      "nextOpponent": "vs Miami",
+      "region": "South",
+      "seed": 4,
+      "isPlayIn": false
+    },
+    "VANDY": {
+      "id": "VANDY",
+      "code": "VANDY",
+      "name": "Vanderbilt",
+      "slug": "vanderbilt",
+      "logo": "assets/logos/vandy.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21363.svg",
+      "pageSlug": "vanderbilt-commodores",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "SEC",
+      "net": 16,
+      "quad1": "8-6",
+      "quad2": "7-1",
+      "quad3": "3-0",
+      "quad4": "6-0",
+      "sos": 24,
+      "nextGame": "Mar 13, 3:30pm ET",
+      "nextOpponent": "vs Tennessee",
+      "region": "Midwest",
+      "seed": 4,
+      "isPlayIn": false
+    },
+    "VCU": {
+      "id": "VCU",
+      "code": "VCU",
+      "name": "VCU",
+      "slug": "vcu",
+      "logo": "assets/logos/vcu.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21232.svg",
+      "pageSlug": "vcu-rams",
+      "record": "24-7",
+      "wins": 24,
+      "losses": 7,
+      "conference": "Atlantic 10",
+      "net": 44,
+      "quad1": "2-5",
+      "quad2": "3-2",
+      "quad3": "8-0",
+      "quad4": "11-0",
+      "sos": 62,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 11,
+      "isPlayIn": true
+    },
+    "WISC": {
+      "id": "WISC",
+      "code": "WISC",
+      "name": "Wisconsin",
+      "slug": "wisconsin",
+      "logo": "assets/logos/wisc.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21200.svg",
+      "pageSlug": "wisconsin-badgers",
+      "record": "23-9",
+      "wins": 23,
+      "losses": 9,
+      "conference": "Big Ten",
+      "net": 26,
+      "quad1": "7-7",
+      "quad2": "5-1",
+      "quad3": "5-1",
+      "quad4": "6-0",
+      "sos": 44,
+      "nextGame": "Mar 13, 2:30pm ET",
+      "nextOpponent": "@ Illinois",
+      "region": "Midwest",
+      "seed": 6,
+      "isPlayIn": false
+    },
+    "WRIGHT": {
+      "id": "WRIGHT",
+      "code": "WRIGHT",
+      "name": "Wright St.",
+      "slug": "wright-st",
+      "logo": "assets/logos/wright.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21303.svg",
+      "pageSlug": "wright-state-raiders",
+      "record": "23-11",
+      "wins": 23,
+      "losses": 11,
+      "conference": "Horizon",
+      "net": 127,
+      "quad1": "0-1",
+      "quad2": "0-2",
+      "quad3": "5-6",
+      "quad4": "16-2",
+      "sos": 213,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "region": "East",
+      "seed": 14,
+      "isPlayIn": false
+    },
+    "YALE": {
+      "id": "YALE",
+      "code": "YALE",
+      "name": "Yale",
+      "slug": "yale",
+      "logo": "assets/logos/yale.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21253.svg",
+      "pageSlug": "yale-bulldogs",
+      "record": "23-5",
+      "wins": 23,
+      "losses": 5,
+      "conference": "Ivy",
+      "net": 65,
+      "quad1": "0-1",
+      "quad2": "2-0",
+      "quad3": "10-3",
+      "quad4": "9-1",
+      "sos": 114,
+      "nextGame": "Mar 14, 11:00am ET",
+      "nextOpponent": "vs Cornell",
+      "region": "East",
+      "seed": 12,
+      "isPlayIn": false
+    }
+  },
+  "games": [
+    {
+      "id": "ff-east-11",
+      "round": 0,
+      "roundLabel": "First Four",
+      "region": "East",
+      "order": 1,
+      "title": "East 11-seed play-in",
+      "seedLine": "11",
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "SNCLRA"
+        },
+        {
+          "type": "team",
+          "teamId": "VCU"
+        }
+      ]
+    },
+    {
+      "id": "ff-midwest-11",
+      "round": 0,
+      "roundLabel": "First Four",
+      "region": "Midwest",
+      "order": 2,
+      "title": "Midwest 11-seed play-in",
+      "seedLine": "11",
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "SMU"
+        },
+        {
+          "type": "team",
+          "teamId": "AUBURN"
+        }
+      ]
+    },
+    {
+      "id": "ff-midwest-16",
+      "round": 0,
+      "roundLabel": "First Four",
+      "region": "Midwest",
+      "order": 3,
+      "title": "Midwest 16-seed play-in",
+      "seedLine": "16",
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "LEHIGH"
+        },
+        {
+          "type": "team",
+          "teamId": "PVAM"
+        }
+      ]
+    },
+    {
+      "id": "ff-south-16",
+      "round": 0,
+      "roundLabel": "First Four",
+      "region": "South",
+      "order": 4,
+      "title": "South 16-seed play-in",
+      "seedLine": "16",
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UMBC"
+        },
+        {
+          "type": "team",
+          "teamId": "HOW"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g1",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 5,
+      "title": "East 1 vs 16",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "DUKE"
+        },
+        {
+          "type": "team",
+          "teamId": "QUEENC"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g2",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 6,
+      "title": "East 8 vs 9",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "CLEM"
+        },
+        {
+          "type": "team",
+          "teamId": "IOWA"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g3",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 7,
+      "title": "East 5 vs 12",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "KANSAS"
+        },
+        {
+          "type": "team",
+          "teamId": "YALE"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g4",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 8,
+      "title": "East 4 vs 13",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "TXTECH"
+        },
+        {
+          "type": "team",
+          "teamId": "HIGHPT"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g5",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 9,
+      "title": "East 6 vs 11",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "STJOHN"
+        },
+        {
+          "type": "winner",
+          "gameId": "ff-east-11"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g6",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 10,
+      "title": "East 3 vs 14",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "NEB"
+        },
+        {
+          "type": "team",
+          "teamId": "WRIGHT"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g7",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 11,
+      "title": "East 7 vs 10",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "MIAMI"
+        },
+        {
+          "type": "team",
+          "teamId": "TEXAS"
+        }
+      ]
+    },
+    {
+      "id": "east-r64-g8",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "East",
+      "order": 12,
+      "title": "East 2 vs 15",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "MICHST"
+        },
+        {
+          "type": "team",
+          "teamId": "SIENA"
+        }
+      ]
+    },
+    {
+      "id": "east-r32-g1",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "East",
+      "order": 13,
+      "title": "East second round game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r64-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r64-g2"
+        }
+      ]
+    },
+    {
+      "id": "east-r32-g2",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "East",
+      "order": 14,
+      "title": "East second round game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r64-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r64-g4"
+        }
+      ]
+    },
+    {
+      "id": "east-r32-g3",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "East",
+      "order": 15,
+      "title": "East second round game 3",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r64-g5"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r64-g6"
+        }
+      ]
+    },
+    {
+      "id": "east-r32-g4",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "East",
+      "order": 16,
+      "title": "East second round game 4",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r64-g7"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r64-g8"
+        }
+      ]
+    },
+    {
+      "id": "east-s16-g1",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "East",
+      "order": 17,
+      "title": "East Sweet 16 game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r32-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r32-g2"
+        }
+      ]
+    },
+    {
+      "id": "east-s16-g2",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "East",
+      "order": 18,
+      "title": "East Sweet 16 game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-r32-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-r32-g4"
+        }
+      ]
+    },
+    {
+      "id": "east-elite8",
+      "round": 4,
+      "roundLabel": "Elite 8",
+      "region": "East",
+      "order": 19,
+      "title": "East regional final",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-s16-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "east-s16-g2"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g1",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 20,
+      "title": "Midwest 1 vs 16",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "MICH"
+        },
+        {
+          "type": "winner",
+          "gameId": "ff-midwest-16"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g2",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 21,
+      "title": "Midwest 8 vs 9",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UTAHST"
+        },
+        {
+          "type": "team",
+          "teamId": "NCST"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g3",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 22,
+      "title": "Midwest 5 vs 12",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "LVILLE"
+        },
+        {
+          "type": "team",
+          "teamId": "NIOWA"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g4",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 23,
+      "title": "Midwest 4 vs 13",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "VANDY"
+        },
+        {
+          "type": "team",
+          "teamId": "HOFSTRA"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g5",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 24,
+      "title": "Midwest 6 vs 11",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "WISC"
+        },
+        {
+          "type": "winner",
+          "gameId": "ff-midwest-11"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g6",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 25,
+      "title": "Midwest 3 vs 14",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "IOWAST"
+        },
+        {
+          "type": "team",
+          "teamId": "NDAKST"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g7",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 26,
+      "title": "Midwest 7 vs 10",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UGA"
+        },
+        {
+          "type": "team",
+          "teamId": "MIAOH"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r64-g8",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "Midwest",
+      "order": 27,
+      "title": "Midwest 2 vs 15",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UCONN"
+        },
+        {
+          "type": "team",
+          "teamId": "TNST"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r32-g1",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "Midwest",
+      "order": 28,
+      "title": "Midwest second round game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g2"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r32-g2",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "Midwest",
+      "order": 29,
+      "title": "Midwest second round game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g4"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r32-g3",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "Midwest",
+      "order": 30,
+      "title": "Midwest second round game 3",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g5"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g6"
+        }
+      ]
+    },
+    {
+      "id": "midwest-r32-g4",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "Midwest",
+      "order": 31,
+      "title": "Midwest second round game 4",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g7"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r64-g8"
+        }
+      ]
+    },
+    {
+      "id": "midwest-s16-g1",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "Midwest",
+      "order": 32,
+      "title": "Midwest Sweet 16 game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r32-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r32-g2"
+        }
+      ]
+    },
+    {
+      "id": "midwest-s16-g2",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "Midwest",
+      "order": 33,
+      "title": "Midwest Sweet 16 game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-r32-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-r32-g4"
+        }
+      ]
+    },
+    {
+      "id": "midwest-elite8",
+      "round": 4,
+      "roundLabel": "Elite 8",
+      "region": "Midwest",
+      "order": 34,
+      "title": "Midwest regional final",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "midwest-s16-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-s16-g2"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g1",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 35,
+      "title": "South 1 vs 16",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "FLA"
+        },
+        {
+          "type": "winner",
+          "gameId": "ff-south-16"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g2",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 36,
+      "title": "South 8 vs 9",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UCLA"
+        },
+        {
+          "type": "team",
+          "teamId": "MARYCA"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g3",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 37,
+      "title": "South 5 vs 12",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "ARK"
+        },
+        {
+          "type": "team",
+          "teamId": "SFLA"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g4",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 38,
+      "title": "South 4 vs 13",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UVA"
+        },
+        {
+          "type": "team",
+          "teamId": "SAMHOU"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g5",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 39,
+      "title": "South 6 vs 11",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "TENN"
+        },
+        {
+          "type": "team",
+          "teamId": "UCF"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g6",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 40,
+      "title": "South 3 vs 14",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "PURDUE"
+        },
+        {
+          "type": "team",
+          "teamId": "TROY"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g7",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 41,
+      "title": "South 7 vs 10",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "NOVA"
+        },
+        {
+          "type": "team",
+          "teamId": "TEXAM"
+        }
+      ]
+    },
+    {
+      "id": "south-r64-g8",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "South",
+      "order": 42,
+      "title": "South 2 vs 15",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "HOU"
+        },
+        {
+          "type": "team",
+          "teamId": "FURMAN"
+        }
+      ]
+    },
+    {
+      "id": "south-r32-g1",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "South",
+      "order": 43,
+      "title": "South second round game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r64-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r64-g2"
+        }
+      ]
+    },
+    {
+      "id": "south-r32-g2",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "South",
+      "order": 44,
+      "title": "South second round game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r64-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r64-g4"
+        }
+      ]
+    },
+    {
+      "id": "south-r32-g3",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "South",
+      "order": 45,
+      "title": "South second round game 3",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r64-g5"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r64-g6"
+        }
+      ]
+    },
+    {
+      "id": "south-r32-g4",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "South",
+      "order": 46,
+      "title": "South second round game 4",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r64-g7"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r64-g8"
+        }
+      ]
+    },
+    {
+      "id": "south-s16-g1",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "South",
+      "order": 47,
+      "title": "South Sweet 16 game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r32-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r32-g2"
+        }
+      ]
+    },
+    {
+      "id": "south-s16-g2",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "South",
+      "order": 48,
+      "title": "South Sweet 16 game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-r32-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-r32-g4"
+        }
+      ]
+    },
+    {
+      "id": "south-elite8",
+      "round": 4,
+      "roundLabel": "Elite 8",
+      "region": "South",
+      "order": 49,
+      "title": "South regional final",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-s16-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "south-s16-g2"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g1",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 50,
+      "title": "West 1 vs 16",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "ARIZ"
+        },
+        {
+          "type": "team",
+          "teamId": "LIU"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g2",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 51,
+      "title": "West 8 vs 9",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "OHIOST"
+        },
+        {
+          "type": "team",
+          "teamId": "TCU"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g3",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 52,
+      "title": "West 5 vs 12",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UNC"
+        },
+        {
+          "type": "team",
+          "teamId": "MCNSE"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g4",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 53,
+      "title": "West 4 vs 13",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "GONZAG"
+        },
+        {
+          "type": "team",
+          "teamId": "UTVALL"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g5",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 54,
+      "title": "West 6 vs 11",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "BYU"
+        },
+        {
+          "type": "team",
+          "teamId": "MIZZOU"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g6",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 55,
+      "title": "West 3 vs 14",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "BAMA"
+        },
+        {
+          "type": "team",
+          "teamId": "UCIRV"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g7",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 56,
+      "title": "West 7 vs 10",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "UK"
+        },
+        {
+          "type": "team",
+          "teamId": "STLOU"
+        }
+      ]
+    },
+    {
+      "id": "west-r64-g8",
+      "round": 1,
+      "roundLabel": "First Round",
+      "region": "West",
+      "order": 57,
+      "title": "West 2 vs 15",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "team",
+          "teamId": "ILL"
+        },
+        {
+          "type": "team",
+          "teamId": "IDAHO"
+        }
+      ]
+    },
+    {
+      "id": "west-r32-g1",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "West",
+      "order": 58,
+      "title": "West second round game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r64-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r64-g2"
+        }
+      ]
+    },
+    {
+      "id": "west-r32-g2",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "West",
+      "order": 59,
+      "title": "West second round game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r64-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r64-g4"
+        }
+      ]
+    },
+    {
+      "id": "west-r32-g3",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "West",
+      "order": 60,
+      "title": "West second round game 3",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r64-g5"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r64-g6"
+        }
+      ]
+    },
+    {
+      "id": "west-r32-g4",
+      "round": 2,
+      "roundLabel": "Second Round",
+      "region": "West",
+      "order": 61,
+      "title": "West second round game 4",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r64-g7"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r64-g8"
+        }
+      ]
+    },
+    {
+      "id": "west-s16-g1",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "West",
+      "order": 62,
+      "title": "West Sweet 16 game 1",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r32-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r32-g2"
+        }
+      ]
+    },
+    {
+      "id": "west-s16-g2",
+      "round": 3,
+      "roundLabel": "Sweet 16",
+      "region": "West",
+      "order": 63,
+      "title": "West Sweet 16 game 2",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-r32-g3"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-r32-g4"
+        }
+      ]
+    },
+    {
+      "id": "west-elite8",
+      "round": 4,
+      "roundLabel": "Elite 8",
+      "region": "West",
+      "order": 64,
+      "title": "West regional final",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "west-s16-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-s16-g2"
+        }
+      ]
+    },
+    {
+      "id": "final-four-g1",
+      "round": 5,
+      "roundLabel": "Final Four",
+      "region": "Final Four",
+      "order": 65,
+      "title": "East champion vs Midwest champion",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "east-elite8"
+        },
+        {
+          "type": "winner",
+          "gameId": "midwest-elite8"
+        }
+      ]
+    },
+    {
+      "id": "final-four-g2",
+      "round": 5,
+      "roundLabel": "Final Four",
+      "region": "Final Four",
+      "order": 66,
+      "title": "South champion vs West champion",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "south-elite8"
+        },
+        {
+          "type": "winner",
+          "gameId": "west-elite8"
+        }
+      ]
+    },
+    {
+      "id": "championship",
+      "round": 6,
+      "roundLabel": "National Championship",
+      "region": "National Championship",
+      "order": 67,
+      "title": "National championship game",
+      "seedLine": null,
+      "slots": [
+        {
+          "type": "winner",
+          "gameId": "final-four-g1"
+        },
+        {
+          "type": "winner",
+          "gameId": "final-four-g2"
+        }
+      ]
+    }
+  ]
+}
