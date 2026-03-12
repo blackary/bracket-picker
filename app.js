@@ -1161,23 +1161,101 @@ async function exportPoster() {
   await document.fonts.ready;
 
   const canvas = document.createElement("canvas");
-  const width = 1600;
-  const height = 2200;
+  const width = 2600;
+  const height = 1800;
   canvas.width = width;
   canvas.height = height;
 
   const ctx = canvas.getContext("2d");
+  const layout = buildPosterLayout(width, height);
+
   drawPosterBackground(ctx, width, height);
-  drawPosterHeader(ctx, bracket, width);
-  await drawPosterChampion(ctx, bracket, width);
-  await drawPosterFinalFour(ctx, bracket, width);
-  drawPosterRoundSummary(ctx, bracket, width);
-  drawPosterRounds(ctx, bracket, width);
+  await drawPosterHeader(ctx, bracket, layout);
+  await drawPosterFirstFourRail(ctx, bracket, layout);
+
+  const regionAnchors = {};
+  for (const regionLayout of layout.regions) {
+    regionAnchors[regionLayout.name] = await drawPosterRegion(ctx, regionLayout, bracket);
+  }
+
+  await drawPosterCenterBracket(ctx, layout, bracket, regionAnchors);
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
   downloadBlob(blob, fileName);
   showToast("Poster export ready.");
+}
+
+function buildPosterLayout(width, height) {
+  const margin = 52;
+  const headerHeight = 112;
+  const stripHeight = 98;
+  const gapAfterHeader = 18;
+  const gapAfterStrip = 24;
+  const bodyGapY = 38;
+  const sideGapX = 34;
+  const centerWidth = 560;
+  const bodyY = margin + headerHeight + gapAfterHeader + stripHeight + gapAfterStrip;
+  const bodyHeight = height - bodyY - margin;
+  const regionWidth = (width - margin * 2 - centerWidth - sideGapX * 2) / 2;
+  const regionHeight = (bodyHeight - bodyGapY) / 2;
+  const leftX = margin;
+  const centerX = leftX + regionWidth + sideGapX;
+  const rightX = centerX + centerWidth + sideGapX;
+  const topY = bodyY;
+  const bottomY = bodyY + regionHeight + bodyGapY;
+
+  return {
+    width,
+    height,
+    header: { x: margin, y: margin, width: width - margin * 2, height: headerHeight },
+    firstFour: {
+      x: margin,
+      y: margin + headerHeight + gapAfterHeader,
+      width: width - margin * 2,
+      height: stripHeight,
+    },
+    center: {
+      x: centerX,
+      y: bodyY,
+      width: centerWidth,
+      height: bodyHeight,
+    },
+    regions: [
+      {
+        name: "East",
+        orientation: "left",
+        x: leftX,
+        y: topY,
+        width: regionWidth,
+        height: regionHeight,
+      },
+      {
+        name: "Midwest",
+        orientation: "left",
+        x: leftX,
+        y: bottomY,
+        width: regionWidth,
+        height: regionHeight,
+      },
+      {
+        name: "South",
+        orientation: "right",
+        x: rightX,
+        y: topY,
+        width: regionWidth,
+        height: regionHeight,
+      },
+      {
+        name: "West",
+        orientation: "right",
+        x: rightX,
+        y: bottomY,
+        width: regionWidth,
+        height: regionHeight,
+      },
+    ],
+  };
 }
 
 function drawPosterBackground(ctx, width, height) {
@@ -1218,359 +1296,695 @@ function drawPosterBackground(ctx, width, height) {
   }
 }
 
-function drawPosterHeader(ctx, bracket, width) {
-  ctx.fillStyle = "#23303d";
-  ctx.font = '800 72px "Baloo 2"';
-  ctx.fillText("Bracket Parade", 80, 110);
+async function drawPosterHeader(ctx, bracket, layout) {
+  const { header } = layout;
+  const champion = getChampion(bracket);
+  const progress = getProgress(bracket);
+  const brandIcon = await loadImage("assets/brand/bracket-parade-icon.svg");
+
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  roundRect(ctx, header.x, header.y, header.width, header.height, 34);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255, 255, 255, 0.68)";
+  roundRect(ctx, header.x + 16, header.y + 14, header.width - 32, header.height - 28, 26);
+  ctx.fill();
+
+  ctx.drawImage(brandIcon, header.x + 24, header.y + 24, 64, 64);
 
   ctx.fillStyle = "#5c6a79";
-  ctx.font = '800 22px "Nunito"';
-  ctx.fillText("2026 March Madness picks", 80, 154);
+  ctx.font = '800 18px "Nunito"';
   ctx.fillText(
     state.data.meta.officialBracket
       ? `Official field • ${state.data.meta.sourceUpdatedLabel}`
       : `Projected field • ${state.data.meta.sourceUpdatedLabel}`,
-    80,
-    188
+    header.x + 108,
+    header.y + 34
   );
 
   ctx.fillStyle = "#23303d";
-  ctx.font = '800 46px "Baloo 2"';
-  ctx.fillText(bracket.name, 80, 258);
+  ctx.font = '400 46px "Bungee"';
+  ctx.fillText("BRACKET PARADE", header.x + 108, header.y + 74);
 
-  const progress = getProgress(bracket);
-  drawPosterPill(ctx, {
-    x: width - 380,
-    y: 82,
-    width: 300,
-    label: "Picks made",
-    value: `${progress.pickedCount}/${progress.total}`,
-    tint: "#fff1d6",
-  });
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 38px "Baloo 2"';
+  ctx.fillText(truncateText(ctx, bracket.name, 1120), header.x + 108, header.y + 108);
 
-  drawPosterPill(ctx, {
-    x: width - 380,
-    y: 172,
-    width: 300,
-    label: "Exported",
-    value: new Date().toLocaleDateString(),
-    tint: "#e6f4ff",
-  });
+  const pills = [
+    {
+      label: "Picks made",
+      value: `${progress.pickedCount}/${progress.total}`,
+      tint: "#fff0d7",
+    },
+    {
+      label: "Exported",
+      value: new Date().toLocaleDateString(),
+      tint: "#e6f3ff",
+    },
+    {
+      label: "Champion",
+      value: champion ? truncateText(ctx, compactTeamName(champion.name), 180) : "Still open",
+      tint: champion ? hexToRgba(getThemeForTeam(champion).color, 0.18) : "#eef1f5",
+      logo: champion?.logo || null,
+    },
+  ];
+
+  let pillX = header.x + header.width - 3 * 230 - 24;
+  for (const pill of pills) {
+    await drawPosterHeaderPill(ctx, {
+      x: pillX,
+      y: header.y + 20,
+      width: 210,
+      height: 72,
+      ...pill,
+    });
+    pillX += 230;
+  }
 }
 
-function drawPosterPill(ctx, { x, y, width, label, value, tint }) {
+async function drawPosterHeaderPill(ctx, { x, y, width, height, label, value, tint, logo }) {
   ctx.fillStyle = tint;
-  roundRect(ctx, x, y, width, 72, 26);
+  roundRect(ctx, x, y, width, height, 24);
   ctx.fill();
 
   ctx.fillStyle = "#5c6a79";
-  ctx.font = '800 18px "Nunito"';
-  ctx.fillText(label, x + 18, y + 26);
+  ctx.font = '800 14px "Nunito"';
+  ctx.fillText(label, x + 16, y + 22);
+
+  let valueX = x + 16;
+  if (logo) {
+    ctx.fillStyle = "rgba(255,255,255,0.82)";
+    roundRect(ctx, x + 12, y + 28, 32, 32, 12);
+    ctx.fill();
+    const image = await loadImage(logo);
+    ctx.drawImage(image, x + 18, y + 34, 20, 20);
+    valueX = x + 50;
+  }
 
   ctx.fillStyle = "#23303d";
   ctx.font = '800 28px "Baloo 2"';
-  ctx.fillText(value, x + 18, y + 56);
+  ctx.fillText(value, valueX, y + 54);
 }
 
-async function drawPosterChampion(ctx, bracket, width) {
-  const champion = getChampion(bracket);
-  const boxX = 80;
-  const boxY = 318;
-  const boxWidth = width - 160;
-  const boxHeight = 190;
+async function drawPosterFirstFourRail(ctx, bracket, layout) {
+  const games = state.navigationGames.filter((game) => game.round === 0);
+  const { firstFour } = layout;
+  const labelWidth = 150;
+  const gap = 14;
+  const cardWidth = (firstFour.width - labelWidth - 32 - gap * 3) / 4;
+  const cardHeight = 70;
+  let x = firstFour.x + labelWidth;
 
   ctx.fillStyle = "rgba(255,255,255,0.82)";
-  roundRect(ctx, boxX, boxY, boxWidth, boxHeight, 34);
+  roundRect(ctx, firstFour.x, firstFour.y, firstFour.width, firstFour.height, 28);
   ctx.fill();
 
-  ctx.fillStyle = "rgba(255, 182, 70, 0.2)";
-  roundRect(ctx, boxX + 18, boxY + 18, boxWidth - 36, boxHeight - 36, 26);
-  ctx.fill();
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 26px "Baloo 2"';
+  ctx.fillText("First Four", firstFour.x + 24, firstFour.y + 44);
 
   ctx.fillStyle = "#5c6a79";
-  ctx.font = '800 20px "Nunito"';
-  ctx.fillText("Champion pick", boxX + 36, boxY + 44);
-
-  if (!champion) {
-    ctx.fillStyle = "#23303d";
-    ctx.font = '800 42px "Baloo 2"';
-    ctx.fillText("Still waiting for your final winner", boxX + 36, boxY + 104);
-    ctx.fillStyle = "#5c6a79";
-    ctx.font = '800 24px "Nunito"';
-    ctx.fillText("Make more picks to unlock the title game champion.", boxX + 36, boxY + 142);
-    return;
-  }
-
-  const image = await loadImage(champion.logo);
-
-  ctx.fillStyle = "rgba(255,255,255,0.94)";
-  roundRect(ctx, boxX + 34, boxY + 54, 120, 120, 30);
-  ctx.fill();
-  ctx.drawImage(image, boxX + 54, boxY + 74, 80, 80);
-
-  ctx.fillStyle = "#23303d";
-  ctx.font = '800 52px "Baloo 2"';
-  ctx.fillText(champion.name, boxX + 186, boxY + 112);
-
-  ctx.fillStyle = "#5c6a79";
-  ctx.font = '800 24px "Nunito"';
-  ctx.fillText(`${champion.conference} • Seed #${champion.seed} • ${champion.record}`, boxX + 186, boxY + 152);
-}
-
-async function drawPosterFinalFour(ctx, bracket, width) {
-  const games = state.navigationGames.filter((game) => game.round === 5);
-  const startX = 80;
-  const boxWidth = (width - 80 * 2 - 18 * 3) / 4;
-  const y = 548;
-
-  ctx.fillStyle = "#23303d";
-  ctx.font = '800 30px "Baloo 2"';
-  ctx.fillText("Final Four path", 80, 530);
-
-  const semifinalTeams = games.flatMap((game) => {
-    const matchup = resolveGame(game, bracket.picks);
-    return [matchup.top, matchup.bottom];
-  });
-
-  for (let index = 0; index < 4; index += 1) {
-    const team = semifinalTeams[index] || null;
-    const x = startX + index * (boxWidth + 18);
-
-    ctx.fillStyle = "rgba(255,255,255,0.85)";
-    roundRect(ctx, x, y, boxWidth, 158, 28);
-    ctx.fill();
-
-    if (!team) {
-      ctx.fillStyle = "#5c6a79";
-      ctx.font = '800 20px "Nunito"';
-      ctx.fillText("Waiting for", x + 24, y + 70);
-      ctx.fillText("a semifinalist", x + 24, y + 98);
-      continue;
-    }
-
-    const image = await loadImage(team.logo);
-    ctx.fillStyle = hexToRgba(getThemeForTeam(team).color, 0.16);
-    roundRect(ctx, x + 18, y + 18, 76, 76, 22);
-    ctx.fill();
-    ctx.drawImage(image, x + 32, y + 32, 48, 48);
-
-    ctx.fillStyle = "#23303d";
-    ctx.font = '800 28px "Baloo 2"';
-    drawWrappedText(ctx, team.name, x + 18, y + 124, boxWidth - 36, 30, 2);
-
-    ctx.fillStyle = "#5c6a79";
-    ctx.font = '800 18px "Nunito"';
-    ctx.fillText(`${team.region} • Seed #${team.seed}`, x + 18, y + 144);
-  }
-}
-
-function drawPosterRoundSummary(ctx, bracket, width) {
-  const tallies = getRoundTallies(bracket);
-  const columns = 4;
-  const gap = 14;
-  const cardWidth = (width - 160 - gap * (columns - 1)) / columns;
-  const cardHeight = 78;
-  const startX = 80;
-  const startY = 736;
-
-  for (const [index, tally] of tallies.entries()) {
-    const row = Math.floor(index / columns);
-    const column = index % columns;
-    const x = startX + column * (cardWidth + gap);
-    const y = startY + row * (cardHeight + gap);
-
-    ctx.fillStyle = "rgba(255,255,255,0.82)";
-    roundRect(ctx, x, y, cardWidth, cardHeight, 24);
-    ctx.fill();
-
-    ctx.fillStyle = tally.picked === tally.total ? "rgba(111, 214, 169, 0.24)" : "rgba(255, 182, 70, 0.18)";
-    roundRect(ctx, x + 12, y + 12, cardWidth - 24, cardHeight - 24, 18);
-    ctx.fill();
-
-    ctx.fillStyle = "#5c6a79";
-    ctx.font = '800 16px "Nunito"';
-    ctx.fillText(tally.label, x + 18, y + 30);
-
-    ctx.fillStyle = "#23303d";
-    ctx.font = '800 28px "Baloo 2"';
-    ctx.fillText(`${tally.picked}/${tally.total}`, x + 18, y + 62);
-  }
-}
-
-function drawPosterRounds(ctx, bracket, width) {
-  const sections = [
-    { x: 80, y: 940, width: 430, rounds: [0, 1] },
-    { x: 585, y: 940, width: 430, rounds: [2, 3] },
-    { x: 1090, y: 940, width: 430, rounds: [4, 5, 6] },
-  ];
-
-  for (const section of sections) {
-    let cursorY = section.y;
-
-    for (const round of section.rounds) {
-      const games = state.navigationGames.filter((game) => game.round === round);
-      cursorY = drawPosterRoundSection(ctx, {
-        x: section.x,
-        y: cursorY,
-        width: section.width,
-        label: games[0]?.roundLabel || "",
-        games,
-        bracket,
-      });
-      cursorY += 24;
-    }
-  }
-}
-
-function drawPosterRoundSection(ctx, { x, y, width, label, games, bracket }) {
-  const rowHeight = 26;
-  const headerHeight = 58;
-  const footerPadding = 14;
-  const sectionHeight = headerHeight + games.length * rowHeight + footerPadding;
-  const pickedCount = games.filter((game) => Boolean(bracket.picks[game.id])).length;
-
-  ctx.fillStyle = "rgba(255,255,255,0.84)";
-  roundRect(ctx, x, y, width, sectionHeight, 28);
-  ctx.fill();
-
-  ctx.fillStyle = "#23303d";
-  ctx.font = '800 30px "Baloo 2"';
-  ctx.fillText(label, x + 20, y + 34);
-
-  ctx.fillStyle = "rgba(35, 48, 61, 0.08)";
-  roundRect(ctx, x + width - 104, y + 16, 84, 28, 14);
-  ctx.fill();
-
-  ctx.fillStyle = "#23303d";
   ctx.font = '800 16px "Nunito"';
-  ctx.fillText(`${pickedCount}/${games.length}`, x + width - 84, y + 35);
-
-  let cursorY = y + headerHeight;
+  ctx.fillText("Play-in games", firstFour.x + 24, firstFour.y + 68);
 
   for (const game of games) {
-    const entry = buildPosterEntry(game, bracket);
+    const theme = state.regionThemes[game.region] || CHAMPIONSHIP_THEME;
 
-    ctx.fillStyle = "rgba(35, 48, 61, 0.04)";
-    roundRect(ctx, x + 14, cursorY - 16, width - 28, rowHeight - 4, 14);
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    roundRect(ctx, x, firstFour.y + 14, cardWidth, cardHeight, 22);
     ctx.fill();
 
-    ctx.fillStyle = entry.picked ? entry.color : "rgba(35, 48, 61, 0.14)";
-    ctx.beginPath();
-    ctx.arc(x + 30, cursorY - 4, 5, 0, Math.PI * 2);
+    ctx.fillStyle = hexToRgba(theme.color, 0.12);
+    roundRect(ctx, x + 10, firstFour.y + 24, cardWidth - 20, cardHeight - 20, 16);
     ctx.fill();
 
     ctx.fillStyle = "#5c6a79";
     ctx.font = '800 14px "Nunito"';
-    ctx.fillText(entry.label, x + 44, cursorY + 1);
+    ctx.fillText(`${game.region} No. ${game.seedLine}`, x + 16, firstFour.y + 32);
 
-    ctx.fillStyle = entry.picked ? "#23303d" : "#7a858f";
-    ctx.font = '800 14px "Nunito"';
-    ctx.textAlign = "right";
-    ctx.fillText(truncateText(ctx, entry.value, 220), x + width - 28, cursorY + 1);
-    ctx.textAlign = "left";
+    await drawPosterGameBox(
+      ctx,
+      game,
+      { x: x + 12, y: firstFour.y + 30, width: cardWidth - 24, height: 42 },
+      bracket,
+      { neutralColor: theme.color, compact: true }
+    );
 
-    cursorY += rowHeight;
+    x += cardWidth + gap;
   }
-
-  return y + sectionHeight;
 }
 
-function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
-  const words = text.split(" ");
-  const lines = [];
-  let current = "";
+async function drawPosterRegion(ctx, regionLayout, bracket) {
+  const theme = state.regionThemes[regionLayout.name] || CHAMPIONSHIP_THEME;
+  const positions = buildRegionBracketPositions(regionLayout);
+  const gamesByRound = {
+    1: getPosterGamesForRound(regionLayout.name, 1),
+    2: getPosterGamesForRound(regionLayout.name, 2),
+    3: getPosterGamesForRound(regionLayout.name, 3),
+    4: getPosterGamesForRound(regionLayout.name, 4),
+  };
 
-  for (const word of words) {
-    const testLine = current ? `${current} ${word}` : word;
-    if (ctx.measureText(testLine).width <= maxWidth) {
-      current = testLine;
-      continue;
+  drawPosterRegionPanel(ctx, regionLayout, theme, positions);
+  drawPosterRegionConnectors(ctx, gamesByRound, positions, bracket, regionLayout.orientation, theme);
+
+  for (const round of [1, 2, 3, 4]) {
+    for (const game of gamesByRound[round]) {
+      await drawPosterGameBox(ctx, game, positions.get(game.id), bracket, {
+        neutralColor: theme.color,
+      });
     }
-
-    if (current) {
-      lines.push(current);
-    }
-
-    current = word;
   }
 
-  if (current) {
-    lines.push(current);
-  }
-
-  lines.slice(0, maxLines).forEach((line, index) => {
-    const isLastVisibleLine = index === maxLines - 1 && lines.length > maxLines;
-    ctx.fillText(isLastVisibleLine ? `${line}...` : line, x, y + index * lineHeight);
-  });
-}
-
-function buildPosterEntry(game, bracket) {
-  const winnerId = bracket.picks[game.id] || null;
-  const winner = winnerId ? state.teamsById[winnerId] : null;
-  const themeSource = winner || resolveGame(game, bracket.picks).top || resolveGame(game, bracket.picks).bottom;
-  const theme = themeSource ? getThemeForTeam(themeSource) : CHAMPIONSHIP_THEME;
-
+  const finalGame = gamesByRound[4][0];
   return {
-    label: getPosterGameLabel(game),
-    value: winner ? winner.name : "Open",
-    picked: Boolean(winner),
-    color: theme.color,
+    theme,
+    championAnchor: getPosterWinnerAnchor(
+      finalGame,
+      positions.get(finalGame.id),
+      bracket,
+      regionLayout.orientation
+    ),
   };
 }
 
-function getPosterGameLabel(game) {
-  if (game.round === 0) {
-    return `${regionAbbr(game.region)} ${game.seedLine}`;
-  }
+function drawPosterRegionPanel(ctx, regionLayout, theme, positions) {
+  ctx.fillStyle = "rgba(255,255,255,0.84)";
+  roundRect(
+    ctx,
+    regionLayout.x,
+    regionLayout.y,
+    regionLayout.width,
+    regionLayout.height,
+    32
+  );
+  ctx.fill();
 
-  if (game.round === 1) {
-    const seeds = getPosterSeedPair(game);
-    return `${regionAbbr(game.region)} ${seeds}`;
-  }
+  ctx.fillStyle = hexToRgba(theme.color, 0.08);
+  roundRect(
+    ctx,
+    regionLayout.x + 12,
+    regionLayout.y + 12,
+    regionLayout.width - 24,
+    regionLayout.height - 24,
+    24
+  );
+  ctx.fill();
 
-  if (game.round === 2) {
-    return `${regionAbbr(game.region)} R2-${extractSequence(game)}`;
-  }
+  ctx.strokeStyle = hexToRgba(theme.color, 0.28);
+  ctx.lineWidth = 2;
+  roundRect(
+    ctx,
+    regionLayout.x,
+    regionLayout.y,
+    regionLayout.width,
+    regionLayout.height,
+    32
+  );
+  ctx.stroke();
 
-  if (game.round === 3) {
-    return `${regionAbbr(game.region)} S16-${extractSequence(game)}`;
-  }
+  ctx.fillStyle = theme.color;
+  roundRect(ctx, regionLayout.x + 18, regionLayout.y + 16, 152, 42, 20);
+  ctx.fill();
 
-  if (game.round === 4) {
-    return `${regionAbbr(game.region)} Champ`;
-  }
+  ctx.fillStyle = "#ffffff";
+  ctx.font = '800 24px "Baloo 2"';
+  ctx.fillText(regionLayout.name, regionLayout.x + 36, regionLayout.y + 44);
 
-  if (game.round === 5) {
-    return `Semi ${extractSequence(game)}`;
-  }
+  const labels = {
+    1: "Round 1",
+    2: "Round 2",
+    3: "Sweet 16",
+    4: "Elite 8",
+  };
 
-  return "Title";
+  ctx.fillStyle = "#5c6a79";
+  ctx.font = '800 15px "Nunito"';
+  for (const round of [1, 2, 3, 4]) {
+    const sample = positions.get(getPosterGamesForRound(regionLayout.name, round)[0].id);
+    const labelX = sample.x + sample.width / 2;
+    ctx.textAlign = "center";
+    ctx.fillText(labels[round], labelX, regionLayout.y + 72);
+  }
+  ctx.textAlign = "left";
 }
 
-function getPosterSeedPair(game) {
-  const seeds = game.slots.map((slot) => {
-    if (slot.type === "team") {
-      return state.teamsById[slot.teamId]?.seed ?? "?";
+function buildRegionBracketPositions(regionLayout) {
+  const boxHeight = 60;
+  const boxWidths = {
+    1: 210,
+    2: 194,
+    3: 178,
+    4: 166,
+  };
+  const gap = 18;
+  const startY = regionLayout.y + 112;
+  const firstRoundGap = 12;
+  const positions = new Map();
+  const roundOneGames = getPosterGamesForRound(regionLayout.name, 1);
+  const roundColumns = {};
+
+  if (regionLayout.orientation === "left") {
+    roundColumns[1] = regionLayout.x + 18;
+    roundColumns[2] = roundColumns[1] + boxWidths[1] + gap;
+    roundColumns[3] = roundColumns[2] + boxWidths[2] + gap;
+    roundColumns[4] = roundColumns[3] + boxWidths[3] + gap;
+  } else {
+    roundColumns[1] = regionLayout.x + regionLayout.width - 18 - boxWidths[1];
+    roundColumns[2] = roundColumns[1] - gap - boxWidths[2];
+    roundColumns[3] = roundColumns[2] - gap - boxWidths[3];
+    roundColumns[4] = roundColumns[3] - gap - boxWidths[4];
+  }
+
+  let previousCenters = [];
+  for (const [index, game] of roundOneGames.entries()) {
+    const y = startY + index * (boxHeight + firstRoundGap);
+    positions.set(game.id, createPosterRect(roundColumns[1], y, boxWidths[1], boxHeight));
+    previousCenters.push(y + boxHeight / 2);
+  }
+
+  for (const round of [2, 3, 4]) {
+    const games = getPosterGamesForRound(regionLayout.name, round);
+    const currentCenters = [];
+
+    for (const [index, game] of games.entries()) {
+      const centerY = (previousCenters[index * 2] + previousCenters[index * 2 + 1]) / 2;
+      positions.set(
+        game.id,
+        createPosterRect(roundColumns[round], centerY - boxHeight / 2, boxWidths[round], boxHeight)
+      );
+      currentCenters.push(centerY);
     }
 
-    const sourceGame = state.gamesById.get(slot.gameId);
-    return sourceGame?.seedLine ?? "?";
-  });
+    previousCenters = currentCenters;
+  }
 
-  return `${seeds[0]}/${seeds[1]}`;
+  return positions;
 }
 
-function regionAbbr(region) {
-  return (
-    {
-      East: "E",
-      Midwest: "MW",
-      South: "S",
-      West: "W",
-      "Final Four": "FF",
-      "National Championship": "NC",
-    }[region] || region
+function createPosterRect(x, y, width, height) {
+  const slotRects = getPosterSlotRects({ x, y, width, height });
+  return {
+    x,
+    y,
+    width,
+    height,
+    centerY: y + height / 2,
+    slotYs: slotRects.map((slotRect) => slotRect.y + slotRect.height / 2),
+  };
+}
+
+function getPosterGamesForRound(region, round) {
+  return state.navigationGames.filter((game) => game.region === region && game.round === round);
+}
+
+function drawPosterRegionConnectors(
+  ctx,
+  gamesByRound,
+  positions,
+  bracket,
+  orientation,
+  theme
+) {
+  for (const [sourceRound, targetRound] of [
+    [1, 2],
+    [2, 3],
+    [3, 4],
+  ]) {
+    for (const game of gamesByRound[targetRound]) {
+      game.slots.forEach((slot, slotIndex) => {
+        if (slot.type !== "winner") {
+          return;
+        }
+
+        const sourceGame = state.gamesById.get(slot.gameId);
+        const sourceRect = positions.get(sourceGame.id);
+        const targetRect = positions.get(game.id);
+        const from = getPosterWinnerAnchor(sourceGame, sourceRect, bracket, orientation);
+        const to = getPosterTargetAnchor(targetRect, slotIndex, orientation);
+        const color = getPosterConnectionColor(sourceGame, bracket, theme.color);
+        drawPosterConnector(ctx, from, to, color);
+      });
+    }
+  }
+}
+
+async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
+  const { center } = layout;
+  const topMidY = (regionAnchors.East.championAnchor.y + regionAnchors.Midwest.championAnchor.y) / 2;
+  const rightMidY = (regionAnchors.South.championAnchor.y + regionAnchors.West.championAnchor.y) / 2;
+  const semiCenterY = (topMidY + rightMidY) / 2;
+  const semiHeight = 68;
+  const semiWidth = 222;
+  const titleWidth = 276;
+  const titleHeight = 72;
+  const semifinalOne = state.gamesById.get("final-four-g1");
+  const semifinalTwo = state.gamesById.get("final-four-g2");
+  const titleGame = state.gamesById.get("championship");
+  const leftSemiRect = createPosterRect(center.x + 22, semiCenterY - semiHeight / 2, semiWidth, semiHeight);
+  const rightSemiRect = createPosterRect(
+    center.x + center.width - semiWidth - 22,
+    semiCenterY - semiHeight / 2,
+    semiWidth,
+    semiHeight
   );
+  const titleRect = createPosterRect(
+    center.x + (center.width - titleWidth) / 2,
+    semiCenterY + 176,
+    titleWidth,
+    titleHeight
+  );
+
+  ctx.fillStyle = "rgba(255,255,255,0.84)";
+  roundRect(ctx, center.x, center.y, center.width, center.height, 34);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(35, 48, 61, 0.03)";
+  roundRect(ctx, center.x + 14, center.y + 14, center.width - 28, center.height - 28, 28);
+  ctx.fill();
+
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 34px "Baloo 2"';
+  ctx.fillText("Final Four", center.x + 24, center.y + 50);
+
+  ctx.fillStyle = "#5c6a79";
+  ctx.font = '800 16px "Nunito"';
+  ctx.fillText("Regional champions move through the center lane to the title game.", center.x + 24, center.y + 74);
+
+  drawPosterConnector(
+    ctx,
+    regionAnchors.East.championAnchor,
+    getPosterTargetAnchor(leftSemiRect, 0, "left"),
+    getPosterConnectionColor(semifinalOne, bracket, regionAnchors.East.theme.color)
+  );
+  drawPosterConnector(
+    ctx,
+    regionAnchors.Midwest.championAnchor,
+    getPosterTargetAnchor(leftSemiRect, 1, "left"),
+    getPosterConnectionColor(semifinalOne, bracket, regionAnchors.Midwest.theme.color)
+  );
+  drawPosterConnector(
+    ctx,
+    regionAnchors.South.championAnchor,
+    getPosterTargetAnchor(rightSemiRect, 0, "right"),
+    getPosterConnectionColor(semifinalTwo, bracket, regionAnchors.South.theme.color)
+  );
+  drawPosterConnector(
+    ctx,
+    regionAnchors.West.championAnchor,
+    getPosterTargetAnchor(rightSemiRect, 1, "right"),
+    getPosterConnectionColor(semifinalTwo, bracket, regionAnchors.West.theme.color)
+  );
+
+  await drawPosterGameBox(ctx, semifinalOne, leftSemiRect, bracket, {
+    neutralColor: "#ff8a5b",
+  });
+  await drawPosterGameBox(ctx, semifinalTwo, rightSemiRect, bracket, {
+    neutralColor: "#63b7ff",
+  });
+
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 24px "Baloo 2"';
+  ctx.fillText("National Championship", titleRect.x - 8, titleRect.y - 18);
+
+  drawPosterConnector(
+    ctx,
+    getPosterWinnerAnchor(semifinalOne, leftSemiRect, bracket, "left"),
+    getPosterTargetAnchor(titleRect, 0, "left"),
+    getPosterConnectionColor(semifinalOne, bracket, "#ff8a5b")
+  );
+  drawPosterConnector(
+    ctx,
+    getPosterWinnerAnchor(semifinalTwo, rightSemiRect, bracket, "right"),
+    getPosterTargetAnchor(titleRect, 1, "right"),
+    getPosterConnectionColor(semifinalTwo, bracket, "#63b7ff")
+  );
+
+  await drawPosterGameBox(ctx, titleGame, titleRect, bracket, {
+    neutralColor: CHAMPIONSHIP_THEME.color,
+    emphasize: true,
+  });
+
+  await drawPosterChampionBadge(ctx, bracket, {
+    x: center.x + 44,
+    y: titleRect.y + 120,
+    width: center.width - 88,
+    height: 182,
+  });
+}
+
+async function drawPosterChampionBadge(ctx, bracket, rect) {
+  const champion = getChampion(bracket);
+
+  ctx.fillStyle = "rgba(255,255,255,0.94)";
+  roundRect(ctx, rect.x, rect.y, rect.width, rect.height, 28);
+  ctx.fill();
+
+  ctx.fillStyle = champion ? "rgba(255, 182, 70, 0.18)" : "rgba(35, 48, 61, 0.06)";
+  roundRect(ctx, rect.x + 14, rect.y + 14, rect.width - 28, rect.height - 28, 22);
+  ctx.fill();
+
+  ctx.fillStyle = "#5c6a79";
+  ctx.font = '800 16px "Nunito"';
+  ctx.fillText("Champion pick", rect.x + 22, rect.y + 28);
+
+  if (!champion) {
+    ctx.fillStyle = "#23303d";
+    ctx.font = '800 34px "Baloo 2"';
+    ctx.fillText("Your winner is still open", rect.x + 22, rect.y + 86);
+    ctx.fillStyle = "#5c6a79";
+    ctx.font = '800 19px "Nunito"';
+    ctx.fillText("Make more picks and export again to lock the trophy in.", rect.x + 22, rect.y + 120);
+    return;
+  }
+
+  const theme = getThemeForTeam(champion);
+  const image = await loadImage(champion.logo);
+
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  roundRect(ctx, rect.x + 22, rect.y + 44, 116, 116, 26);
+  ctx.fill();
+  ctx.fillStyle = hexToRgba(theme.color, 0.16);
+  roundRect(ctx, rect.x + 30, rect.y + 52, 100, 100, 22);
+  ctx.fill();
+  ctx.drawImage(image, rect.x + 48, rect.y + 70, 64, 64);
+
+  ctx.fillStyle = "#23303d";
+  ctx.font = '800 42px "Baloo 2"';
+  ctx.fillText(compactTeamName(champion.name), rect.x + 164, rect.y + 90);
+
+  ctx.fillStyle = "#5c6a79";
+  ctx.font = '800 21px "Nunito"';
+  ctx.fillText(
+    `${champion.conference} • No. ${champion.seed} • ${getTeamRecordLabel(champion)}`,
+    rect.x + 164,
+    rect.y + 128
+  );
+
+  ctx.fillStyle = theme.color;
+  roundRect(ctx, rect.x + 164, rect.y + 146, 198, 26, 13);
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = '800 15px "Nunito"';
+  ctx.fillText("Trophy locked in", rect.x + 182, rect.y + 164);
+}
+
+async function drawPosterGameBox(ctx, game, rect, bracket, options = {}) {
+  const {
+    neutralColor = "#8893a0",
+    compact = false,
+    emphasize = false,
+  } = options;
+  const slots = getPosterGameSlots(game, bracket.picks);
+  const winnerId = bracket.picks[game.id] || null;
+  const winnerIndex = slots.findIndex((slot) => slot.team?.id === winnerId);
+  const slotRects = getPosterSlotRects(rect);
+  const borderColor = emphasize
+    ? hexToRgba(CHAMPIONSHIP_THEME.color, 0.45)
+    : hexToRgba(neutralColor, 0.25);
+
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  roundRect(ctx, rect.x, rect.y, rect.width, rect.height, compact ? 16 : 18);
+  ctx.fill();
+
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = emphasize ? 3 : 2;
+  roundRect(ctx, rect.x, rect.y, rect.width, rect.height, compact ? 16 : 18);
+  ctx.stroke();
+
+  for (const [index, slotRect] of slotRects.entries()) {
+    const slot = slots[index];
+    const isWinner = index === winnerIndex;
+    const fillColor =
+      isWinner && slot.team
+        ? hexToRgba(getThemeForTeam(slot.team).color, 0.18)
+        : slot.team
+          ? "rgba(255,255,255,0.92)"
+          : "rgba(35, 48, 61, 0.045)";
+
+    ctx.fillStyle = fillColor;
+    roundRect(ctx, slotRect.x, slotRect.y, slotRect.width, slotRect.height, compact ? 12 : 14);
+    ctx.fill();
+
+    await drawPosterSlot(ctx, slot, slotRect, {
+      isWinner,
+      compact,
+    });
+  }
+}
+
+async function drawPosterSlot(ctx, slot, slotRect, { isWinner, compact }) {
+  const iconSize = compact ? 10 : 16;
+  const iconShell = compact ? 14 : 20;
+
+  ctx.save();
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.fillStyle = isWinner ? "#23303d" : slot.team ? "#2d3948" : "#7b8791";
+  ctx.font = compact ? '800 12px "Nunito"' : '800 14px "Nunito"';
+
+  let textX = slotRect.x + 10;
+  if (slot.team) {
+    const image = await loadImage(slot.team.logo);
+    const shellX = slotRect.x + 6;
+    const shellY = slotRect.y + 3;
+    ctx.fillStyle = "rgba(255,255,255,0.84)";
+    roundRect(ctx, shellX, shellY, iconShell, iconShell, compact ? 6 : 8);
+    ctx.fill();
+    ctx.drawImage(
+      image,
+      shellX + (iconShell - iconSize) / 2,
+      shellY + (iconShell - iconSize) / 2,
+      iconSize,
+      iconSize
+    );
+    textX = slotRect.x + (compact ? 24 : 32);
+    ctx.fillStyle = isWinner ? "#23303d" : "#2d3948";
+  } else {
+    ctx.fillStyle = "#7b8791";
+  }
+
+  const maxWidth = slotRect.width - (textX - slotRect.x) - (isWinner ? 20 : 10);
+  ctx.fillText(truncateText(ctx, slot.label, maxWidth), textX, slotRect.y + slotRect.height / 2 + 1);
+
+  if (isWinner) {
+    ctx.fillStyle = "#1c8e5a";
+    ctx.beginPath();
+    ctx.arc(slotRect.x + slotRect.width - 11, slotRect.y + slotRect.height / 2, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function getPosterGameSlots(game, picks) {
+  return game.slots.map((slot) => getPosterSlotDetails(slot, picks));
+}
+
+function getPosterSlotDetails(slot, picks) {
+  if (slot.type === "team") {
+    const team = state.teamsById[slot.teamId] || null;
+    return {
+      team,
+      label: team ? `${team.seed} ${compactTeamName(team.name)}` : "TBD",
+    };
+  }
+
+  const pickedTeamId = picks[slot.gameId];
+  if (pickedTeamId) {
+    const team = state.teamsById[pickedTeamId] || null;
+    return {
+      team,
+      label: team ? `${team.seed} ${compactTeamName(team.name)}` : "TBD",
+    };
+  }
+
+  const sourceGame = state.gamesById.get(slot.gameId);
+  if (sourceGame?.round === 0) {
+    const sourceTeams = sourceGame.slots
+      .map((sourceSlot) => state.teamsById[sourceSlot.teamId] || null)
+      .filter(Boolean)
+      .map((team) => compactTeamName(team.name));
+
+    return {
+      team: null,
+      label: sourceTeams.join(" / ") || "Play-in winner",
+    };
+  }
+
+  return {
+    team: null,
+    label: "TBD",
+  };
+}
+
+function getPosterSlotRects(rect) {
+  const inset = 4;
+  const gap = 4;
+  const slotHeight = (rect.height - inset * 2 - gap) / 2;
+
+  return [
+    {
+      x: rect.x + inset,
+      y: rect.y + inset,
+      width: rect.width - inset * 2,
+      height: slotHeight,
+    },
+    {
+      x: rect.x + inset,
+      y: rect.y + inset + slotHeight + gap,
+      width: rect.width - inset * 2,
+      height: slotHeight,
+    },
+  ];
+}
+
+function getPosterWinnerAnchor(game, rect, bracket, orientation) {
+  const winnerId = bracket.picks[game.id] || null;
+  const slots = getPosterGameSlots(game, bracket.picks);
+  const winnerIndex = slots.findIndex((slot) => slot.team?.id === winnerId);
+
+  return {
+    x: orientation === "left" ? rect.x + rect.width : rect.x,
+    y: winnerIndex >= 0 ? rect.slotYs[winnerIndex] : rect.centerY,
+  };
+}
+
+function getPosterTargetAnchor(rect, slotIndex, orientation) {
+  return {
+    x: orientation === "left" ? rect.x : rect.x + rect.width,
+    y: rect.slotYs[slotIndex],
+  };
+}
+
+function getPosterConnectionColor(game, bracket, fallbackColor) {
+  const winnerId = bracket.picks[game.id] || null;
+  const winner = winnerId ? state.teamsById[winnerId] || null : null;
+  return winner ? hexToRgba(getThemeForTeam(winner).color, 0.86) : hexToRgba(fallbackColor, 0.34);
+}
+
+function drawPosterConnector(ctx, from, to, color) {
+  const midX = (from.x + to.x) / 2;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(midX, from.y);
+  ctx.lineTo(midX, to.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+}
+
+function compactTeamName(name) {
+  return String(name)
+    .replaceAll(/\bSaint\b/g, "St.")
+    .replaceAll(/\bState\b/g, "St.")
+    .replaceAll(/\bMount\b/g, "Mt.")
+    .replaceAll(/\bNorth\b/g, "N.")
+    .replaceAll(/\bSouth\b/g, "S.")
+    .replaceAll(/\bEast\b/g, "E.")
+    .replaceAll(/\bWest\b/g, "W.");
 }
 
 function truncateText(ctx, text, maxWidth) {
