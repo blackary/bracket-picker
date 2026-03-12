@@ -30,11 +30,15 @@ const state = {
   activeGameId: null,
   toastTimer: null,
   imageCache: new Map(),
+  bracketCanvasSignature: null,
+  bracketCanvasRenderId: 0,
 };
 
 const elements = {
   sourceStatus: document.querySelector("#sourceStatus"),
   sourceNote: document.querySelector("#sourceNote"),
+  pickViewButton: document.querySelector("#pickViewButton"),
+  bracketViewButton: document.querySelector("#bracketViewButton"),
   bracketSelect: document.querySelector("#bracketSelect"),
   newBracketButton: document.querySelector("#newBracketButton"),
   deleteBracketButton: document.querySelector("#deleteBracketButton"),
@@ -42,6 +46,8 @@ const elements = {
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
   exportImageButton: document.querySelector("#exportImageButton"),
+  pickerScreen: document.querySelector("#pickerScreen"),
+  bracketScreen: document.querySelector("#bracketScreen"),
   matchupEyebrow: document.querySelector("#matchupEyebrow"),
   matchupTitle: document.querySelector("#matchupTitle"),
   matchupHint: document.querySelector("#matchupHint"),
@@ -52,6 +58,10 @@ const elements = {
   prevGameButton: document.querySelector("#prevGameButton"),
   clearPickButton: document.querySelector("#clearPickButton"),
   nextGameButton: document.querySelector("#nextGameButton"),
+  returnToPickButton: document.querySelector("#returnToPickButton"),
+  bracketViewTitle: document.querySelector("#bracketViewTitle"),
+  bracketViewHint: document.querySelector("#bracketViewHint"),
+  bracketCanvasWrap: document.querySelector("#bracketCanvasWrap"),
   snapshotCard: document.querySelector("#snapshotCard"),
   roundProgress: document.querySelector("#roundProgress"),
   recentPicks: document.querySelector("#recentPicks"),
@@ -126,20 +136,21 @@ function loadStore() {
   try {
     const raw = readStoredState();
     if (!raw) {
-      return { brackets: [], currentBracketId: null };
+      return { brackets: [], currentBracketId: null, viewMode: "pick" };
     }
 
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed.brackets)) {
-      return { brackets: [], currentBracketId: null };
+      return { brackets: [], currentBracketId: null, viewMode: "pick" };
     }
 
     return {
       brackets: parsed.brackets.map(normalizeBracket),
       currentBracketId: parsed.currentBracketId || null,
+      viewMode: parsed.viewMode === "bracket" ? "bracket" : "pick",
     };
   } catch {
-    return { brackets: [], currentBracketId: null };
+    return { brackets: [], currentBracketId: null, viewMode: "pick" };
   }
 }
 
@@ -195,11 +206,11 @@ function nextBracketName() {
   }
 
   let counter = 2;
-  while (usedNames.has(`Superstar Bracket ${counter}`)) {
+  while (usedNames.has(`Victory Parade ${counter}`)) {
     counter += 1;
   }
 
-  return `Superstar Bracket ${counter}`;
+  return `Victory Parade ${counter}`;
 }
 
 function createBracket(name = nextBracketName()) {
@@ -221,9 +232,28 @@ function ensureCurrentBracket() {
     persistStore();
   }
 
+  if (state.store.viewMode !== "pick" && state.store.viewMode !== "bracket") {
+    state.store.viewMode = "pick";
+  }
+
   if (!state.store.brackets.some((bracket) => bracket.id === state.store.currentBracketId)) {
     state.store.currentBracketId = state.store.brackets[0].id;
   }
+}
+
+function getViewMode() {
+  return state.store.viewMode === "bracket" ? "bracket" : "pick";
+}
+
+function setViewMode(mode) {
+  const nextMode = mode === "bracket" ? "bracket" : "pick";
+  if (getViewMode() === nextMode) {
+    return;
+  }
+
+  state.store.viewMode = nextMode;
+  persistStore();
+  render();
 }
 
 function getCurrentBracket() {
@@ -349,6 +379,7 @@ function setPick(gameId, teamId) {
   bracket.picks[gameId] = teamId;
   clearDescendantPicks(bracket.picks, gameId);
   touchBracket(bracket);
+  state.bracketCanvasSignature = null;
   persistStore();
   moveToNextOpen(gameId);
   render();
@@ -363,6 +394,7 @@ function clearPick(gameId) {
   delete bracket.picks[gameId];
   clearDescendantPicks(bracket.picks, gameId);
   touchBracket(bracket);
+  state.bracketCanvasSignature = null;
   persistStore();
   state.activeGameId = gameId;
   render();
@@ -400,6 +432,7 @@ function render() {
   renderSnapshot(bracket);
   renderRoundProgress(bracket);
   renderRecentPicks(bracket);
+  renderViewMode(bracket, progress, currentContext);
 }
 
 function renderSourceBanner() {
@@ -1002,10 +1035,94 @@ function renderRecentPicks(bracket) {
   `;
 }
 
+function renderViewMode(bracket, progress, currentContext) {
+  const viewMode = getViewMode();
+  document.body.dataset.viewMode = viewMode;
+  elements.pickerScreen.hidden = viewMode !== "pick";
+  elements.bracketScreen.hidden = viewMode !== "bracket";
+
+  elements.pickViewButton.classList.toggle("is-active", viewMode === "pick");
+  elements.pickViewButton.setAttribute("aria-pressed", viewMode === "pick");
+  elements.bracketViewButton.classList.toggle("is-active", viewMode === "bracket");
+  elements.bracketViewButton.setAttribute("aria-pressed", viewMode === "bracket");
+
+  renderBracketViewHeader(bracket, progress, currentContext);
+
+  if (viewMode === "bracket") {
+    renderBracketCanvas(bracket);
+  }
+}
+
+function renderBracketViewHeader(bracket, progress, currentContext) {
+  const champion = getChampion(bracket);
+  const nextOpen =
+    currentContext.visibleGames.find((game) => !bracket.picks[game.id]) || currentContext.currentGame;
+
+  elements.bracketViewTitle.textContent = bracket.name || "Untitled bracket";
+  elements.bracketViewHint.textContent = champion
+    ? `${champion.name} is your current champion pick. ${progress.pickedCount} of ${progress.total} games are locked in.`
+    : nextOpen
+      ? `${progress.pickedCount} of ${progress.total} picks are locked in. Switch back to pick screen to choose ${getPreviewLabel(nextOpen, bracket.picks)}.`
+      : "Your bracket board is ready for a full look.";
+}
+
+async function renderBracketCanvas(bracket) {
+  const signature = `${bracket.id}:${bracket.updatedAt}`;
+  if (
+    state.bracketCanvasSignature === signature &&
+    elements.bracketCanvasWrap.querySelector("canvas")
+  ) {
+    return;
+  }
+
+  const renderId = ++state.bracketCanvasRenderId;
+  state.bracketCanvasSignature = signature;
+  elements.bracketCanvasWrap.innerHTML =
+    '<p class="bracket-canvas-wrap__loading">Building your bracket view...</p>';
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "bracket-canvas";
+
+  try {
+    await renderPosterCanvas(canvas, bracket, { width: 2340, height: 1620 });
+  } catch (error) {
+    if (renderId !== state.bracketCanvasRenderId) {
+      return;
+    }
+
+    elements.bracketCanvasWrap.innerHTML = `
+      <div class="bracket-canvas-wrap__loading">
+        Could not draw this bracket preview. Try exporting the poster again.
+      </div>
+    `;
+    return;
+  }
+
+  if (renderId !== state.bracketCanvasRenderId || getViewMode() !== "bracket") {
+    return;
+  }
+
+  elements.bracketCanvasWrap.innerHTML = "";
+  elements.bracketCanvasWrap.append(canvas);
+}
+
 function attachEvents() {
+  elements.pickViewButton.addEventListener("click", () => {
+    setViewMode("pick");
+  });
+
+  elements.bracketViewButton.addEventListener("click", () => {
+    setViewMode("bracket");
+  });
+
+  elements.returnToPickButton.addEventListener("click", () => {
+    setViewMode("pick");
+  });
+
   elements.bracketSelect.addEventListener("change", (event) => {
     state.store.currentBracketId = event.target.value;
     state.activeGameId = null;
+    state.bracketCanvasSignature = null;
     persistStore();
     render();
   });
@@ -1015,6 +1132,7 @@ function attachEvents() {
     state.store.brackets.unshift(bracket);
     state.store.currentBracketId = bracket.id;
     state.activeGameId = null;
+    state.bracketCanvasSignature = null;
     persistStore();
     render();
     showToast(`Created ${bracket.name}.`);
@@ -1030,6 +1148,7 @@ function attachEvents() {
     state.store.brackets = state.store.brackets.filter((item) => item.id !== bracket.id);
     ensureCurrentBracket();
     state.activeGameId = null;
+    state.bracketCanvasSignature = null;
     persistStore();
     render();
     showToast("Bracket deleted.");
@@ -1039,9 +1158,14 @@ function attachEvents() {
     const bracket = getCurrentBracket();
     bracket.name = event.target.value.slice(0, MAX_BRACKET_NAME);
     touchBracket(bracket);
+    state.bracketCanvasSignature = null;
     persistStore();
     renderSnapshot(bracket);
     renderToolbar(bracket);
+    renderBracketViewHeader(bracket, getProgress(bracket), getCurrentGameContext());
+    if (getViewMode() === "bracket") {
+      renderBracketCanvas(bracket);
+    }
   });
 
   elements.bracketNameInput.addEventListener("blur", () => {
@@ -1052,6 +1176,7 @@ function attachEvents() {
 
     bracket.name = nextBracketName();
     touchBracket(bracket);
+    state.bracketCanvasSignature = null;
     persistStore();
     render();
   });
@@ -1065,6 +1190,7 @@ function attachEvents() {
     bracket.picks = {};
     touchBracket(bracket);
     state.activeGameId = null;
+    state.bracketCanvasSignature = null;
     persistStore();
     render();
     showToast("All picks cleared.");
@@ -1158,11 +1284,18 @@ function buildExportSnapshot(bracket) {
 
 async function exportPoster() {
   const bracket = getCurrentBracket();
+  const canvas = document.createElement("canvas");
+  await renderPosterCanvas(canvas, bracket, { width: 2600, height: 1800 });
+
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+  const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
+  downloadBlob(blob, fileName);
+  showToast("Poster export ready.");
+}
+
+async function renderPosterCanvas(canvas, bracket, { width, height }) {
   await document.fonts.ready;
 
-  const canvas = document.createElement("canvas");
-  const width = 2600;
-  const height = 1800;
   canvas.width = width;
   canvas.height = height;
 
@@ -1179,11 +1312,6 @@ async function exportPoster() {
   }
 
   await drawPosterCenterBracket(ctx, layout, bracket, regionAnchors);
-
-  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-  const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
-  downloadBlob(blob, fileName);
-  showToast("Poster export ready.");
 }
 
 function buildPosterLayout(width, height) {

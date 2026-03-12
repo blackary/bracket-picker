@@ -60,116 +60,98 @@
       <div class="page-glow page-glow--two" aria-hidden="true"></div>
       <div class="page-glow page-glow--three" aria-hidden="true"></div>
 
-      <header class="panel hero">
-        <div class="hero__copy">
-          <div class="hero__brand">
+      <header class="panel app-topbar">
+        <div class="app-topbar__main">
+          <div class="app-brand">
             <img
-              class="hero__mark"
+              class="app-brand__mark"
               src="assets/brand/bracket-parade-icon.svg"
               alt=""
-              width="96"
-              height="96"
+              width="68"
+              height="68"
               aria-hidden="true"
             />
-            <div class="hero__title">
+            <div>
               <p class="eyebrow">2026 March Madness picker</p>
-              <div class="hero__headline">
+              <div class="app-brand__headline">
                 <h1>Bracket Parade</h1>
-                <span class="hero__burst">Junior picks</span>
+                <span class="app-brand__burst">Pick mode first</span>
               </div>
             </div>
           </div>
-          <p class="hero__lede">
-            Pick winners one game at a time with giant logos, bright colors, and
-            easy stats that make every matchup feel like a mini showdown.
-          </p>
-          <div class="hero__chips">
-            <span class="chip chip--sunny">One matchup at a time</span>
-            <span class="chip chip--mint">All picks saved on this device</span>
-            <span class="chip chip--blue">Export poster + JSON</span>
+
+          <div class="app-topbar__status">
+            <p class="app-topbar__status-label">Bracket status</p>
+            <p class="app-topbar__status-value" id="sourceStatus">Loading bracket...</p>
+            <p class="app-topbar__status-note" id="sourceNote"></p>
           </div>
-          <div class="hero__deck" aria-hidden="true">
-            <span class="hero__deck-card hero__deck-card--orange"></span>
-            <span class="hero__deck-card hero__deck-card--blue"></span>
-            <span class="hero__deck-card hero__deck-card--green"></span>
+
+          <div class="view-switch" role="tablist" aria-label="View mode">
+            <button
+              id="pickViewButton"
+              class="view-switch__button"
+              type="button"
+              aria-pressed="true"
+            >
+              Pick screen
+            </button>
+            <button
+              id="bracketViewButton"
+              class="view-switch__button"
+              type="button"
+              aria-pressed="false"
+            >
+              Bracket view
+            </button>
           </div>
         </div>
 
-        <div class="hero__status">
-          <div class="hero-scoreboard" aria-hidden="true">
-            <div class="hero-scoreboard__tile">
-              <span class="hero-scoreboard__number">68</span>
-              <span class="hero-scoreboard__label">Teams</span>
-            </div>
-            <div class="hero-scoreboard__tile">
-              <span class="hero-scoreboard__number">67</span>
-              <span class="hero-scoreboard__label">Picks</span>
-            </div>
-            <div class="hero-scoreboard__tile">
-              <span class="hero-scoreboard__number">All</span>
-              <span class="hero-scoreboard__label">Logos</span>
-            </div>
+        <div class="app-topbar__controls">
+          <div class="toolbar__group">
+            <label class="field">
+              <span class="field__label">Saved brackets</span>
+              <select id="bracketSelect" class="field__control"></select>
+            </label>
+            <button id="newBracketButton" class="button">New bracket</button>
+            <button id="deleteBracketButton" class="button button--ghost">
+              Delete
+            </button>
           </div>
-          <div class="hero-card">
-            <p class="hero-card__label">Bracket status</p>
-            <p class="hero-card__value" id="sourceStatus">Loading bracket...</p>
-            <p class="hero-card__note" id="sourceNote"></p>
+
+          <div class="toolbar__group toolbar__group--grow">
+            <label class="field field--grow">
+              <span class="field__label">Bracket name</span>
+              <input
+                id="bracketNameInput"
+                class="field__control"
+                type="text"
+                maxlength="40"
+                placeholder="Name this bracket"
+                spellcheck="false"
+              />
+            </label>
           </div>
-          <div class="hero-card hero-card--accent">
-            <p class="hero-card__label">Pro tip</p>
-            <p class="hero-card__value">Tap the mascot logo team you like best.</p>
-            <p class="hero-card__note">
-              You can always go back and change a pick later.
-            </p>
+
+          <div class="toolbar__group">
+            <button id="resetButton" class="button button--ghost">Reset picks</button>
+            <button id="exportJsonButton" class="button">Export JSON</button>
+            <button id="exportImageButton" class="button button--accent">
+              Export poster
+            </button>
           </div>
         </div>
       </header>
 
-      <section class="panel toolbar">
-        <div class="toolbar__group">
-          <label class="field">
-            <span class="field__label">Saved brackets</span>
-            <select id="bracketSelect" class="field__control"></select>
-          </label>
-          <button id="newBracketButton" class="button">New bracket</button>
-          <button id="deleteBracketButton" class="button button--ghost">
-            Delete
-          </button>
-        </div>
-
-        <div class="toolbar__group toolbar__group--grow">
-          <label class="field field--grow">
-            <span class="field__label">Bracket name</span>
-            <input
-              id="bracketNameInput"
-              class="field__control"
-              type="text"
-              maxlength="40"
-              placeholder="Name this bracket"
-              spellcheck="false"
-            />
-          </label>
-        </div>
-
-        <div class="toolbar__group">
-          <button id="resetButton" class="button button--ghost">Reset picks</button>
-          <button id="exportJsonButton" class="button">Export JSON</button>
-          <button id="exportImageButton" class="button button--accent">
-            Export poster
-          </button>
-        </div>
-      </section>
-
-      <main class="layout">
-        <section class="panel matchup-panel">
-          <div class="matchup-panel__header">
-            <div class="matchup-panel__copy">
+      <main class="screen-shell">
+        <section class="panel matchup-panel picker-screen" id="pickerScreen">
+          <div class="picker-screen__header">
+            <div class="picker-screen__copy">
               <p class="eyebrow" id="matchupEyebrow">Loading...</p>
               <h2 id="matchupTitle">Getting the next matchup ready</h2>
               <p class="matchup-panel__hint" id="matchupHint"></p>
             </div>
 
-            <div class="progress-card">
+            <div class="progress-card progress-card--picker">
               <p class="progress-card__label">Bracket progress</p>
               <p class="progress-card__value" id="progressCount">0 / 67 picks</p>
               <div class="progress-bar" aria-hidden="true">
@@ -192,22 +174,41 @@
           </div>
         </section>
 
-        <aside class="sidebar">
-          <section class="panel sidebar-card">
-            <h3 class="sidebar-card__title">Bracket snapshot</h3>
-            <div id="snapshotCard"></div>
+        <section class="bracket-screen" id="bracketScreen" hidden>
+          <section class="panel bracket-screen__main">
+            <div class="bracket-screen__header">
+              <div class="bracket-screen__copy">
+                <p class="eyebrow">Bracket view</p>
+                <h2 id="bracketViewTitle">Loading bracket view</h2>
+                <p class="bracket-screen__hint" id="bracketViewHint"></p>
+              </div>
+              <button id="returnToPickButton" class="button">Back to picks</button>
+            </div>
+
+            <div class="bracket-canvas-shell">
+              <div class="bracket-canvas-wrap" id="bracketCanvasWrap">
+                <p class="bracket-canvas-wrap__loading">Building your bracket view...</p>
+              </div>
+            </div>
           </section>
 
-          <section class="panel sidebar-card">
-            <h3 class="sidebar-card__title">Round progress</h3>
-            <div id="roundProgress"></div>
-          </section>
+          <aside class="sidebar">
+            <section class="panel sidebar-card">
+              <h3 class="sidebar-card__title">Bracket snapshot</h3>
+              <div id="snapshotCard"></div>
+            </section>
 
-          <section class="panel sidebar-card">
-            <h3 class="sidebar-card__title">Recent picks</h3>
-            <div id="recentPicks"></div>
-          </section>
-        </aside>
+            <section class="panel sidebar-card">
+              <h3 class="sidebar-card__title">Round progress</h3>
+              <div id="roundProgress"></div>
+            </section>
+
+            <section class="panel sidebar-card">
+              <h3 class="sidebar-card__title">Recent picks</h3>
+              <div id="recentPicks"></div>
+            </section>
+          </aside>
+        </section>
       </main>
     </div>
 
