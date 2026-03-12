@@ -808,8 +808,8 @@ img {
   grid-template-areas:
     "top top"
     "crest body"
-    "badges badges"
-    "stats stats"
+    "facts facts"
+    "scouting scouting"
     "footer footer";
   gap: 14px 16px;
   width: 100%;
@@ -945,40 +945,31 @@ img {
   color: var(--ink-soft);
   font-weight: 900;
   line-height: 1.45;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
-.team-card__badges {
-  grid-area: badges;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.team-card__badge {
-  padding: 8px 10px;
-  border: 1px solid rgba(31, 42, 58, 0.08);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.84);
-  color: var(--ink);
-  font-size: 0.8rem;
-  font-weight: 900;
-}
-
-.team-card__stats {
-  grid-area: stats;
+.team-card__facts {
+  grid-area: facts;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
-.stat-chip {
-  padding: 12px;
+.team-card__fact {
+  min-height: 78px;
+  padding: 12px 14px;
   border: 1px solid rgba(31, 42, 58, 0.08);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.82);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 6px 0 rgba(31, 42, 58, 0.04);
 }
 
-.stat-chip__label {
+.team-card__fact:last-child {
+  grid-column: 1 / -1;
+}
+
+.team-card__fact-label {
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.72rem;
@@ -987,10 +978,87 @@ img {
   text-transform: uppercase;
 }
 
-.stat-chip__value {
-  margin: 6px 0 0;
-  font-size: 1.02rem;
+.team-card__fact-value {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 1.04rem;
   font-weight: 900;
+  line-height: 1.25;
+}
+
+.team-card__scouting {
+  grid-area: scouting;
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid rgba(31, 42, 58, 0.08);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 252, 255, 0.92));
+}
+
+.team-card__section-label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scout-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.scout-row + .scout-row {
+  padding-top: 10px;
+  border-top: 1px solid rgba(31, 42, 58, 0.08);
+}
+
+.scout-row__copy {
+  min-width: 0;
+}
+
+.scout-row__label {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 900;
+}
+
+.scout-row__note {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.scout-row__meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.scout-row__dot {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(31, 42, 58, 0.16);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.scout-row__dot.is-filled {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: var(--team-color);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 3px 0 rgba(31, 42, 58, 0.08);
 }
 
 .team-card__footer {
@@ -1473,17 +1541,21 @@ img {
     font-size: 1.42rem;
   }
 
-  .team-card__badges {
+  .team-card__fact {
+    min-height: 74px;
+  }
+
+  .team-card__scouting {
+    padding: 12px 14px;
+  }
+
+  .scout-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .scout-row__meter {
     gap: 6px;
-  }
-
-  .team-card__badge {
-    font-size: 0.74rem;
-    padding: 7px 9px;
-  }
-
-  .team-card__stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .team-card__footer {

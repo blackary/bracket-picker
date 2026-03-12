@@ -7,6 +7,14 @@ const DEFAULT_BRACKET_NAMES = [
   "Halftime Heroes",
   "Buzzer Beater",
 ];
+const POWER_CONFERENCES = new Set(["ACC", "Big 12", "Big East", "Big Ten", "SEC"]);
+const STRONG_MID_MAJORS = new Set([
+  "American",
+  "Atlantic 10",
+  "Mountain West",
+  "Missouri Valley",
+  "West Coast",
+]);
 
 const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 
@@ -520,7 +528,7 @@ function renderCompletedState(champion) {
         <div>
           <p class="eyebrow">Champion pick</p>
           <h3>${escapeHtml(champion.name)}</h3>
-          <p>${escapeHtml(champion.conference)} • ${escapeHtml(champion.record)} record</p>
+          <p>${escapeHtml(champion.conference)} • ${escapeHtml(getTeamRecordLabel(champion))}</p>
         </div>
       </div>
     </div>
@@ -530,7 +538,8 @@ function renderCompletedState(champion) {
 function renderTeamCard(team, game, pickedTeamId, side) {
   const theme = getThemeForTeam(team);
   const sticker = getTeamSticker(team);
-  const badges = getTeamBadges(team);
+  const facts = getTeamFacts(team);
+  const scoutRows = getTeamScoutRows(team);
   const isPicked = pickedTeamId === team.id;
   const pulseText = isPicked ? "Locked in" : "Tap to advance";
 
@@ -542,7 +551,7 @@ function renderTeamCard(team, game, pickedTeamId, side) {
       style="--team-color:${theme.color};--team-glow:${theme.glow};--team-tint:${hexToRgba(theme.color, 0.18)}"
     >
       <div class="team-card__top">
-        <span class="team-card__seed">Seed #${team.seed}</span>
+        <span class="team-card__seed">No. ${team.seed}</span>
         <span class="team-card__sticker">${escapeHtml(sticker)}</span>
       </div>
 
@@ -552,18 +561,16 @@ function renderTeamCard(team, game, pickedTeamId, side) {
 
       <div class="team-card__body">
         <h3 class="team-card__name">${escapeHtml(team.name)}</h3>
-        <p class="team-card__conference">${escapeHtml(team.conference)} • ${escapeHtml(team.record)}</p>
+        <p class="team-card__conference">${escapeHtml(team.conference)}</p>
       </div>
 
-      <div class="team-card__badges">
-        ${badges.map((badge) => `<span class="team-card__badge">${escapeHtml(badge)}</span>`).join("")}
+      <div class="team-card__facts">
+        ${facts.map(renderTeamFact).join("")}
       </div>
 
-      <div class="team-card__stats">
-        ${renderStatChip("Record", team.record)}
-        ${renderStatChip("NET", `#${team.net}`)}
-        ${renderStatChip("Quad 1", team.quad1)}
-        ${renderStatChip("SOS", `#${team.sos}`)}
+      <div class="team-card__scouting">
+        <p class="team-card__section-label">Quick scout</p>
+        ${scoutRows.map(renderScoutRow).join("")}
       </div>
 
       <div class="team-card__footer">
@@ -574,59 +581,291 @@ function renderTeamCard(team, game, pickedTeamId, side) {
   `;
 }
 
-function renderStatChip(label, value) {
+function renderTeamFact(fact) {
   return `
-    <div class="stat-chip">
-      <p class="stat-chip__label">${escapeHtml(label)}</p>
-      <p class="stat-chip__value">${escapeHtml(value)}</p>
+    <div class="team-card__fact">
+      <p class="team-card__fact-label">${escapeHtml(fact.label)}</p>
+      <p class="team-card__fact-value">${escapeHtml(fact.value)}</p>
     </div>
   `;
 }
 
-function getTeamSticker(team) {
-  if (team.seed === 1) {
-    return "Top seed";
-  }
-
-  if (team.net <= 8) {
-    return "Top-8 NET";
-  }
-
-  if (team.seed >= 12) {
-    return "Upset alert";
-  }
-
-  if (team.wins >= 27) {
-    return `${team.wins} wins`;
-  }
-
-  return "Ready to dance";
+function renderScoutRow(row) {
+  return `
+    <div class="scout-row">
+      <div class="scout-row__copy">
+        <p class="scout-row__label">${escapeHtml(row.label)}</p>
+        <p class="scout-row__note">${escapeHtml(row.note)}</p>
+      </div>
+      <div class="scout-row__meter" aria-label="${row.rating} out of 5">
+        ${renderScoutDots(row.rating)}
+      </div>
+    </div>
+  `;
 }
 
-function getTeamBadges(team) {
-  const badges = [];
+function renderScoutDots(rating) {
+  return Array.from({ length: 5 }, (_, index) => {
+    const filled = index < rating;
+    return `<span class="scout-row__dot ${filled ? "is-filled" : ""}" aria-hidden="true"></span>`;
+  }).join("");
+}
 
-  if (team.wins >= 30) {
-    badges.push("30-win club");
+function getTeamSticker(team) {
+  if (team.isPlayIn) {
+    return "Play-in fighter";
   }
 
-  if (team.net <= 16) {
-    badges.push(`NET #${team.net}`);
+  if (team.seed <= 2) {
+    return "Front-runner";
   }
 
-  if (team.quad1 && !team.quad1.startsWith("0-")) {
-    badges.push(`Q1 ${team.quad1}`);
+  if (team.seed <= 4) {
+    return "Heavy hitter";
   }
 
-  if (team.seed >= 12) {
-    badges.push("Big upset energy");
+  if (team.seed <= 7) {
+    return "Contender";
   }
 
-  if (!badges.length) {
-    badges.push(`${team.conference} contender`);
+  if (team.seed <= 10) {
+    return "Tough out";
   }
 
-  return badges.slice(0, 3);
+  if (team.seed <= 12) {
+    return "Sleeper pick";
+  }
+
+  return "Cinderella watch";
+}
+
+function getTeamFacts(team) {
+  return [
+    { label: "Record", value: getTeamRecordLabel(team) },
+    { label: "Team rank", value: getTeamRankLabel(team.net) },
+    { label: "League type", value: getConferenceProfile(team.conference) },
+  ];
+}
+
+function getTeamScoutRows(team) {
+  const record = getTeamRecordNumbers(team);
+  const gamesPlayed = record.wins + record.losses;
+  const winPct = gamesPlayed ? record.wins / gamesPlayed : 0;
+  const bigWins = getRecordNumbers(team.quad1).wins;
+  const badLosses = getRecordNumbers(team.quad3).losses + getRecordNumbers(team.quad4).losses;
+
+  return [
+    {
+      label: "Hot streak",
+      note: gamesPlayed
+        ? `Won ${record.wins} of ${gamesPlayed} games`
+        : "Record still settling in",
+      rating: getWinPctRating(winPct),
+    },
+    {
+      label: "Big wins",
+      note: bigWins
+        ? `${bigWins} wins against strong teams`
+        : "Still hunting a signature win",
+      rating: getBigWinsRating(bigWins),
+    },
+    {
+      label: "Battle-tested",
+      note: getScheduleNote(team.sos),
+      rating: getScheduleRating(team.sos),
+    },
+    {
+      label: "Steady season",
+      note: getStabilityNote(badLosses),
+      rating: getStabilityRating(badLosses),
+    },
+  ];
+}
+
+function getTeamRecordLabel(team) {
+  const { wins, losses } = getTeamRecordNumbers(team);
+  return wins || losses ? `${wins} wins, ${losses} losses` : "Record coming soon";
+}
+
+function getTeamRecordNumbers(team) {
+  const fallback = getRecordNumbers(team.record);
+  const quadTotals = [
+    getRecordNumbers(team.quad1),
+    getRecordNumbers(team.quad2),
+    getRecordNumbers(team.quad3),
+    getRecordNumbers(team.quad4),
+  ].reduce(
+    (totals, entry) => ({
+      wins: totals.wins + entry.wins,
+      losses: totals.losses + entry.losses,
+    }),
+    { wins: 0, losses: 0 }
+  );
+
+  return {
+    wins: Number.isFinite(team.wins) ? team.wins : fallback.wins || quadTotals.wins,
+    losses: Number.isFinite(team.losses) ? team.losses : fallback.losses || quadTotals.losses,
+  };
+}
+
+function getRecordNumbers(value) {
+  const match = String(value || "").match(/(\d+)-(\d+)/);
+  if (!match) {
+    return { wins: 0, losses: 0 };
+  }
+
+  return {
+    wins: Number.parseInt(match[1], 10),
+    losses: Number.parseInt(match[2], 10),
+  };
+}
+
+function getTeamRankLabel(net) {
+  if (net <= 10) {
+    return "Top 10";
+  }
+
+  if (net <= 25) {
+    return "Top 25";
+  }
+
+  if (net <= 50) {
+    return "Top 50";
+  }
+
+  if (net <= 100) {
+    return "Top 100";
+  }
+
+  return "100+";
+}
+
+function getConferenceProfile(conference) {
+  if (POWER_CONFERENCES.has(conference)) {
+    return "Power conference";
+  }
+
+  if (STRONG_MID_MAJORS.has(conference)) {
+    return "Strong mid-major";
+  }
+
+  return "Smaller conference";
+}
+
+function getWinPctRating(winPct) {
+  if (winPct >= 0.88) {
+    return 5;
+  }
+
+  if (winPct >= 0.8) {
+    return 4;
+  }
+
+  if (winPct >= 0.7) {
+    return 3;
+  }
+
+  if (winPct >= 0.62) {
+    return 2;
+  }
+
+  return 1;
+}
+
+function getBigWinsRating(bigWins) {
+  if (bigWins >= 10) {
+    return 5;
+  }
+
+  if (bigWins >= 7) {
+    return 4;
+  }
+
+  if (bigWins >= 4) {
+    return 3;
+  }
+
+  if (bigWins >= 2) {
+    return 2;
+  }
+
+  return 1;
+}
+
+function getScheduleRating(sos) {
+  if (sos <= 20) {
+    return 5;
+  }
+
+  if (sos <= 50) {
+    return 4;
+  }
+
+  if (sos <= 100) {
+    return 3;
+  }
+
+  if (sos <= 180) {
+    return 2;
+  }
+
+  return 1;
+}
+
+function getScheduleNote(sos) {
+  if (sos <= 20) {
+    return "Played one of the toughest schedules";
+  }
+
+  if (sos <= 50) {
+    return "Played a tough schedule";
+  }
+
+  if (sos <= 100) {
+    return "Saw a solid mix of opponents";
+  }
+
+  if (sos <= 180) {
+    return "Had a lighter road than most";
+  }
+
+  return "Did not face many heavyweights";
+}
+
+function getStabilityRating(badLosses) {
+  if (badLosses === 0) {
+    return 5;
+  }
+
+  if (badLosses === 1) {
+    return 4;
+  }
+
+  if (badLosses === 2) {
+    return 3;
+  }
+
+  if (badLosses <= 4) {
+    return 2;
+  }
+
+  return 1;
+}
+
+function getStabilityNote(badLosses) {
+  if (badLosses === 0) {
+    return "No slip-ups against weaker teams";
+  }
+
+  if (badLosses === 1) {
+    return "Only one surprise loss";
+  }
+
+  if (badLosses === 2) {
+    return "Just two surprise losses";
+  }
+
+  return `${badLosses} losses against lighter competition`;
 }
 
 function setNavState({ canGoBack, canGoForward, canClear }) {
