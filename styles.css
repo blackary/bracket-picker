@@ -3823,6 +3823,31 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 }
 
+@media (max-width: 760px) {
+  body[data-view-mode="bracket"] .app-topbar__main {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  body[data-view-mode="bracket"] .app-brand {
+    min-width: 0;
+  }
+
+  body[data-view-mode="bracket"] .topbar-utility {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    width: 100%;
+    justify-content: stretch;
+    align-items: center;
+    gap: 8px;
+  }
+
+  body[data-view-mode="bracket"] .view-switch {
+    width: 100%;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .team-card__crest,
   .champion-card__logo,
