@@ -52,6 +52,7 @@ const elements = {
   bracketNameInput: document.querySelector("#bracketNameInput"),
   newBracketModal: document.querySelector("#newBracketModal"),
   newBracketForm: document.querySelector("#newBracketForm"),
+  newBracketNote: document.querySelector("#newBracketNote"),
   newBracketNameInput: document.querySelector("#newBracketNameInput"),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
   useAutoNameButton: document.querySelector("#useAutoNameButton"),
@@ -366,14 +367,15 @@ function applyBracketZoom() {
 
 function openNewBracketModal() {
   state.pendingBracketName = nextBracketName();
-  elements.newBracketNameInput.value = state.pendingBracketName;
+  elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.placeholder = state.pendingBracketName;
+  elements.newBracketNote.textContent = `Type your own name, or use ${state.pendingBracketName}.`;
+  elements.useAutoNameButton.textContent = `Use ${state.pendingBracketName}`;
   elements.newBracketModal.hidden = false;
   document.body.classList.add("has-modal");
 
   window.requestAnimationFrame(() => {
     elements.newBracketNameInput.focus();
-    elements.newBracketNameInput.select();
   });
 }
 
@@ -381,6 +383,9 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   state.pendingBracketName = "";
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
+  elements.newBracketNameInput.setCustomValidity("");
+  elements.newBracketNote.textContent = "Keep the auto name or swap in your own before the first pick.";
+  elements.useAutoNameButton.textContent = "Use auto name";
   document.body.classList.remove("has-modal");
 
   if (restoreFocus) {
@@ -1461,11 +1466,24 @@ function attachEvents() {
 
   elements.newBracketForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    startNewBracket(elements.newBracketNameInput.value);
+    const typedName = elements.newBracketNameInput.value.trim();
+    if (!typedName) {
+      elements.newBracketNameInput.setCustomValidity("Type a bracket name, or use the auto name button.");
+      elements.newBracketNameInput.reportValidity();
+      return;
+    }
+
+    elements.newBracketNameInput.setCustomValidity("");
+    startNewBracket(typedName);
   });
 
   elements.useAutoNameButton.addEventListener("click", () => {
+    elements.newBracketNameInput.setCustomValidity("");
     startNewBracket(state.pendingBracketName);
+  });
+
+  elements.newBracketNameInput.addEventListener("input", () => {
+    elements.newBracketNameInput.setCustomValidity("");
   });
 
   elements.cancelNewBracketButton.addEventListener("click", () => {
