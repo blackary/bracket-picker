@@ -80,7 +80,7 @@
               <p class="eyebrow">2026 March Madness picker</p>
               <div class="app-brand__headline">
                 <h1>Bracket Parade</h1>
-                <span class="app-brand__burst">Pick mode first</span>
+                <span class="app-brand__burst" id="appModeBurst">Pick mode first</span>
               </div>
             </div>
           </div>
@@ -208,6 +208,9 @@
                     +
                   </button>
                 </div>
+                <button id="revealBlindfoldButton" class="button button--accent" type="button" hidden>
+                  Take off blindfold
+                </button>
                 <button id="returnToPickButton" class="button">Back to picks</button>
               </div>
             </div>
@@ -250,11 +253,47 @@
         aria-labelledby="newBracketTitle"
         aria-describedby="newBracketNote"
       >
-        <p class="eyebrow">New bracket</p>
-        <h2 id="newBracketTitle">Name your next bracket</h2>
+        <p class="eyebrow" id="newBracketEyebrow">New bracket</p>
+        <h2 id="newBracketTitle">Start a new bracket</h2>
         <p class="modal-card__note" id="newBracketNote">
-          Keep the auto name or swap in your own before the first pick.
+          Choose regular or blindfold mode, then keep the auto name or swap in your own.
         </p>
+
+        <div class="mode-picker" role="radiogroup" aria-labelledby="newBracketModeLabel">
+          <p class="field__label" id="newBracketModeLabel">Bracket style</p>
+          <div class="mode-picker__grid">
+            <label class="mode-choice">
+              <input
+                class="mode-choice__input"
+                type="radio"
+                name="newBracketMode"
+                value="regular"
+                checked
+              />
+              <span class="mode-choice__body">
+                <span class="mode-choice__title">Regular</span>
+                <span class="mode-choice__note">
+                  Real teams, seeds, and logos from the first matchup.
+                </span>
+              </span>
+            </label>
+
+            <label class="mode-choice">
+              <input
+                class="mode-choice__input"
+                type="radio"
+                name="newBracketMode"
+                value="blindfold"
+              />
+              <span class="mode-choice__body">
+                <span class="mode-choice__title">Blindfold</span>
+                <span class="mode-choice__note">
+                  Cute code names and made-up logos now, real teams revealed at the end.
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
 
         <label class="field field--grow">
           <span class="field__label">Bracket name</span>

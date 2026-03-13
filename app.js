@@ -20,6 +20,80 @@ const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 const BRACKET_ZOOM_STEP = 0.15;
 const BRACKET_ZOOM_MIN = 0.85;
 const BRACKET_ZOOM_MAX = 1.75;
+const BRACKET_MODE_REGULAR = "regular";
+const BRACKET_MODE_BLINDFOLD = "blindfold";
+const BLINDFOLD_ADJECTIVES = [
+  "Sunny",
+  "Bouncy",
+  "Rocket",
+  "Twirly",
+  "Sparkly",
+  "Cozy",
+  "Jolly",
+  "Nifty",
+  "Giggly",
+  "Snappy",
+  "Dandy",
+  "Pepper",
+  "Taffy",
+  "Comet",
+  "Waffle",
+  "Breezy",
+  "Jumpy",
+  "Marshmallow",
+  "Crayon",
+  "Storybook",
+  "Zippy",
+  "Poppy",
+  "Bubble",
+  "Lucky",
+];
+const BLINDFOLD_ANIMALS = [
+  "Otters",
+  "Foxes",
+  "Koalas",
+  "Puffins",
+  "Raccoons",
+  "Bunnies",
+  "Kittens",
+  "Cubs",
+  "Owls",
+  "Turtles",
+  "Penguins",
+  "Hedgehogs",
+  "Llamas",
+  "Alpacas",
+  "Fireflies",
+  "Squirrels",
+  "Beavers",
+  "Ducks",
+  "Seals",
+  "Ponies",
+  "Badgers",
+  "Falcons",
+  "Bobcats",
+  "Parrots",
+];
+const BLINDFOLD_BADGES = [
+  "Mystery mascot",
+  "Scout squad",
+  "Secret favorite",
+  "Storybook crew",
+  "Lucky charm",
+  "Sneaky star",
+];
+const BLINDFOLD_SHAPES = ["shield", "pennant", "medal", "ticket"];
+const BLINDFOLD_PATTERNS = ["burst", "orbit", "rays", "confetti"];
+const BLINDFOLD_PALETTES = [
+  { color: "#ff8a5b", glow: "#ffd3bf", tint: "#fff0e8", accent: "#24344d" },
+  { color: "#5c8cff", glow: "#d9e4ff", tint: "#eef3ff", accent: "#21304d" },
+  { color: "#42b883", glow: "#d8f6e8", tint: "#edfdf6", accent: "#1d3c35" },
+  { color: "#f2b94b", glow: "#fff0c9", tint: "#fff8e9", accent: "#3a2f19" },
+  { color: "#9a68ff", glow: "#ecdeff", tint: "#f7f1ff", accent: "#312149" },
+  { color: "#f16fa2", glow: "#ffdbe8", tint: "#fff1f6", accent: "#452033" },
+  { color: "#39a6a3", glow: "#d9f6f4", tint: "#effdfc", accent: "#183c3b" },
+  { color: "#e86b3f", glow: "#ffe1d5", tint: "#fff3ed", accent: "#40251d" },
+];
 
 const state = {
   data: null,
@@ -37,12 +111,16 @@ const state = {
   bracketCanvasRenderId: 0,
   bracketZoom: 1,
   pendingBracketName: "",
+  pendingBracketMode: BRACKET_MODE_REGULAR,
+  newBracketModalLocked: false,
   deferredInstallPrompt: null,
+  blindfoldProfileCache: new Map(),
 };
 
 const elements = {
   sourceStatus: document.querySelector("#sourceStatus"),
   sourceNote: document.querySelector("#sourceNote"),
+  appModeBurst: document.querySelector("#appModeBurst"),
   installAppButton: document.querySelector("#installAppButton"),
   pickViewButton: document.querySelector("#pickViewButton"),
   bracketViewButton: document.querySelector("#bracketViewButton"),
@@ -52,10 +130,13 @@ const elements = {
   bracketNameInput: document.querySelector("#bracketNameInput"),
   newBracketModal: document.querySelector("#newBracketModal"),
   newBracketForm: document.querySelector("#newBracketForm"),
+  newBracketEyebrow: document.querySelector("#newBracketEyebrow"),
   newBracketNote: document.querySelector("#newBracketNote"),
   newBracketNameInput: document.querySelector("#newBracketNameInput"),
+  newBracketModeInputs: document.querySelectorAll('input[name="newBracketMode"]'),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
   useAutoNameButton: document.querySelector("#useAutoNameButton"),
+  startNewBracketButton: document.querySelector("#startNewBracketButton"),
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
   exportImageButton: document.querySelector("#exportImageButton"),
@@ -73,6 +154,7 @@ const elements = {
   seeBracketButton: document.querySelector("#seeBracketButton"),
   nextGameButton: document.querySelector("#nextGameButton"),
   returnToPickButton: document.querySelector("#returnToPickButton"),
+  revealBlindfoldButton: document.querySelector("#revealBlindfoldButton"),
   zoomOutButton: document.querySelector("#zoomOutButton"),
   fitBracketButton: document.querySelector("#fitBracketButton"),
   zoomInButton: document.querySelector("#zoomInButton"),
@@ -110,6 +192,9 @@ async function init() {
     attachEvents();
     setupInstallability();
     render();
+    if (!state.store.brackets.length) {
+      openNewBracketModal({ locked: true, initial: true });
+    }
     registerServiceWorker();
   } catch (error) {
     renderFatal(error);
@@ -196,6 +281,9 @@ function normalizeBracket(bracket) {
     }
   }
 
+  const mode =
+    bracket?.mode === BRACKET_MODE_BLINDFOLD ? BRACKET_MODE_BLINDFOLD : BRACKET_MODE_REGULAR;
+
   return {
     id: bracket?.id || createId(),
     name: typeof bracket?.name === "string" ? bracket.name.slice(0, MAX_BRACKET_NAME) : "",
@@ -203,6 +291,11 @@ function normalizeBracket(bracket) {
     createdAt: bracket?.createdAt || new Date().toISOString(),
     updatedAt: bracket?.updatedAt || new Date().toISOString(),
     datasetId: bracket?.datasetId || state.data.meta.tournamentId,
+    mode,
+    blindfoldRevealed:
+      mode === BRACKET_MODE_BLINDFOLD ? Boolean(bracket?.blindfoldRevealed) : false,
+    blindfoldSeed:
+      mode === BRACKET_MODE_BLINDFOLD ? String(bracket?.blindfoldSeed || createBlindfoldSeed()) : "",
   };
 }
 
@@ -233,7 +326,13 @@ function nextBracketName() {
   return `Victory Parade ${counter}`;
 }
 
-function createBracket(name = nextBracketName()) {
+function createBlindfoldSeed() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function createBracket(name = nextBracketName(), options = {}) {
+  const mode =
+    options.mode === BRACKET_MODE_BLINDFOLD ? BRACKET_MODE_BLINDFOLD : BRACKET_MODE_REGULAR;
   return {
     id: createId(),
     name,
@@ -241,15 +340,23 @@ function createBracket(name = nextBracketName()) {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     datasetId: state.data.meta.tournamentId,
+    mode,
+    blindfoldRevealed: false,
+    blindfoldSeed: mode === BRACKET_MODE_BLINDFOLD ? createBlindfoldSeed() : "",
   };
 }
 
-function ensureCurrentBracket() {
+function ensureCurrentBracket({ createIfMissing = false, mode = BRACKET_MODE_REGULAR } = {}) {
   if (!state.store.brackets.length) {
-    const fresh = createBracket();
-    state.store.brackets.push(fresh);
-    state.store.currentBracketId = fresh.id;
-    persistStore();
+    state.store.currentBracketId = null;
+    state.store.viewMode = "pick";
+    if (createIfMissing) {
+      const fresh = createBracket(nextBracketName(), { mode });
+      state.store.brackets.push(fresh);
+      state.store.currentBracketId = fresh.id;
+      persistStore();
+    }
+    return;
   }
 
   if (state.store.viewMode !== "pick" && state.store.viewMode !== "bracket") {
@@ -365,12 +472,38 @@ function applyBracketZoom() {
   elements.fitBracketButton.classList.toggle("is-active", Math.abs(state.bracketZoom - 1) < 0.001);
 }
 
-function openNewBracketModal() {
-  state.pendingBracketName = nextBracketName();
-  elements.newBracketNameInput.value = "";
-  elements.newBracketNameInput.placeholder = state.pendingBracketName;
-  elements.newBracketNote.textContent = `Type your own name, or use ${state.pendingBracketName}.`;
+function setPendingBracketMode(mode) {
+  state.pendingBracketMode =
+    mode === BRACKET_MODE_BLINDFOLD ? BRACKET_MODE_BLINDFOLD : BRACKET_MODE_REGULAR;
+  elements.newBracketModeInputs.forEach((input) => {
+    input.checked = input.value === state.pendingBracketMode;
+  });
+}
+
+function updateNewBracketModalCopy({ initial = false } = {}) {
+  elements.newBracketEyebrow.textContent = initial ? "Pick your bracket style" : "New bracket";
+  elements.newBracketTitle.textContent = initial ? "Start your first bracket" : "Start a new bracket";
+
+  const modeMessage =
+    state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
+      ? "Blindfold mode uses cute code names and made-up logos until the final reveal."
+      : "Regular mode shows the real teams, seeds, and logos from the start.";
+  elements.newBracketNote.textContent = `${modeMessage} Keep ${state.pendingBracketName} or type your own name.`;
   elements.useAutoNameButton.textContent = `Use ${state.pendingBracketName}`;
+  elements.newBracketNameInput.placeholder = state.pendingBracketName;
+  elements.startNewBracketButton.textContent =
+    state.pendingBracketMode === BRACKET_MODE_BLINDFOLD ? "Start blindfold bracket" : "Start picking";
+}
+
+function openNewBracketModal({ locked = false, initial = false } = {}) {
+  state.pendingBracketName = nextBracketName();
+  state.newBracketModalLocked = locked;
+  elements.newBracketNameInput.value = "";
+  elements.newBracketNameInput.setCustomValidity("");
+  setPendingBracketMode(BRACKET_MODE_REGULAR);
+  updateNewBracketModalCopy({ initial });
+  elements.cancelNewBracketButton.hidden = locked;
+  elements.cancelNewBracketButton.disabled = locked;
   elements.newBracketModal.hidden = false;
   document.body.classList.add("has-modal");
 
@@ -380,12 +513,25 @@ function openNewBracketModal() {
 }
 
 function closeNewBracketModal({ restoreFocus = true } = {}) {
+  if (state.newBracketModalLocked) {
+    return;
+  }
+
   state.pendingBracketName = "";
+  state.pendingBracketMode = BRACKET_MODE_REGULAR;
+  state.newBracketModalLocked = false;
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.setCustomValidity("");
-  elements.newBracketNote.textContent = "Keep the auto name or swap in your own before the first pick.";
+  elements.newBracketEyebrow.textContent = "New bracket";
+  elements.newBracketTitle.textContent = "Start a new bracket";
+  elements.newBracketNote.textContent =
+    "Choose regular or blindfold mode, then keep the auto name or swap in your own.";
   elements.useAutoNameButton.textContent = "Use auto name";
+  elements.startNewBracketButton.textContent = "Start picking";
+  elements.cancelNewBracketButton.hidden = false;
+  elements.cancelNewBracketButton.disabled = false;
+  setPendingBracketMode(BRACKET_MODE_REGULAR);
   document.body.classList.remove("has-modal");
 
   if (restoreFocus) {
@@ -393,15 +539,16 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   }
 }
 
-function startNewBracket(name = "") {
+function startNewBracket(name = "", mode = state.pendingBracketMode) {
   const finalName = name.trim() || state.pendingBracketName || nextBracketName();
-  const bracket = createBracket(finalName);
+  const bracket = createBracket(finalName, { mode });
   state.store.brackets.unshift(bracket);
   state.store.currentBracketId = bracket.id;
   state.store.viewMode = "pick";
   state.activeGameId = null;
   state.bracketCanvasSignature = null;
   persistStore();
+  state.newBracketModalLocked = false;
   closeNewBracketModal({ restoreFocus: false });
   render();
   showToast(`Created ${bracket.name}.`);
@@ -409,6 +556,182 @@ function startNewBracket(name = "") {
 
 function touchBracket(bracket) {
   bracket.updatedAt = new Date().toISOString();
+}
+
+function isBlindfoldMode(bracket) {
+  return bracket?.mode === BRACKET_MODE_BLINDFOLD;
+}
+
+function isBlindfoldHidden(bracket) {
+  return isBlindfoldMode(bracket) && !bracket?.blindfoldRevealed;
+}
+
+function canRevealBlindfold(bracket) {
+  return isBlindfoldHidden(bracket) && getProgress(bracket).pickedCount === state.data.games.length;
+}
+
+function revealBlindfold() {
+  const bracket = getCurrentBracket();
+  if (!canRevealBlindfold(bracket)) {
+    return;
+  }
+
+  bracket.blindfoldRevealed = true;
+  touchBracket(bracket);
+  state.bracketCanvasSignature = null;
+  persistStore();
+  render();
+  showToast("Blindfold off. Real teams revealed.");
+}
+
+function getBracketModeLabel(bracket) {
+  if (!bracket) {
+    return "Choose a bracket";
+  }
+
+  if (isBlindfoldHidden(bracket)) {
+    return "Blindfold on";
+  }
+
+  if (isBlindfoldMode(bracket) && bracket.blindfoldRevealed) {
+    return "Blindfold revealed";
+  }
+
+  return "Regular mode";
+}
+
+function getBlindfoldProfiles(bracket) {
+  if (!isBlindfoldMode(bracket)) {
+    return {};
+  }
+
+  const cacheKey = `${bracket.id}:${bracket.blindfoldSeed}`;
+  if (state.blindfoldProfileCache.has(cacheKey)) {
+    return state.blindfoldProfileCache.get(cacheKey);
+  }
+
+  const aliasPool = BLINDFOLD_ADJECTIVES.flatMap((adjective) =>
+    BLINDFOLD_ANIMALS.map((animal) => ({
+      adjective,
+      animal,
+      alias: `${adjective} ${animal}`,
+    }))
+  );
+  const shuffledAliases = seededShuffle(aliasPool, `${cacheKey}:aliases`);
+  const teamIds = Object.keys(state.teamsById).sort();
+  const profiles = {};
+
+  teamIds.forEach((teamId, index) => {
+    const aliasEntry = shuffledAliases[index % shuffledAliases.length];
+    const palette =
+      BLINDFOLD_PALETTES[
+        hashString(`${cacheKey}:${teamId}:palette`) % BLINDFOLD_PALETTES.length
+      ];
+    const badge =
+      BLINDFOLD_BADGES[
+        hashString(`${cacheKey}:${teamId}:badge`) % BLINDFOLD_BADGES.length
+      ];
+    const shape =
+      BLINDFOLD_SHAPES[
+        hashString(`${cacheKey}:${teamId}:shape`) % BLINDFOLD_SHAPES.length
+      ];
+    const pattern =
+      BLINDFOLD_PATTERNS[
+        hashString(`${cacheKey}:${teamId}:pattern`) % BLINDFOLD_PATTERNS.length
+      ];
+    const initials = `${aliasEntry.adjective[0]}${aliasEntry.animal[0]}`.toUpperCase();
+
+    profiles[teamId] = {
+      alias: aliasEntry.alias,
+      animal: aliasEntry.animal,
+      badge,
+      palette,
+      shape,
+      pattern,
+      logo: buildBlindfoldLogo({
+        alias: aliasEntry.alias,
+        initials,
+        palette,
+        shape,
+        pattern,
+      }),
+    };
+  });
+
+  state.blindfoldProfileCache.set(cacheKey, profiles);
+  return profiles;
+}
+
+function getBlindfoldIdentity(bracket, team) {
+  return getBlindfoldProfiles(bracket)[team.id];
+}
+
+function getDisplayTeamData(bracket, team) {
+  if (!team) {
+    return null;
+  }
+
+  if (!isBlindfoldHidden(bracket)) {
+    return {
+      id: team.id,
+      name: team.name,
+      compactName: compactTeamName(team.name),
+      logo: team.logo,
+      logoAlt: `${team.name} logo`,
+      subtitle: team.conference,
+      seedTag: `No. ${team.seed}`,
+      sticker: getTeamSticker(team),
+      facts: getTeamFacts(team),
+      scoutRows: getTeamScoutRows(team),
+      buttonLabel: "Pick this team",
+      pulseLabel: "Tap to advance",
+      theme: getThemeForTeam(team),
+      miniMeta: `${team.conference} • Seed #${team.seed}`,
+      championMeta: `${team.conference} • ${getTeamRecordLabel(team)}`,
+      mobileNote: `${team.conference} • No. ${team.seed}`,
+      mobileTag: `No. ${team.seed}`,
+      slotLabel: `${team.seed} ${compactTeamName(team.name)}`,
+    };
+  }
+
+  const identity = getBlindfoldIdentity(bracket, team);
+  return {
+    id: team.id,
+    name: identity.alias,
+    compactName: compactTeamName(identity.alias),
+    logo: identity.logo,
+    logoAlt: `${identity.alias} badge`,
+    subtitle: getConferenceProfile(team.conference),
+    seedTag: "Code name",
+    sticker: identity.badge,
+    facts: getTeamFacts(team),
+    scoutRows: getTeamScoutRows(team),
+    buttonLabel: "Pick this mascot",
+    pulseLabel: "Pick by clues",
+    theme: identity.palette,
+    miniMeta: `${getConferenceProfile(team.conference)} • Stats only`,
+    championMeta: `${getConferenceProfile(team.conference)} • ${getTeamRecordLabel(team)}`,
+    mobileNote: `${getConferenceProfile(team.conference)} • ${getTeamRecordLabel(team)}`,
+    mobileTag: "Mystery",
+    slotLabel: compactTeamName(identity.alias),
+  };
+}
+
+function getDisplayTeamName(bracket, team) {
+  return getDisplayTeamData(bracket, team)?.name || "TBD";
+}
+
+function getDisplayTeamTheme(bracket, team) {
+  return getDisplayTeamData(bracket, team)?.theme || getThemeForTeam(team);
+}
+
+function getPreviewLabel(game, picks, bracket = null) {
+  const matchup = resolveGame(game, picks);
+  if (matchup.top && matchup.bottom) {
+    return `${getDisplayTeamName(bracket, matchup.top)} vs ${getDisplayTeamName(bracket, matchup.bottom)}`;
+  }
+
+  return game.title;
 }
 
 function getThemeForTeam(team) {
@@ -440,6 +763,11 @@ function resolveSlot(slot, picks) {
 
 function syncActiveGame() {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    state.activeGameId = null;
+    return;
+  }
+
   const visibleGames = getVisibleGames(bracket.picks);
 
   if (!visibleGames.length) {
@@ -457,6 +785,15 @@ function syncActiveGame() {
 
 function getCurrentGameContext() {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    return {
+      bracket: null,
+      visibleGames: [],
+      currentGame: null,
+      currentIndex: -1,
+    };
+  }
+
   const visibleGames = getVisibleGames(bracket.picks);
   const currentGame = visibleGames.find((game) => game.id === state.activeGameId) || null;
   const currentIndex = currentGame
@@ -472,7 +809,7 @@ function getCurrentGameContext() {
 }
 
 function getProgress(bracket) {
-  const pickedCount = Object.keys(bracket.picks).length;
+  const pickedCount = Object.keys(bracket?.picks || {}).length;
   return {
     pickedCount,
     total: state.data.games.length,
@@ -481,20 +818,24 @@ function getProgress(bracket) {
 }
 
 function getRoundTallies(bracket) {
+  const picks = bracket?.picks || {};
   return state.roundMeta.map((meta) => {
-    const picked = state.navigationGames.filter(
-      (game) => game.round === meta.round && bracket.picks[game.id]
-    ).length;
+    const picked = state.navigationGames.filter((game) => game.round === meta.round && picks[game.id])
+      .length;
     return { ...meta, picked };
   });
 }
 
 function getChampion(bracket) {
-  const championId = bracket.picks.championship;
+  const championId = bracket?.picks?.championship;
   return championId ? state.teamsById[championId] || null : null;
 }
 
 function getPickedGames(bracket) {
+  if (!bracket) {
+    return [];
+  }
+
   return state.navigationGames
     .filter((game) => bracket.picks[game.id])
     .map((game) => {
@@ -517,6 +858,10 @@ function clearDescendantPicks(picks, gameId) {
 
 function setPick(gameId, teamId) {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    return;
+  }
+
   const previousPick = bracket.picks[gameId];
 
   if (previousPick === teamId) {
@@ -534,6 +879,10 @@ function setPick(gameId, teamId) {
 
 function clearPick(gameId) {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    return;
+  }
+
   if (!bracket.picks[gameId]) {
     return;
   }
@@ -549,6 +898,11 @@ function clearPick(gameId) {
 
 function moveToNextOpen(originGameId = null) {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    state.activeGameId = null;
+    return;
+  }
+
   const visibleGames = getVisibleGames(bracket.picks);
   const originIndex = originGameId
     ? visibleGames.findIndex((game) => game.id === originGameId)
@@ -584,6 +938,7 @@ function render() {
 }
 
 function renderSourceBanner() {
+  const bracket = getCurrentBracket();
   elements.sourceStatus.textContent = state.data.meta.officialBracket
     ? `Official bracket • ${state.data.meta.sourceUpdatedLabel}`
     : `Projected bracket • ${state.data.meta.sourceUpdatedLabel}`;
@@ -591,17 +946,36 @@ function renderSourceBanner() {
   elements.sourceNote.textContent = state.data.meta.officialBracket
     ? "The field is official."
     : "Selection Sunday is March 15, 2026, so this build uses the latest projected matchups and teams.";
+  elements.appModeBurst.textContent = bracket ? getBracketModeLabel(bracket) : "Pick a style";
 }
 
 function renderToolbar(bracket) {
+  if (!bracket) {
+    elements.bracketSelect.innerHTML = '<option value="">No saved brackets yet</option>';
+    elements.bracketSelect.disabled = true;
+    elements.deleteBracketButton.disabled = true;
+    elements.bracketNameInput.value = "";
+    elements.bracketNameInput.disabled = true;
+    elements.resetButton.disabled = true;
+    elements.exportJsonButton.disabled = true;
+    elements.exportImageButton.disabled = true;
+    return;
+  }
+
   elements.bracketSelect.innerHTML = state.store.brackets
     .map((item) => {
       const picked = Object.keys(item.picks).length;
       return `<option value="${item.id}" ${item.id === bracket.id ? "selected" : ""}>
-        ${escapeHtml(item.name || "Untitled bracket")} · ${picked}/${state.data.games.length}
+        ${escapeHtml(item.name || "Untitled bracket")} · ${escapeHtml(getBracketModeLabel(item))} · ${picked}/${state.data.games.length}
       </option>`;
     })
     .join("");
+  elements.bracketSelect.disabled = false;
+  elements.deleteBracketButton.disabled = false;
+  elements.bracketNameInput.disabled = false;
+  elements.resetButton.disabled = false;
+  elements.exportJsonButton.disabled = false;
+  elements.exportImageButton.disabled = false;
 
   if (elements.bracketNameInput !== document.activeElement) {
     elements.bracketNameInput.value = bracket.name;
@@ -627,16 +1001,36 @@ function renderRoundPills(bracket, currentGame) {
 }
 
 function renderMatchup(bracket, context) {
+  if (!bracket) {
+    elements.matchupEyebrow.textContent = "Start here";
+    elements.matchupTitle.textContent = "Choose regular or blindfold mode to begin";
+    elements.matchupHint.textContent =
+      "Pick your style, keep the auto-generated name or type your own, and the first matchup will be ready.";
+    elements.matchupStage.innerHTML = `
+      <div class="empty-state">
+        <h3>No bracket yet</h3>
+        <p>Your first bracket starts as soon as you choose a mode in the setup card.</p>
+      </div>
+    `;
+    setNavState({ canGoBack: false, canGoForward: false, canClear: false });
+    return;
+  }
+
   const { currentGame, currentIndex, visibleGames } = context;
   const champion = getChampion(bracket);
-  const complete = Object.keys(bracket.picks).length === state.data.games.length;
+  const complete = getProgress(bracket).pickedCount === state.data.games.length;
 
   if (!currentGame && complete && champion) {
-    elements.matchupEyebrow.textContent = "Bracket complete";
-    elements.matchupTitle.textContent = `${bracket.name} is ready to celebrate`;
-    elements.matchupHint.textContent =
-      "Your whole bracket is finished. Export the poster or jump backward to revisit any matchup.";
-    elements.matchupStage.innerHTML = renderCompletedState(champion);
+    elements.matchupEyebrow.textContent = isBlindfoldHidden(bracket)
+      ? "Blindfold bracket complete"
+      : "Bracket complete";
+    elements.matchupTitle.textContent = isBlindfoldHidden(bracket)
+      ? `${bracket.name} is ready for the reveal`
+      : `${bracket.name} is ready to celebrate`;
+    elements.matchupHint.textContent = isBlindfoldHidden(bracket)
+      ? "You picked the whole bracket using only the clues. Take off the blindfold to see the real teams."
+      : "Your whole bracket is finished. Export the poster or jump backward to revisit any matchup.";
+    elements.matchupStage.innerHTML = renderCompletedState(bracket, champion);
     setNavState({
       canGoBack: false,
       canGoForward: false,
@@ -663,16 +1057,18 @@ function renderMatchup(bracket, context) {
   const pickedTeamId = bracket.picks[currentGame.id] || null;
 
   elements.matchupEyebrow.textContent = `${currentGame.roundLabel} • ${formatGameStageLabel(currentGame)} • Matchup ${currentIndex + 1} of ${visibleGames.length}`;
-  elements.matchupTitle.textContent = `${matchup.top.name} vs ${matchup.bottom.name}`;
+  elements.matchupTitle.textContent = `${getDisplayTeamName(bracket, matchup.top)} vs ${getDisplayTeamName(bracket, matchup.bottom)}`;
   elements.matchupHint.textContent =
-    currentGame.round === 0
-      ? "Pick the play-in winner to unlock the rest of that seed line."
-      : "Choose the team you want to advance. If you change this later, dependent picks will clear automatically.";
+    isBlindfoldHidden(bracket)
+      ? "Pick using only the clues. Real school names and logos stay hidden until the final reveal."
+      : currentGame.round === 0
+        ? "Pick the play-in winner to unlock the rest of that seed line."
+        : "Choose the team you want to advance. If you change this later, dependent picks will clear automatically.";
 
   elements.matchupStage.innerHTML = `
     <div class="matchup-board">
       <div class="matchup-lane matchup-lane--left">
-        ${renderTeamCard(matchup.top, currentGame, pickedTeamId, "left")}
+        ${renderTeamCard(bracket, matchup.top, currentGame, pickedTeamId, "left")}
       </div>
       <div class="matchup-board__center">
         <p class="versus-track__round">${escapeHtml(currentGame.roundLabel)}</p>
@@ -683,7 +1079,7 @@ function renderMatchup(bracket, context) {
         </div>
       </div>
       <div class="matchup-lane matchup-lane--right">
-        ${renderTeamCard(matchup.bottom, currentGame, pickedTeamId, "right")}
+        ${renderTeamCard(bracket, matchup.bottom, currentGame, pickedTeamId, "right")}
       </div>
     </div>
   `;
@@ -695,66 +1091,80 @@ function renderMatchup(bracket, context) {
   });
 }
 
-function renderCompletedState(champion) {
+function renderCompletedState(bracket, champion) {
+  const displayChampion = getDisplayTeamData(bracket, champion);
   return `
     <div class="summary-card">
       <h3>Mission complete!</h3>
-      <p>You picked every game in the bracket. Your champion is ready for the spotlight.</p>
+      <p>${
+        isBlindfoldHidden(bracket)
+          ? "You picked every game with the blindfold on. Your champion is ready for the big reveal."
+          : "You picked every game in the bracket. Your champion is ready for the spotlight."
+      }</p>
       <div class="champion-card">
         <div class="champion-card__logo">
-          <img src="${escapeAttribute(champion.logo)}" alt="${escapeAttribute(champion.name)} logo" />
+          <img src="${escapeAttribute(displayChampion.logo)}" alt="${escapeAttribute(displayChampion.logoAlt)}" />
         </div>
         <div>
-          <p class="eyebrow">Champion pick</p>
-          <h3>${escapeHtml(champion.name)}</h3>
-          <p>${escapeHtml(champion.conference)} • ${escapeHtml(getTeamRecordLabel(champion))}</p>
+          <p class="eyebrow">${isBlindfoldHidden(bracket) ? "Blindfold champion" : "Champion pick"}</p>
+          <h3>${escapeHtml(displayChampion.name)}</h3>
+          <p>${escapeHtml(displayChampion.championMeta)}</p>
         </div>
       </div>
+      ${
+        canRevealBlindfold(bracket)
+          ? `
+            <div class="summary-card__actions">
+              <button class="button button--accent" type="button" data-action="reveal-blindfold">
+                Take off the blindfold
+              </button>
+            </div>
+          `
+          : ""
+      }
     </div>
   `;
 }
 
-function renderTeamCard(team, game, pickedTeamId, side) {
-  const theme = getThemeForTeam(team);
-  const sticker = getTeamSticker(team);
-  const facts = getTeamFacts(team);
-  const scoutRows = getTeamScoutRows(team);
+function renderTeamCard(bracket, team, game, pickedTeamId, side) {
+  const displayTeam = getDisplayTeamData(bracket, team);
+  const theme = displayTeam.theme;
   const isPicked = pickedTeamId === team.id;
-  const pulseText = isPicked ? "Locked in" : "Tap to advance";
+  const pulseText = isPicked ? "Locked in" : displayTeam.pulseLabel;
 
   return `
     <button
       class="team-card team-card--${side} ${isPicked ? "is-picked" : ""}"
       type="button"
       data-team-pick="${escapeAttribute(team.id)}"
-      style="--team-color:${theme.color};--team-glow:${theme.glow};--team-tint:${hexToRgba(theme.color, 0.18)}"
+      style="--team-color:${theme.color};--team-glow:${theme.glow};--team-tint:${theme.tint || hexToRgba(theme.color, 0.18)}"
     >
       <div class="team-card__top">
-        <span class="team-card__seed">No. ${team.seed}</span>
-        <span class="team-card__sticker">${escapeHtml(sticker)}</span>
+        <span class="team-card__seed">${escapeHtml(displayTeam.seedTag)}</span>
+        <span class="team-card__sticker">${escapeHtml(displayTeam.sticker)}</span>
       </div>
 
       <div class="team-card__crest">
-        <img src="${escapeAttribute(team.logo)}" alt="${escapeAttribute(team.name)} logo" />
+        <img src="${escapeAttribute(displayTeam.logo)}" alt="${escapeAttribute(displayTeam.logoAlt)}" />
       </div>
 
       <div class="team-card__body">
-        <h3 class="team-card__name">${escapeHtml(team.name)}</h3>
-        <p class="team-card__conference">${escapeHtml(team.conference)}</p>
+        <h3 class="team-card__name">${escapeHtml(displayTeam.name)}</h3>
+        <p class="team-card__conference">${escapeHtml(displayTeam.subtitle)}</p>
       </div>
 
       <div class="team-card__facts">
-        ${facts.map(renderTeamFact).join("")}
+        ${displayTeam.facts.map(renderTeamFact).join("")}
       </div>
 
       <div class="team-card__scouting">
         <p class="team-card__section-label">Quick scout</p>
-        ${scoutRows.map(renderScoutRow).join("")}
+        ${displayTeam.scoutRows.map(renderScoutRow).join("")}
       </div>
 
       <div class="team-card__footer">
         <span class="team-card__pulse">${escapeHtml(pulseText)}</span>
-        <span class="team-card__button">${isPicked ? "Picked winner" : "Pick this team"}</span>
+        <span class="team-card__button">${isPicked ? "Picked winner" : escapeHtml(displayTeam.buttonLabel)}</span>
       </div>
     </button>
   `;
@@ -1054,6 +1464,19 @@ function setNavState({ canGoBack, canGoForward, canClear }) {
 }
 
 function renderSnapshot(bracket) {
+  if (!bracket) {
+    elements.snapshotCard.innerHTML = `
+      <div class="snapshot">
+        <div class="snapshot__hero">
+          <p class="snapshot__label">Ready to start</p>
+          <p class="snapshot__value">Choose regular or blindfold mode</p>
+          <p class="snapshot__value">Your bracket will save on this device as soon as you start.</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
   const champion = getChampion(bracket);
   const visibleGames = getVisibleGames(bracket.picks);
   const nextOpen = visibleGames.find((game) => !bracket.picks[game.id]) || null;
@@ -1065,6 +1488,7 @@ function renderSnapshot(bracket) {
         <p class="snapshot__label">Current bracket</p>
         <p class="snapshot__value">${escapeHtml(bracket.name || "Untitled bracket")}</p>
         <p class="snapshot__value">${Object.keys(bracket.picks).length} picks saved on this device</p>
+        <p class="snapshot__mode">${escapeHtml(getBracketModeLabel(bracket))}</p>
       </div>
 
       ${
@@ -1072,7 +1496,7 @@ function renderSnapshot(bracket) {
           ? `
             <div>
               <p class="snapshot__label">Champion pick</p>
-              ${renderMiniTeam(champion)}
+              ${renderMiniTeam(bracket, champion)}
             </div>
           `
           : `
@@ -1092,7 +1516,7 @@ function renderSnapshot(bracket) {
             <div class="stack-item">
               <div>
                 <p class="stack-item__label">Next open matchup</p>
-                <p class="stack-item__meta">${escapeHtml(nextOpen ? getPreviewLabel(nextOpen, bracket.picks) : "All games picked")}</p>
+                <p class="stack-item__meta">${escapeHtml(nextOpen ? getPreviewLabel(nextOpen, bracket.picks, bracket) : "All games picked")}</p>
               </div>
               <span class="stack-item__count">${nextOpen ? "Ready" : "Done"}</span>
             </div>
@@ -1100,30 +1524,46 @@ function renderSnapshot(bracket) {
         <div class="stack-item">
           <div>
             <p class="stack-item__label">Final Four spots</p>
-            <p class="stack-item__meta">${finalFourTeams.length ? finalFourTeams.map((team) => team.name).join(", ") : "No semifinalists locked in yet."}</p>
+            <p class="stack-item__meta">${finalFourTeams.length ? finalFourTeams.map((team) => getDisplayTeamName(bracket, team)).join(", ") : "No semifinalists locked in yet."}</p>
           </div>
           <span class="stack-item__count">${finalFourTeams.length}/4</span>
         </div>
       </div>
+      ${
+        canRevealBlindfold(bracket)
+          ? `
+            <div class="summary-card__actions summary-card__actions--inline">
+              <button class="button button--accent" type="button" data-action="reveal-blindfold">
+                Take off the blindfold
+              </button>
+            </div>
+          `
+          : ""
+      }
     </div>
   `;
 }
 
-function renderMiniTeam(team) {
+function renderMiniTeam(bracket, team) {
+  const displayTeam = getDisplayTeamData(bracket, team);
   return `
     <div class="mini-team">
       <div class="mini-team__logo">
-        <img src="${escapeAttribute(team.logo)}" alt="${escapeAttribute(team.name)} logo" />
+        <img src="${escapeAttribute(displayTeam.logo)}" alt="${escapeAttribute(displayTeam.logoAlt)}" />
       </div>
       <div>
-        <p class="mini-team__name">${escapeHtml(team.name)}</p>
-        <p class="mini-team__meta">${escapeHtml(team.conference)} • Seed #${team.seed}</p>
+        <p class="mini-team__name">${escapeHtml(displayTeam.name)}</p>
+        <p class="mini-team__meta">${escapeHtml(displayTeam.miniMeta)}</p>
       </div>
     </div>
   `;
 }
 
 function getResolvedFinalFour(bracket) {
+  if (!bracket) {
+    return [];
+  }
+
   return state.data.games
     .filter((game) => game.round === 5)
     .flatMap((game) => {
@@ -1153,6 +1593,13 @@ function renderRoundProgress(bracket) {
 }
 
 function renderRecentPicks(bracket) {
+  if (!bracket) {
+    elements.recentPicks.innerHTML = `
+      <p class="recent-empty">Start a bracket and your latest winners will stack up here.</p>
+    `;
+    return;
+  }
+
   const pickedGames = getPickedGames(bracket).slice(-6).reverse();
 
   if (!pickedGames.length) {
@@ -1169,8 +1616,8 @@ function renderRecentPicks(bracket) {
           ({ game, winner }) => `
             <div class="stack-item">
               <div>
-                <p class="stack-item__label">${escapeHtml(winner.name)}</p>
-                <p class="stack-item__meta">${escapeHtml(game.roundLabel)} • ${escapeHtml(getPreviewLabel(game, bracket.picks))}</p>
+                <p class="stack-item__label">${escapeHtml(getDisplayTeamName(bracket, winner))}</p>
+                <p class="stack-item__meta">${escapeHtml(game.roundLabel)} • ${escapeHtml(getPreviewLabel(game, bracket.picks, bracket))}</p>
               </div>
             </div>
           `
@@ -1181,6 +1628,21 @@ function renderRecentPicks(bracket) {
 }
 
 function renderBracketMobileBoard(bracket) {
+  if (!bracket) {
+    elements.bracketMobileBoard.innerHTML = `
+      <section class="mobile-bracket-card mobile-bracket-card--special">
+        <div class="mobile-bracket-card__header">
+          <div>
+            <p class="mobile-bracket-card__eyebrow">No bracket yet</p>
+            <h3>Start with a mode</h3>
+          </div>
+        </div>
+        <p class="recent-empty">Regular shows the real teams. Blindfold swaps in clues, cute code names, and a reveal at the end.</p>
+      </section>
+    `;
+    return;
+  }
+
   const sections = [];
   const firstFourGames = state.navigationGames.filter((game) => game.round === 0);
   const finalGames = state.navigationGames.filter((game) => game.round >= 4);
@@ -1266,12 +1728,13 @@ function renderMobileBracketSection(title, note, games, bracket) {
 }
 
 function renderMobileBracketGame(game, bracket) {
-  const slots = game.slots.map((slot) => getMobileBracketSlotDetails(slot, bracket.picks));
+  const slots = game.slots.map((slot) => getMobileBracketSlotDetails(slot, bracket.picks, bracket));
   const winnerId = bracket.picks[game.id] || null;
+  const gameLabel = getPreviewLabel(game, bracket.picks, bracket);
 
   return `
     <article class="mobile-game-card ${winnerId ? "is-picked" : ""}">
-      <p class="mobile-game-card__label">${escapeHtml(game.title || getPreviewLabel(game, bracket.picks))}</p>
+      <p class="mobile-game-card__label">${escapeHtml(gameLabel)}</p>
       <div class="mobile-slot-stack">
         ${slots
           .map((slot) => renderMobileBracketSlot(slot, slot.team?.id === winnerId))
@@ -1281,24 +1744,27 @@ function renderMobileBracketGame(game, bracket) {
   `;
 }
 
-function getMobileBracketSlotDetails(slot, picks) {
+function getMobileBracketSlotDetails(slot, picks, bracket) {
   if (slot.type === "team") {
+    const team = state.teamsById[slot.teamId] || null;
+    const displayTeam = team ? getDisplayTeamData(bracket, team) : null;
     return {
-      team: state.teamsById[slot.teamId] || null,
-      label: state.teamsById[slot.teamId]?.name || "TBD",
-      note: state.teamsById[slot.teamId]
-        ? `${state.teamsById[slot.teamId].conference} • No. ${state.teamsById[slot.teamId].seed}`
-        : "Waiting on teams",
+      team,
+      displayTeam,
+      label: displayTeam?.name || "TBD",
+      note: displayTeam?.mobileNote || "Waiting on teams",
     };
   }
 
   const pickedTeamId = picks[slot.gameId];
   if (pickedTeamId) {
     const team = state.teamsById[pickedTeamId] || null;
+    const displayTeam = team ? getDisplayTeamData(bracket, team) : null;
     return {
       team,
-      label: team?.name || "TBD",
-      note: team ? `${team.conference} • No. ${team.seed}` : "Winner locked in",
+      displayTeam,
+      label: displayTeam?.name || "TBD",
+      note: displayTeam?.mobileNote || "Winner locked in",
     };
   }
 
@@ -1323,22 +1789,22 @@ function renderMobileBracketSlot(slot, isWinner) {
     <div class="mobile-slot ${isWinner ? "is-winner" : ""}">
       <div class="mobile-slot__logo-shell ${slot.team ? "" : "is-empty"}">
         ${
-          slot.team
-            ? `<img src="${escapeAttribute(slot.team.logo)}" alt="${escapeAttribute(slot.team.name)} logo" />`
+          slot.displayTeam
+            ? `<img src="${escapeAttribute(slot.displayTeam.logo)}" alt="${escapeAttribute(slot.displayTeam.logoAlt)}" />`
             : `<span>?</span>`
         }
       </div>
       <div class="mobile-slot__copy">
-        <p class="mobile-slot__name">${escapeHtml(slot.team?.name || slot.label)}</p>
+        <p class="mobile-slot__name">${escapeHtml(slot.displayTeam?.name || slot.label)}</p>
         <p class="mobile-slot__meta">${escapeHtml(slot.note)}</p>
       </div>
-      <span class="mobile-slot__tag">${isWinner ? "Picked" : slot.team ? `No. ${slot.team.seed}` : "Open"}</span>
+      <span class="mobile-slot__tag">${isWinner ? "Picked" : slot.displayTeam ? escapeHtml(slot.displayTeam.mobileTag) : "Open"}</span>
     </div>
   `;
 }
 
 function renderViewMode(bracket, progress, currentContext) {
-  const viewMode = getViewMode();
+  const viewMode = bracket ? getViewMode() : "pick";
   document.body.dataset.viewMode = viewMode;
   elements.pickerScreen.hidden = viewMode !== "pick";
   elements.bracketScreen.hidden = viewMode !== "bracket";
@@ -1347,6 +1813,10 @@ function renderViewMode(bracket, progress, currentContext) {
   elements.pickViewButton.setAttribute("aria-pressed", viewMode === "pick");
   elements.bracketViewButton.classList.toggle("is-active", viewMode === "bracket");
   elements.bracketViewButton.setAttribute("aria-pressed", viewMode === "bracket");
+  elements.bracketViewButton.disabled = !bracket;
+  elements.seeBracketButton.disabled = !bracket;
+  elements.returnToPickButton.disabled = !bracket;
+  elements.revealBlindfoldButton.hidden = !canRevealBlindfold(bracket);
 
   renderBracketViewHeader(bracket, progress, currentContext);
   renderBracketCanvas(bracket);
@@ -1354,19 +1824,35 @@ function renderViewMode(bracket, progress, currentContext) {
 }
 
 function renderBracketViewHeader(bracket, progress, currentContext) {
+  if (!bracket) {
+    elements.bracketViewTitle.textContent = "Start a bracket";
+    elements.bracketViewHint.textContent =
+      "Pick regular mode for real teams or blindfold mode for clue-only mascot picking.";
+    return;
+  }
+
   const champion = getChampion(bracket);
   const nextOpen =
     currentContext.visibleGames.find((game) => !bracket.picks[game.id]) || currentContext.currentGame;
 
   elements.bracketViewTitle.textContent = bracket.name || "Untitled bracket";
-  elements.bracketViewHint.textContent = champion
-    ? `${champion.name} is your current champion pick. ${progress.pickedCount} of ${progress.total} games are locked in.`
+  elements.bracketViewHint.textContent = canRevealBlindfold(bracket)
+    ? "Every pick is locked in. Take off the blindfold to reveal the real teams behind your bracket."
+    : champion
+    ? `${getDisplayTeamName(bracket, champion)} is your current champion pick. ${progress.pickedCount} of ${progress.total} games are locked in.`
     : nextOpen
-      ? `${progress.pickedCount} of ${progress.total} picks are locked in. This live bracket updates as you pick, and the next open game is ${getPreviewLabel(nextOpen, bracket.picks)}.`
+      ? `${progress.pickedCount} of ${progress.total} picks are locked in. This live bracket updates as you pick, and the next open game is ${getPreviewLabel(nextOpen, bracket.picks, bracket)}.`
       : "Your live bracket board is ready for a full look.";
 }
 
 async function renderBracketCanvas(bracket) {
+  if (!bracket) {
+    state.bracketCanvasSignature = null;
+    elements.bracketCanvasWrap.innerHTML =
+      '<p class="bracket-canvas-wrap__loading">Start a bracket to see the live board here.</p>';
+    return;
+  }
+
   const signature = `${bracket.id}:${bracket.updatedAt}`;
   if (
     state.bracketCanvasSignature === signature &&
@@ -1474,16 +1960,23 @@ function attachEvents() {
     }
 
     elements.newBracketNameInput.setCustomValidity("");
-    startNewBracket(typedName);
+    startNewBracket(typedName, state.pendingBracketMode);
   });
 
   elements.useAutoNameButton.addEventListener("click", () => {
     elements.newBracketNameInput.setCustomValidity("");
-    startNewBracket(state.pendingBracketName);
+    startNewBracket(state.pendingBracketName, state.pendingBracketMode);
   });
 
   elements.newBracketNameInput.addEventListener("input", () => {
     elements.newBracketNameInput.setCustomValidity("");
+  });
+
+  elements.newBracketModeInputs.forEach((input) => {
+    input.addEventListener("change", (event) => {
+      setPendingBracketMode(event.target.value);
+      updateNewBracketModalCopy({ initial: state.newBracketModalLocked });
+    });
   });
 
   elements.cancelNewBracketButton.addEventListener("click", () => {
@@ -1509,6 +2002,10 @@ function attachEvents() {
 
   elements.deleteBracketButton.addEventListener("click", () => {
     const bracket = getCurrentBracket();
+    if (!bracket) {
+      return;
+    }
+
     const deletingLastBracket = state.store.brackets.length === 1;
     const confirmMessage = deletingLastBracket
       ? `Delete "${bracket.name}"? A fresh blank bracket will be created right away.`
@@ -1519,7 +2016,13 @@ function attachEvents() {
     }
 
     state.store.brackets = state.store.brackets.filter((item) => item.id !== bracket.id);
-    ensureCurrentBracket();
+    if (deletingLastBracket) {
+      const replacement = createBracket(nextBracketName(), { mode: bracket.mode });
+      state.store.brackets = [replacement];
+      state.store.currentBracketId = replacement.id;
+    } else {
+      ensureCurrentBracket();
+    }
     state.activeGameId = null;
     state.bracketCanvasSignature = null;
     persistStore();
@@ -1529,6 +2032,10 @@ function attachEvents() {
 
   elements.bracketNameInput.addEventListener("input", (event) => {
     const bracket = getCurrentBracket();
+    if (!bracket) {
+      return;
+    }
+
     bracket.name = event.target.value.slice(0, MAX_BRACKET_NAME);
     touchBracket(bracket);
     state.bracketCanvasSignature = null;
@@ -1543,6 +2050,10 @@ function attachEvents() {
 
   elements.bracketNameInput.addEventListener("blur", () => {
     const bracket = getCurrentBracket();
+    if (!bracket) {
+      return;
+    }
+
     if (bracket.name.trim()) {
       return;
     }
@@ -1556,6 +2067,10 @@ function attachEvents() {
 
   elements.resetButton.addEventListener("click", () => {
     const bracket = getCurrentBracket();
+    if (!bracket) {
+      return;
+    }
+
     if (!window.confirm(`Reset every pick in "${bracket.name}"?`)) {
       return;
     }
@@ -1601,13 +2116,28 @@ function attachEvents() {
     setViewMode("bracket");
   });
 
+  elements.revealBlindfoldButton.addEventListener("click", () => {
+    revealBlindfold();
+  });
+
   elements.matchupStage.addEventListener("click", (event) => {
     const teamButton = event.target.closest("[data-team-pick]");
-    if (!teamButton || !state.activeGameId) {
+    if (teamButton && state.activeGameId) {
+      setPick(state.activeGameId, teamButton.dataset.teamPick);
       return;
     }
 
-    setPick(state.activeGameId, teamButton.dataset.teamPick);
+    const actionButton = event.target.closest("[data-action='reveal-blindfold']");
+    if (actionButton) {
+      revealBlindfold();
+    }
+  });
+
+  elements.snapshotCard.addEventListener("click", (event) => {
+    const actionButton = event.target.closest("[data-action='reveal-blindfold']");
+    if (actionButton) {
+      revealBlindfold();
+    }
   });
 
   elements.exportJsonButton.addEventListener("click", exportJson);
@@ -1616,6 +2146,10 @@ function attachEvents() {
 
 async function exportJson() {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    return;
+  }
+
   const snapshot = buildExportSnapshot(bracket);
   const fileName = `${slugifyFileName(bracket.name)}-2026-picks.json`;
   const result = await saveBlob(
@@ -1629,6 +2163,7 @@ async function exportJson() {
 }
 
 function buildExportSnapshot(bracket) {
+  const identitiesHidden = isBlindfoldHidden(bracket);
   const picks = state.navigationGames.map((game) => {
     const matchup = resolveGame(game, bracket.picks);
     const winnerId = bracket.picks[game.id] || null;
@@ -1638,15 +2173,20 @@ function buildExportSnapshot(bracket) {
       round: game.roundLabel,
       region: game.region,
       title: game.title,
-      teams: [matchup.top?.name || null, matchup.bottom?.name || null],
-      winnerId,
-      winnerName: winnerId ? state.teamsById[winnerId]?.name || null : null,
+      teams: [
+        matchup.top ? getDisplayTeamName(bracket, matchup.top) : null,
+        matchup.bottom ? getDisplayTeamName(bracket, matchup.bottom) : null,
+      ],
+      winnerId: identitiesHidden ? null : winnerId,
+      winnerName: winnerId ? getDisplayTeamName(bracket, state.teamsById[winnerId]) : null,
     };
   });
 
   return {
     exportedAt: new Date().toISOString(),
     bracketName: bracket.name,
+    bracketMode: bracket.mode,
+    blindfoldRevealed: Boolean(bracket.blindfoldRevealed),
     datasetId: state.data.meta.tournamentId,
     datasetSource: {
       sourceName: state.data.meta.sourceName,
@@ -1656,13 +2196,21 @@ function buildExportSnapshot(bracket) {
       note: state.data.meta.note,
     },
     progress: getProgress(bracket),
-    champion: getChampion(bracket)?.name || null,
+    champion: getChampion(bracket) ? getDisplayTeamName(bracket, getChampion(bracket)) : null,
+    championId: identitiesHidden ? null : getChampion(bracket)?.id || null,
+    blindfoldNote: identitiesHidden
+      ? "Real team identities stay hidden in this export until the bracket reveal."
+      : null,
     picks,
   };
 }
 
 async function exportPoster() {
   const bracket = getCurrentBracket();
+  if (!bracket) {
+    return;
+  }
+
   const canvas = document.createElement("canvas");
   await renderPosterCanvas(canvas, bracket, { width: 2600, height: 1800 });
 
@@ -1808,6 +2356,7 @@ function drawPosterBackground(ctx, width, height) {
 async function drawPosterHeader(ctx, bracket, layout) {
   const { header } = layout;
   const champion = getChampion(bracket);
+  const displayChampion = champion ? getDisplayTeamData(bracket, champion) : null;
   const progress = getProgress(bracket);
   const brandIcon = await loadImage("assets/brand/bracket-parade-icon.svg");
 
@@ -1846,15 +2395,15 @@ async function drawPosterHeader(ctx, bracket, layout) {
       tint: "#fff0d7",
     },
     {
-      label: "Exported",
-      value: new Date().toLocaleDateString(),
+      label: "Mode",
+      value: getBracketModeLabel(bracket),
       tint: "#e6f3ff",
     },
     {
       label: "Champion",
-      value: champion ? truncateText(ctx, compactTeamName(champion.name), 180) : "Still open",
-      tint: champion ? hexToRgba(getThemeForTeam(champion).color, 0.18) : "#eef1f5",
-      logo: champion?.logo || null,
+      value: displayChampion ? truncateText(ctx, displayChampion.compactName, 180) : "Still open",
+      tint: displayChampion ? hexToRgba(displayChampion.theme.color, 0.18) : "#eef1f5",
+      logo: displayChampion?.logo || null,
     },
   ];
 
@@ -1892,7 +2441,7 @@ async function drawPosterHeaderPill(ctx, { x, y, width, height, label, value, ti
 
   ctx.fillStyle = "#23303d";
   ctx.font = '800 28px "Baloo 2"';
-  ctx.fillText(value, valueX, y + 54);
+  ctx.fillText(truncateText(ctx, value, width - (valueX - x) - 16), valueX, y + 54);
 }
 
 async function drawPosterFirstFourRail(ctx, bracket, layout) {
@@ -1929,7 +2478,11 @@ async function drawPosterFirstFourRail(ctx, bracket, layout) {
 
     ctx.fillStyle = "#5c6a79";
     ctx.font = '800 14px "Nunito"';
-    ctx.fillText(`${game.region} No. ${game.seedLine}`, x + 16, firstFour.y + 34);
+    ctx.fillText(
+      isBlindfoldHidden(bracket) ? `${game.region} play-in` : `${game.region} No. ${game.seedLine}`,
+      x + 16,
+      firstFour.y + 34
+    );
 
     await drawPosterGameBox(
       ctx,
@@ -2243,6 +2796,7 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
 
 async function drawPosterChampionBadge(ctx, bracket, rect) {
   const champion = getChampion(bracket);
+  const displayChampion = champion ? getDisplayTeamData(bracket, champion) : null;
 
   ctx.fillStyle = "rgba(255,255,255,0.94)";
   roundRect(ctx, rect.x, rect.y, rect.width, rect.height, 28);
@@ -2254,7 +2808,7 @@ async function drawPosterChampionBadge(ctx, bracket, rect) {
 
   ctx.fillStyle = "#5c6a79";
   ctx.font = '800 16px "Nunito"';
-  ctx.fillText("Champion pick", rect.x + 22, rect.y + 28);
+  ctx.fillText(isBlindfoldHidden(bracket) ? "Blindfold champion" : "Champion pick", rect.x + 22, rect.y + 28);
 
   if (!champion) {
     ctx.fillStyle = "#23303d";
@@ -2266,8 +2820,8 @@ async function drawPosterChampionBadge(ctx, bracket, rect) {
     return;
   }
 
-  const theme = getThemeForTeam(champion);
-  const image = await loadImage(champion.logo);
+  const theme = getDisplayTeamTheme(bracket, champion);
+  const image = await loadImage(displayChampion.logo);
 
   ctx.fillStyle = "rgba(255,255,255,0.96)";
   roundRect(ctx, rect.x + 22, rect.y + 44, 116, 116, 26);
@@ -2279,15 +2833,11 @@ async function drawPosterChampionBadge(ctx, bracket, rect) {
 
   ctx.fillStyle = "#23303d";
   ctx.font = '800 42px "Baloo 2"';
-  ctx.fillText(compactTeamName(champion.name), rect.x + 164, rect.y + 90);
+  ctx.fillText(truncateText(ctx, displayChampion.compactName, rect.width - 198), rect.x + 164, rect.y + 90);
 
   ctx.fillStyle = "#5c6a79";
   ctx.font = '800 21px "Nunito"';
-  ctx.fillText(
-    `${champion.conference} • No. ${champion.seed} • ${getTeamRecordLabel(champion)}`,
-    rect.x + 164,
-    rect.y + 128
-  );
+  ctx.fillText(truncateText(ctx, displayChampion.championMeta, rect.width - 198), rect.x + 164, rect.y + 128);
 
   ctx.fillStyle = theme.color;
   roundRect(ctx, rect.x + 164, rect.y + 146, 198, 26, 13);
@@ -2303,7 +2853,7 @@ async function drawPosterGameBox(ctx, game, rect, bracket, options = {}) {
     compact = false,
     emphasize = false,
   } = options;
-  const slots = getPosterGameSlots(game, bracket.picks);
+  const slots = getPosterGameSlots(game, bracket.picks, bracket);
   const winnerId = bracket.picks[game.id] || null;
   const winnerIndex = slots.findIndex((slot) => slot.team?.id === winnerId);
   const slotRects = getPosterSlotRects(rect);
@@ -2325,7 +2875,7 @@ async function drawPosterGameBox(ctx, game, rect, bracket, options = {}) {
     const isWinner = index === winnerIndex;
     const fillColor =
       isWinner && slot.team
-        ? hexToRgba(getThemeForTeam(slot.team).color, 0.18)
+        ? hexToRgba(getDisplayTeamTheme(bracket, slot.team).color, 0.18)
         : slot.team
           ? "rgba(255,255,255,0.92)"
           : "rgba(35, 48, 61, 0.045)";
@@ -2352,8 +2902,8 @@ async function drawPosterSlot(ctx, slot, slotRect, { isWinner, compact }) {
   ctx.font = compact ? '800 12px "Nunito"' : '800 14px "Nunito"';
 
   let textX = slotRect.x + 10;
-  if (slot.team) {
-    const image = await loadImage(slot.team.logo);
+  if (slot.displayTeam) {
+    const image = await loadImage(slot.displayTeam.logo);
     const shellX = slotRect.x + 6;
     const shellY = slotRect.y + 3;
     ctx.fillStyle = "rgba(255,255,255,0.84)";
@@ -2385,25 +2935,29 @@ async function drawPosterSlot(ctx, slot, slotRect, { isWinner, compact }) {
   ctx.restore();
 }
 
-function getPosterGameSlots(game, picks) {
-  return game.slots.map((slot) => getPosterSlotDetails(slot, picks));
+function getPosterGameSlots(game, picks, bracket) {
+  return game.slots.map((slot) => getPosterSlotDetails(slot, picks, bracket));
 }
 
-function getPosterSlotDetails(slot, picks) {
+function getPosterSlotDetails(slot, picks, bracket) {
   if (slot.type === "team") {
     const team = state.teamsById[slot.teamId] || null;
+    const displayTeam = team ? getDisplayTeamData(bracket, team) : null;
     return {
       team,
-      label: team ? `${team.seed} ${compactTeamName(team.name)}` : "TBD",
+      displayTeam,
+      label: displayTeam?.slotLabel || "TBD",
     };
   }
 
   const pickedTeamId = picks[slot.gameId];
   if (pickedTeamId) {
     const team = state.teamsById[pickedTeamId] || null;
+    const displayTeam = team ? getDisplayTeamData(bracket, team) : null;
     return {
       team,
-      label: team ? `${team.seed} ${compactTeamName(team.name)}` : "TBD",
+      displayTeam,
+      label: displayTeam?.slotLabel || "TBD",
     };
   }
 
@@ -2412,16 +2966,18 @@ function getPosterSlotDetails(slot, picks) {
     const sourceTeams = sourceGame.slots
       .map((sourceSlot) => state.teamsById[sourceSlot.teamId] || null)
       .filter(Boolean)
-      .map((team) => compactTeamName(team.name));
+      .map((team) => getDisplayTeamData(bracket, team)?.compactName || "TBD");
 
     return {
       team: null,
-      label: sourceTeams.join(" / ") || "Play-in winner",
+      displayTeam: null,
+      label: isBlindfoldHidden(bracket) ? "Play-in winner" : sourceTeams.join(" / ") || "Play-in winner",
     };
   }
 
   return {
     team: null,
+    displayTeam: null,
     label: "TBD",
   };
 }
@@ -2449,7 +3005,7 @@ function getPosterSlotRects(rect) {
 
 function getPosterWinnerAnchor(game, rect, bracket, orientation) {
   const winnerId = bracket.picks[game.id] || null;
-  const slots = getPosterGameSlots(game, bracket.picks);
+  const slots = getPosterGameSlots(game, bracket.picks, bracket);
   const winnerIndex = slots.findIndex((slot) => slot.team?.id === winnerId);
 
   return {
@@ -2468,7 +3024,9 @@ function getPosterTargetAnchor(rect, slotIndex, orientation) {
 function getPosterConnectionColor(game, bracket, fallbackColor) {
   const winnerId = bracket.picks[game.id] || null;
   const winner = winnerId ? state.teamsById[winnerId] || null : null;
-  return winner ? hexToRgba(getThemeForTeam(winner).color, 0.86) : hexToRgba(fallbackColor, 0.34);
+  return winner
+    ? hexToRgba(getDisplayTeamTheme(bracket, winner).color, 0.86)
+    : hexToRgba(fallbackColor, 0.34);
 }
 
 function drawPosterConnector(ctx, from, to, color) {
@@ -2483,6 +3041,94 @@ function drawPosterConnector(ctx, from, to, color) {
   ctx.lineTo(midX, to.y);
   ctx.lineTo(to.x, to.y);
   ctx.stroke();
+}
+
+function buildBlindfoldLogo({ alias, initials, palette, shape, pattern }) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${escapeSvgText(alias)} badge">
+      <title>${escapeSvgText(alias)}</title>
+      <rect x="4" y="4" width="112" height="112" rx="30" fill="${palette.tint}" stroke="${palette.glow}" stroke-width="4" />
+      ${getBlindfoldPatternMarkup(pattern, palette)}
+      ${getBlindfoldShapeMarkup(shape, palette)}
+      <circle cx="60" cy="60" r="24" fill="#ffffff" opacity="0.88" />
+      <text x="60" y="68" text-anchor="middle" font-family="Trebuchet MS, Arial, sans-serif" font-size="26" font-weight="900" fill="${palette.accent}">${escapeSvgText(initials)}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function getBlindfoldShapeMarkup(shape, palette) {
+  if (shape === "pennant") {
+    return `<path d="M24 20h62l10 18-10 18H24l8-18z" fill="${palette.color}" opacity="0.95" /><path d="M28 72h64l-10 24H38z" fill="${palette.glow}" opacity="0.78" />`;
+  }
+
+  if (shape === "medal") {
+    return `<circle cx="60" cy="58" r="34" fill="${palette.color}" opacity="0.94" /><circle cx="60" cy="58" r="23" fill="${palette.glow}" opacity="0.86" /><path d="M45 86h30l-8 18H53z" fill="${palette.color}" opacity="0.84" />`;
+  }
+
+  if (shape === "ticket") {
+    return `<path d="M24 28c8 0 10-8 18-8h36c8 0 10 8 18 8v16c-8 0-10 8-18 8h-36c-8 0-10-8-18-8z" fill="${palette.color}" opacity="0.95" /><rect x="28" y="58" width="64" height="30" rx="12" fill="${palette.glow}" opacity="0.82" />`;
+  }
+
+  return `<path d="M60 14l31 12-6 44c-6 16-17 26-25 33-8-7-19-17-25-33l-6-44z" fill="${palette.color}" opacity="0.95" /><path d="M60 28l17 7-4 28c-3 9-8 15-13 20-5-5-10-11-13-20l-4-28z" fill="${palette.glow}" opacity="0.82" />`;
+}
+
+function getBlindfoldPatternMarkup(pattern, palette) {
+  if (pattern === "orbit") {
+    return `<ellipse cx="60" cy="60" rx="42" ry="24" fill="none" stroke="${palette.color}" stroke-width="5" opacity="0.18" /><circle cx="88" cy="40" r="5" fill="${palette.color}" opacity="0.42" /><circle cx="30" cy="84" r="4" fill="${palette.accent}" opacity="0.24" />`;
+  }
+
+  if (pattern === "rays") {
+    return `<path d="M60 10v18M60 92v18M10 60h18M92 60h18M25 25l12 12M83 83l12 12M95 25L83 37M25 95l12-12" stroke="${palette.color}" stroke-width="4" stroke-linecap="round" opacity="0.2" />`;
+  }
+
+  if (pattern === "confetti") {
+    return `<circle cx="24" cy="26" r="5" fill="${palette.color}" opacity="0.22" /><circle cx="96" cy="28" r="4" fill="${palette.accent}" opacity="0.24" /><circle cx="86" cy="92" r="5" fill="${palette.color}" opacity="0.22" /><path d="M26 88h14M84 16h12M18 54h10" stroke="${palette.accent}" stroke-width="4" stroke-linecap="round" opacity="0.18" />`;
+  }
+
+  return `<path d="M60 16l8 18 19 2-14 12 4 18-17-10-17 10 4-18-14-12 19-2z" fill="${palette.color}" opacity="0.12" /><path d="M60 20l6 14 15 2-11 9 3 14-13-8-13 8 3-14-11-9 15-2z" fill="${palette.accent}" opacity="0.08" />`;
+}
+
+function hashString(value) {
+  let hash = 2166136261;
+  for (const character of String(value)) {
+    hash ^= character.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function mulberry32(seed) {
+  let current = seed >>> 0;
+  return () => {
+    current += 0x6d2b79f5;
+    let result = Math.imul(current ^ (current >>> 15), 1 | current);
+    result ^= result + Math.imul(result ^ (result >>> 7), 61 | result);
+    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function seededShuffle(items, seed) {
+  const shuffled = [...items];
+  const random = mulberry32(hashString(seed));
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
+function escapeSvgText(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 function compactTeamName(name) {
@@ -2683,15 +3329,6 @@ function formatGameStageLabel(game) {
   }
 
   return `${game.region} region`;
-}
-
-function getPreviewLabel(game, picks) {
-  const matchup = resolveGame(game, picks);
-  if (matchup.top && matchup.bottom) {
-    return `${matchup.top.name} vs ${matchup.bottom.name}`;
-  }
-
-  return game.title;
 }
 
 function getAdvancementLabel(round) {
