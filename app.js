@@ -415,6 +415,9 @@ function setViewMode(mode) {
   persistStore();
   render();
   window.requestAnimationFrame(() => {
+    if (nextMode === "bracket") {
+      resetBracketCanvasViewport();
+    }
     scrollToViewStart(nextMode);
   });
 }
@@ -478,6 +481,14 @@ function applyBracketZoom() {
   elements.zoomOutButton.disabled = state.bracketZoom <= BRACKET_ZOOM_MIN + 0.001;
   elements.zoomInButton.disabled = state.bracketZoom >= BRACKET_ZOOM_MAX - 0.001;
   elements.fitBracketButton.classList.toggle("is-active", Math.abs(state.bracketZoom - 1) < 0.001);
+}
+
+function resetBracketCanvasViewport() {
+  if (!elements.bracketCanvasWrap) {
+    return;
+  }
+
+  elements.bracketCanvasWrap.scrollTo({ left: 0, top: 0, behavior: "auto" });
 }
 
 function setPendingBracketMode(mode) {
@@ -2006,6 +2017,7 @@ async function renderBracketCanvas(bracket) {
   elements.bracketCanvasWrap.innerHTML = "";
   elements.bracketCanvasWrap.append(canvas);
   applyBracketZoom();
+  resetBracketCanvasViewport();
 }
 
 function scheduleBracketCanvasRender(bracket, { active = false } = {}) {
@@ -2096,6 +2108,7 @@ function attachEvents() {
 
   elements.fitBracketButton.addEventListener("click", () => {
     setBracketZoom(1);
+    resetBracketCanvasViewport();
   });
 
   elements.zoomInButton.addEventListener("click", () => {
