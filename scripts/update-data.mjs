@@ -256,10 +256,75 @@ function upsertTeam(teams, stats, row, region, seed, isPlayIn) {
     sos: stats?.sos ?? existing.sos ?? null,
     nextGame: stats?.nextGame || existing.nextGame || "",
     nextOpponent: stats?.nextOpponent || existing.nextOpponent || "",
+    recentResults: existing.recentResults || [],
+    recentRecord: existing.recentRecord || "",
+    currentStreak: existing.currentStreak || "",
     region,
     seed,
     isPlayIn,
   });
+}
+
+function getCompletedResultsFromSchedule(html) {
+  const rows = [...html.matchAll(/<tr class="TableBase-bodyTr">([\s\S]*?)<\/tr>/g)];
+  const results = [];
+
+  for (const [, rowHtml] of rows) {
+    const resultMatch = rowHtml.match(/<span class="CellGame-(?:win|lose)">\s*([WL])\s*<\/span>/);
+    if (!resultMatch) {
+      continue;
+    }
+
+    results.push(resultMatch[1]);
+  }
+
+  return results;
+}
+
+function getCurrentStreak(results) {
+  if (!results.length) {
+    return "";
+  }
+
+  const lastResult = results[results.length - 1];
+  let count = 0;
+
+  for (let index = results.length - 1; index >= 0; index -= 1) {
+    if (results[index] !== lastResult) {
+      break;
+    }
+    count += 1;
+  }
+
+  return `${lastResult}${count}`;
+}
+
+async function enrichTeamsWithRecentForm(teams) {
+  for (const team of teams.values()) {
+    if (!team.code || !team.pageSlug) {
+      continue;
+    }
+
+    const scheduleUrl = `https://www.cbssports.com/college-basketball/teams/${team.code}/${team.pageSlug}/schedule/`;
+
+    try {
+      const html = await fetchText(scheduleUrl);
+      const results = getCompletedResultsFromSchedule(html);
+      const recentResults = results.slice(-5);
+      const recentWins = recentResults.filter((result) => result === "W").length;
+
+      team.recentResults = recentResults;
+      team.recentRecord = recentResults.length
+        ? `${recentWins}-${recentResults.length - recentWins}`
+        : "";
+      team.currentStreak = getCurrentStreak(results);
+    } catch (error) {
+      console.warn(`Unable to fetch recent form for ${team.code}: ${error.message}`);
+      team.recentResults = team.recentResults || [];
+      team.recentRecord = team.recentRecord || "";
+      team.currentStreak = team.currentStreak || "";
+    }
+  }
 }
 
 function addGame(games, payload) {
@@ -300,6 +365,14 @@ async function downloadLogos(teams) {
 }
 
 async function main() {
+  const generatedAt = new Date();
+  const generatedDateId = generatedAt.toISOString().slice(0, 10);
+  const generatedDateLabel = generatedAt.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "America/New_York",
+  });
   const html = await fetchText(BRACKETOLOGY_URL);
   const updatedMatch = html.match(
     /<span class="table-update-text">Updated<\/span>\s*([^<]+)/
@@ -444,20 +517,23 @@ async function main() {
     ],
   });
 
+  await enrichTeamsWithRecentForm(teams);
   await downloadLogos(teams);
 
   const data = {
     meta: {
-      tournamentId: "2026-men-cbs-projected-2026-03-12",
+      tournamentId: `2026-men-cbs-projected-${generatedDateId}`,
       season: 2026,
       tournament: "NCAA Men's Basketball Tournament",
       officialBracket: false,
       sourceName: "CBS Sports Bracketology",
       sourceUrl: BRACKETOLOGY_URL,
       sourceUpdatedLabel: `${updatedMatch[1].trim()} ET`,
-      generatedAt: new Date().toISOString(),
+      generatedAt: generatedAt.toISOString(),
       note:
-        "The official 2026 NCAA men's bracket was not available on March 12, 2026. This dataset uses the current CBS Sports projected field and projected first-round matchups.",
+        `The official 2026 NCAA men's bracket was not available on ${generatedDateLabel}. This dataset uses the current CBS Sports projected field and projected first-round matchups.`,
+      hotStreakSource:
+        "Recent form comes from each team's CBS Sports schedule page and uses the latest five completed games plus the current streak.",
     },
     regions: Object.entries(REGION_THEMES).map(([name, theme]) => ({
       name,

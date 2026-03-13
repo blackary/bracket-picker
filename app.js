@@ -1246,19 +1246,15 @@ function getTeamFacts(team) {
 }
 
 function getTeamScoutRows(team) {
-  const record = getTeamRecordNumbers(team);
-  const gamesPlayed = record.wins + record.losses;
-  const winPct = gamesPlayed ? record.wins / gamesPlayed : 0;
+  const hotStreak = getHotStreakSummary(team);
   const bigWins = getRecordNumbers(team.quad1).wins;
   const badLosses = getRecordNumbers(team.quad3).losses + getRecordNumbers(team.quad4).losses;
 
   return [
     {
       label: "Hot streak",
-      note: gamesPlayed
-        ? `Won ${record.wins} of ${gamesPlayed} games`
-        : "Record still settling in",
-      rating: getWinPctRating(winPct),
+      note: hotStreak.note,
+      rating: hotStreak.rating,
     },
     {
       label: "Big wins",
@@ -1283,6 +1279,68 @@ function getTeamScoutRows(team) {
 function getTeamRecordLabel(team) {
   const { wins, losses } = getTeamRecordNumbers(team);
   return wins || losses ? `${wins} wins, ${losses} losses` : "Record coming soon";
+}
+
+function getHotStreakSummary(team) {
+  const recentResults = getRecentResults(team);
+  if (!recentResults.length) {
+    return {
+      note: "Recent form still coming in",
+      rating: 3,
+    };
+  }
+
+  const recentWindow = recentResults.slice(-5);
+  const recentWins = recentWindow.filter((result) => result === "W").length;
+  const streak = getCurrentStreak(recentResults);
+
+  if (streak.count >= 3) {
+    return {
+      note:
+        streak.type === "W"
+          ? `Won ${streak.count} straight`
+          : `Lost ${streak.count} straight`,
+      rating: getHotStreakRating(recentWins, recentWindow.length, streak),
+    };
+  }
+
+  if (recentWindow.length === 1) {
+    return {
+      note: recentWindow[0] === "W" ? "Won the last game" : "Lost the last game",
+      rating: getHotStreakRating(recentWins, recentWindow.length, streak),
+    };
+  }
+
+  return {
+    note: `Won ${recentWins} of last ${recentWindow.length}`,
+    rating: getHotStreakRating(recentWins, recentWindow.length, streak),
+  };
+}
+
+function getRecentResults(team) {
+  if (!Array.isArray(team?.recentResults)) {
+    return [];
+  }
+
+  return team.recentResults.filter((result) => result === "W" || result === "L");
+}
+
+function getCurrentStreak(results) {
+  if (!results.length) {
+    return { type: null, count: 0 };
+  }
+
+  const type = results[results.length - 1];
+  let count = 0;
+
+  for (let index = results.length - 1; index >= 0; index -= 1) {
+    if (results[index] !== type) {
+      break;
+    }
+    count += 1;
+  }
+
+  return { type, count };
 }
 
 function getTeamRecordNumbers(team) {
@@ -1350,24 +1408,35 @@ function getConferenceProfile(conference) {
   return "Smaller conference";
 }
 
-function getWinPctRating(winPct) {
+function getHotStreakRating(recentWins, recentGames, streak) {
+  if (!recentGames) {
+    return 3;
+  }
+
+  const winPct = recentWins / recentGames;
+  let rating;
+
   if (winPct >= 0.88) {
     return 5;
   }
 
   if (winPct >= 0.8) {
-    return 4;
+    rating = 4;
+  } else if (winPct >= 0.6) {
+    rating = 3;
+  } else if (winPct >= 0.4) {
+    rating = 2;
+  } else {
+    rating = 1;
   }
 
-  if (winPct >= 0.7) {
-    return 3;
+  if (streak.type === "W" && streak.count >= 4) {
+    rating += 1;
+  } else if (streak.type === "L" && streak.count >= 3) {
+    rating -= 1;
   }
 
-  if (winPct >= 0.62) {
-    return 2;
-  }
-
-  return 1;
+  return Math.max(1, Math.min(5, rating));
 }
 
 function getBigWinsRating(bigWins) {

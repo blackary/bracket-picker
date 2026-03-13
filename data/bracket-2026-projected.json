@@ -1,14 +1,15 @@
 {
   "meta": {
-    "tournamentId": "2026-men-cbs-projected-2026-03-12",
+    "tournamentId": "2026-men-cbs-projected-2026-03-13",
     "season": 2026,
     "tournament": "NCAA Men's Basketball Tournament",
     "officialBracket": false,
     "sourceName": "CBS Sports Bracketology",
     "sourceUrl": "https://www.cbssports.com/college-basketball/bracketology/",
-    "sourceUpdatedLabel": "Mar 12, 11:06am ET",
-    "generatedAt": "2026-03-12T22:46:34.010Z",
-    "note": "The official 2026 NCAA men's bracket was not available on March 12, 2026. This dataset uses the current CBS Sports projected field and projected first-round matchups."
+    "sourceUpdatedLabel": "Mar 13, 10:38am ET",
+    "generatedAt": "2026-03-13T19:44:28.509Z",
+    "note": "The official 2026 NCAA men's bracket was not available on March 13, 2026. This dataset uses the current CBS Sports projected field and projected first-round matchups.",
+    "hotStreakSource": "Recent form comes from each team's CBS Sports schedule page and uses the latest five completed games plus the current streak."
   },
   "regions": [
     {
@@ -33,6 +34,39 @@
     }
   ],
   "teams": {
+    "AKRON": {
+      "id": "AKRON",
+      "code": "AKRON",
+      "name": "Akron",
+      "slug": "akron",
+      "logo": "assets/logos/akron.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21264.svg",
+      "pageSlug": "akron-zips",
+      "record": "27-5",
+      "wins": 27,
+      "losses": 5,
+      "conference": "Mid-American",
+      "net": 54,
+      "quad1": "0-2",
+      "quad2": "0-2",
+      "quad3": "9-1",
+      "quad4": "16-0",
+      "sos": 179,
+      "nextGame": "Mar 13, 7:30pm ET",
+      "nextOpponent": "vs Kent St.",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W8",
+      "region": "East",
+      "seed": 12,
+      "isPlayIn": false
+    },
     "ARIZ": {
       "id": "ARIZ",
       "code": "ARIZ",
@@ -46,13 +80,22 @@
       "losses": 2,
       "conference": "Big 12",
       "net": 3,
-      "quad1": "15-2",
-      "quad2": "7-0",
+      "quad1": "14-2",
+      "quad2": "8-0",
       "quad3": "1-0",
       "quad4": "7-0",
-      "sos": 9,
+      "sos": 10,
       "nextGame": "Mar 13, 7:00pm ET",
       "nextOpponent": "vs Iowa St.",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W7",
       "region": "West",
       "seed": 1,
       "isPlayIn": false
@@ -69,41 +112,26 @@
       "wins": 23,
       "losses": 8,
       "conference": "SEC",
-      "net": 18,
+      "net": 17,
       "quad1": "6-8",
       "quad2": "7-0",
       "quad3": "4-0",
       "quad4": "6-0",
       "sos": 7,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
-      "region": "South",
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "vs Oklahoma",
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W2",
+      "region": "West",
       "seed": 5,
       "isPlayIn": false
-    },
-    "AUBURN": {
-      "id": "AUBURN",
-      "code": "AUBURN",
-      "name": "Auburn",
-      "slug": "auburn",
-      "logo": "assets/logos/auburn.svg",
-      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21354.svg",
-      "pageSlug": "auburn-tigers",
-      "record": "17-16",
-      "wins": 17,
-      "losses": 16,
-      "conference": "SEC",
-      "net": 38,
-      "quad1": "4-12",
-      "quad2": "3-2",
-      "quad3": "4-1",
-      "quad4": "6-0",
-      "sos": 5,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
-      "region": "Midwest",
-      "seed": 11,
-      "isPlayIn": true
     },
     "BAMA": {
       "id": "BAMA",
@@ -117,14 +145,23 @@
       "wins": 23,
       "losses": 8,
       "conference": "SEC",
-      "net": 17,
+      "net": 14,
       "quad1": "7-7",
       "quad2": "9-1",
       "quad3": "5-0",
       "quad4": "2-0",
       "sos": 4,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "nextGame": "Mar 13, 7:00pm ET",
+      "nextOpponent": "vs Ole Miss",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W1",
       "region": "West",
       "seed": 3,
       "isPlayIn": false
@@ -137,20 +174,29 @@
       "logo": "assets/logos/byu.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21424.svg",
       "pageSlug": "byu-cougars",
-      "record": "23-10",
+      "record": "23-11",
       "wins": 23,
-      "losses": 10,
+      "losses": 11,
       "conference": "Big 12",
       "net": 23,
-      "quad1": "7-9",
+      "quad1": "7-10",
       "quad2": "7-1",
       "quad3": "4-0",
       "quad4": "5-0",
-      "sos": 11,
-      "nextGame": "Mar 12, 7:00pm ET",
-      "nextOpponent": "@ Houston",
+      "sos": 9,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L1",
       "region": "West",
-      "seed": 6,
+      "seed": 7,
       "isPlayIn": false
     },
     "CLEM": {
@@ -161,20 +207,29 @@
       "logo": "assets/logos/clem.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21129.svg",
       "pageSlug": "clemson-tigers",
-      "record": "23-9",
-      "wins": 23,
+      "record": "24-9",
+      "wins": 24,
       "losses": 9,
       "conference": "ACC",
-      "net": 36,
-      "quad1": "5-5",
-      "quad2": "7-4",
+      "net": 34,
+      "quad1": "7-5",
+      "quad2": "6-4",
       "quad3": "4-0",
       "quad4": "7-0",
-      "sos": 75,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "@ N. Carolina",
-      "region": "East",
-      "seed": 8,
+      "sos": 72,
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "@ Duke",
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
+      "region": "Midwest",
+      "seed": 7,
       "isPlayIn": false
     },
     "DUKE": {
@@ -185,18 +240,27 @@
       "logo": "assets/logos/duke.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21130.svg",
       "pageSlug": "duke-blue-devils",
-      "record": "29-2",
-      "wins": 29,
+      "record": "30-2",
+      "wins": 30,
       "losses": 2,
       "conference": "ACC",
       "net": 1,
       "quad1": "15-2",
-      "quad2": "5-0",
+      "quad2": "6-0",
       "quad3": "2-0",
       "quad4": "7-0",
       "sos": 6,
-      "nextGame": "Mar 12, 7:00pm ET",
-      "nextOpponent": "vs Florida St.",
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "vs Clemson",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W9",
       "region": "East",
       "seed": 1,
       "isPlayIn": false
@@ -209,8 +273,8 @@
       "logo": "assets/logos/fla.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21355.svg",
       "pageSlug": "florida-gators",
-      "record": "25-6",
-      "wins": 25,
+      "record": "26-6",
+      "wins": 26,
       "losses": 6,
       "conference": "SEC",
       "net": 4,
@@ -218,9 +282,18 @@
       "quad2": "6-1",
       "quad3": "3-0",
       "quad4": "5-0",
-      "sos": 8,
-      "nextGame": "Mar 13, 1:00pm ET",
-      "nextOpponent": "vs Kentucky",
+      "sos": 11,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W11",
       "region": "South",
       "seed": 1,
       "isPlayIn": false
@@ -237,16 +310,25 @@
       "wins": 22,
       "losses": 12,
       "conference": "Southern",
-      "net": 186,
+      "net": 187,
       "quad1": "0-1",
       "quad2": "0-2",
       "quad3": "5-5",
       "quad4": "14-4",
-      "sos": 216,
+      "sos": 218,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "South",
-      "seed": 15,
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
+      "region": "East",
+      "seed": 16,
       "isPlayIn": false
     },
     "GONZAG": {
@@ -266,9 +348,18 @@
       "quad2": "4-0",
       "quad3": "11-1",
       "quad4": "8-0",
-      "sos": 86,
+      "sos": 84,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W2",
       "region": "West",
       "seed": 4,
       "isPlayIn": false
@@ -293,6 +384,15 @@
       "sos": 318,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W14",
       "region": "East",
       "seed": 13,
       "isPlayIn": false
@@ -309,14 +409,23 @@
       "wins": 24,
       "losses": 10,
       "conference": "Coastal Athletic",
-      "net": 87,
+      "net": 88,
       "quad1": "0-1",
       "quad2": "2-2",
       "quad3": "10-4",
       "quad4": "10-3",
-      "sos": 128,
+      "sos": 129,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W7",
       "region": "Midwest",
       "seed": 13,
       "isPlayIn": false
@@ -329,18 +438,27 @@
       "logo": "assets/logos/hou.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21237.svg",
       "pageSlug": "houston-cougars",
-      "record": "26-5",
-      "wins": 26,
+      "record": "27-5",
+      "wins": 27,
       "losses": 5,
       "conference": "Big 12",
-      "net": 7,
-      "quad1": "8-5",
+      "net": 8,
+      "quad1": "9-5",
       "quad2": "9-0",
-      "quad3": "4-0",
-      "quad4": "5-0",
-      "sos": 30,
-      "nextGame": "Mar 12, 7:00pm ET",
-      "nextOpponent": "vs BYU",
+      "quad3": "3-0",
+      "quad4": "6-0",
+      "sos": 25,
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "vs Kansas",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "South",
       "seed": 2,
       "isPlayIn": false
@@ -357,14 +475,23 @@
       "wins": 21,
       "losses": 10,
       "conference": "MEAC",
-      "net": 200,
+      "net": 202,
       "quad1": "0-2",
       "quad2": "1-2",
       "quad3": "1-0",
       "quad4": "15-6",
-      "sos": 360,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "sos": 358,
+      "nextGame": "Mar 13, 6:00pm ET",
+      "nextOpponent": "vs SC State",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W6",
       "region": "South",
       "seed": 16,
       "isPlayIn": true
@@ -381,15 +508,24 @@
       "wins": 21,
       "losses": 14,
       "conference": "Big Sky",
-      "net": 142,
+      "net": 146,
       "quad1": "0-0",
       "quad2": "0-4",
       "quad3": "9-7",
       "quad4": "9-3",
-      "sos": 312,
+      "sos": 310,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "West",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W5",
+      "region": "South",
       "seed": 15,
       "isPlayIn": false
     },
@@ -407,12 +543,21 @@
       "conference": "Big Ten",
       "net": 5,
       "quad1": "7-7",
-      "quad2": "6-0",
-      "quad3": "6-0",
+      "quad2": "5-0",
+      "quad3": "7-0",
       "quad4": "5-0",
       "sos": 13,
       "nextGame": "Mar 13, 2:30pm ET",
       "nextOpponent": "vs Wisconsin",
+      "recentResults": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W2",
       "region": "West",
       "seed": 2,
       "isPlayIn": false
@@ -430,14 +575,23 @@
       "losses": 12,
       "conference": "Big Ten",
       "net": 25,
-      "quad1": "4-9",
-      "quad2": "5-2",
-      "quad3": "6-1",
+      "quad1": "3-9",
+      "quad2": "6-1",
+      "quad3": "6-2",
       "quad4": "6-0",
-      "sos": 69,
+      "sos": 66,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "East",
+      "recentResults": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "L"
+      ],
+      "recentRecord": "1-4",
+      "currentStreak": "L1",
+      "region": "Midwest",
       "seed": 9,
       "isPlayIn": false
     },
@@ -453,14 +607,23 @@
       "wins": 27,
       "losses": 6,
       "conference": "Big 12",
-      "net": 8,
+      "net": 7,
       "quad1": "8-6",
       "quad2": "10-0",
       "quad3": "2-0",
       "quad4": "7-0",
-      "sos": 58,
+      "sos": 54,
       "nextGame": "Mar 13, 7:00pm ET",
       "nextOpponent": "@ Arizona",
+      "recentResults": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W3",
       "region": "Midwest",
       "seed": 3,
       "isPlayIn": false
@@ -473,20 +636,29 @@
       "logo": "assets/logos/kansas.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21204.svg",
       "pageSlug": "kansas-jayhawks",
-      "record": "22-9",
-      "wins": 22,
+      "record": "23-9",
+      "wins": 23,
       "losses": 9,
       "conference": "Big 12",
-      "net": 19,
-      "quad1": "8-8",
+      "net": 18,
+      "quad1": "9-8",
       "quad2": "7-1",
       "quad3": "4-0",
       "quad4": "3-0",
-      "sos": 1,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "vs TCU",
+      "sos": 2,
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "@ Houston",
+      "recentResults": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W2",
       "region": "East",
-      "seed": 5,
+      "seed": 4,
       "isPlayIn": false
     },
     "LEHIGH": {
@@ -501,7 +673,7 @@
       "wins": 18,
       "losses": 16,
       "conference": "Patriot",
-      "net": 275,
+      "net": 276,
       "quad1": "0-2",
       "quad2": "0-2",
       "quad3": "1-4",
@@ -509,6 +681,15 @@
       "sos": 293,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W6",
       "region": "Midwest",
       "seed": 16,
       "isPlayIn": true
@@ -525,14 +706,23 @@
       "wins": 24,
       "losses": 10,
       "conference": "Northeast",
-      "net": 196,
+      "net": 198,
       "quad1": "0-2",
       "quad2": "0-2",
       "quad3": "1-3",
       "quad4": "23-3",
-      "sos": 349,
+      "sos": 350,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W5",
       "region": "West",
       "seed": 16,
       "isPlayIn": false
@@ -549,15 +739,24 @@
       "wins": 23,
       "losses": 10,
       "conference": "ACC",
-      "net": 14,
+      "net": 16,
       "quad1": "7-10",
       "quad2": "5-0",
       "quad3": "4-0",
       "quad4": "7-0",
-      "sos": 23,
+      "sos": 20,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "Midwest",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L1",
+      "region": "East",
       "seed": 5,
       "isPlayIn": false
     },
@@ -578,9 +777,18 @@
       "quad2": "8-1",
       "quad3": "10-0",
       "quad4": "7-0",
-      "sos": 52,
+      "sos": 51,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "L1",
       "region": "South",
       "seed": 9,
       "isPlayIn": false
@@ -597,15 +805,24 @@
       "wins": 28,
       "losses": 5,
       "conference": "Southland",
-      "net": 57,
+      "net": 56,
       "quad1": "0-2",
       "quad2": "2-2",
       "quad3": "8-0",
       "quad4": "16-1",
-      "sos": 192,
+      "sos": 197,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "West",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W10",
+      "region": "South",
       "seed": 12,
       "isPlayIn": false
     },
@@ -621,16 +838,25 @@
       "wins": 25,
       "losses": 7,
       "conference": "ACC",
-      "net": 32,
+      "net": 30,
       "quad1": "6-5",
       "quad2": "6-2",
       "quad3": "3-0",
       "quad4": "10-0",
-      "sos": 114,
+      "sos": 104,
       "nextGame": "Mar 13, 7:00pm ET",
       "nextOpponent": "@ Virginia",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W1",
       "region": "East",
-      "seed": 7,
+      "seed": 6,
       "isPlayIn": false
     },
     "MIAOH": {
@@ -645,15 +871,24 @@
       "wins": null,
       "losses": null,
       "conference": "Mid-American",
-      "net": 54,
+      "net": 64,
       "quad1": "0-0",
       "quad2": "2-0",
-      "quad3": "11-0",
-      "quad4": "15-1",
-      "sos": 239,
+      "quad3": "11-1",
+      "quad4": "15-0",
+      "sos": 240,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "Midwest",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "L1",
+      "region": "West",
       "seed": 10,
       "isPlayIn": false
     },
@@ -665,18 +900,27 @@
       "logo": "assets/logos/mich.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21193.svg",
       "pageSlug": "michigan-wolverines",
-      "record": "29-2",
-      "wins": 29,
+      "record": "30-2",
+      "wins": 30,
       "losses": 2,
       "conference": "Big Ten",
       "net": 2,
       "quad1": "14-2",
       "quad2": "7-0",
       "quad3": "6-0",
-      "quad4": "2-0",
+      "quad4": "3-0",
       "sos": 3,
-      "nextGame": "Mar 13, 12:00pm ET",
-      "nextOpponent": "vs Ohio St.",
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W5",
       "region": "Midwest",
       "seed": 1,
       "isPlayIn": false
@@ -694,13 +938,22 @@
       "losses": 6,
       "conference": "Big Ten",
       "net": 11,
-      "quad1": "9-5",
-      "quad2": "5-1",
+      "quad1": "8-5",
+      "quad2": "6-1",
       "quad3": "7-0",
       "quad4": "4-0",
       "sos": 12,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "nextGame": "Mar 13, 9:00pm ET",
+      "nextOpponent": "vs UCLA",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "L1",
       "region": "East",
       "seed": 2,
       "isPlayIn": false
@@ -717,17 +970,26 @@
       "wins": 20,
       "losses": 12,
       "conference": "SEC",
-      "net": 59,
+      "net": 58,
       "quad1": "5-7",
       "quad2": "4-5",
       "quad3": "3-0",
       "quad4": "8-0",
-      "sos": 81,
+      "sos": 77,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "West",
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "recentRecord": "2-3",
+      "currentStreak": "L3",
+      "region": "Midwest",
       "seed": 11,
-      "isPlayIn": false
+      "isPlayIn": true
     },
     "NCST": {
       "id": "NCST",
@@ -742,15 +1004,24 @@
       "losses": 13,
       "conference": "ACC",
       "net": 35,
-      "quad1": "5-8",
-      "quad2": "6-4",
+      "quad1": "5-9",
+      "quad2": "6-3",
       "quad3": "5-0",
       "quad4": "4-1",
-      "sos": 18,
+      "sos": 15,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "Midwest",
-      "seed": 9,
+      "recentResults": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "L"
+      ],
+      "recentRecord": "1-4",
+      "currentStreak": "L1",
+      "region": "East",
+      "seed": 10,
       "isPlayIn": false
     },
     "NDAKST": {
@@ -768,11 +1039,20 @@
       "net": 115,
       "quad1": "0-0",
       "quad2": "0-1",
-      "quad3": "5-4",
-      "quad4": "19-2",
-      "sos": 329,
+      "quad3": "6-4",
+      "quad4": "18-2",
+      "sos": 326,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "Midwest",
       "seed": 14,
       "isPlayIn": false
@@ -790,13 +1070,22 @@
       "losses": 5,
       "conference": "Big Ten",
       "net": 12,
-      "quad1": "8-5",
-      "quad2": "7-0",
+      "quad1": "9-5",
+      "quad2": "6-0",
       "quad3": "5-0",
       "quad4": "6-0",
-      "sos": 55,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "sos": 58,
+      "nextGame": "Mar 13, 6:30pm ET",
+      "nextOpponent": "vs Purdue",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W1",
       "region": "East",
       "seed": 3,
       "isPlayIn": false
@@ -821,6 +1110,15 @@
       "sos": 113,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W5",
       "region": "Midwest",
       "seed": 12,
       "isPlayIn": false
@@ -833,18 +1131,27 @@
       "logo": "assets/logos/nova.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21171.svg",
       "pageSlug": "villanova-wildcats",
-      "record": "24-7",
+      "record": "24-8",
       "wins": 24,
-      "losses": 7,
+      "losses": 8,
       "conference": "Big East",
-      "net": 33,
+      "net": 36,
       "quad1": "2-6",
-      "quad2": "8-0",
+      "quad2": "8-1",
       "quad3": "9-1",
       "quad4": "5-0",
-      "sos": 42,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "vs Georgetown",
+      "sos": 44,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L1",
       "region": "South",
       "seed": 7,
       "isPlayIn": false
@@ -857,20 +1164,62 @@
       "logo": "assets/logos/ohiost.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21197.svg",
       "pageSlug": "ohio-state-buckeyes",
-      "record": "21-11",
+      "record": "21-12",
       "wins": 21,
-      "losses": 11,
+      "losses": 12,
       "conference": "Big Ten",
-      "net": 30,
-      "quad1": "4-10",
-      "quad2": "6-1",
-      "quad3": "5-0",
+      "net": 31,
+      "quad1": "4-11",
+      "quad2": "5-1",
+      "quad3": "6-0",
       "quad4": "6-0",
-      "sos": 31,
-      "nextGame": "Mar 13, 12:00pm ET",
-      "nextOpponent": "@ Michigan",
+      "sos": 28,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "L1",
       "region": "West",
       "seed": 8,
+      "isPlayIn": false
+    },
+    "OKLA": {
+      "id": "OKLA",
+      "code": "OKLA",
+      "name": "Oklahoma",
+      "slug": "oklahoma",
+      "logo": "assets/logos/okla.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21208.svg",
+      "pageSlug": "oklahoma-sooners",
+      "record": "19-14",
+      "wins": 19,
+      "losses": 14,
+      "conference": "SEC",
+      "net": 47,
+      "quad1": "4-9",
+      "quad2": "6-5",
+      "quad3": "2-0",
+      "quad4": "7-0",
+      "sos": 97,
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "@ Arkansas",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W6",
+      "region": "West",
+      "seed": 11,
       "isPlayIn": false
     },
     "PURDUE": {
@@ -881,45 +1230,30 @@
       "logo": "assets/logos/purdue.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21199.svg",
       "pageSlug": "purdue-boilermakers",
-      "record": "23-8",
-      "wins": 23,
+      "record": "24-8",
+      "wins": 24,
       "losses": 8,
       "conference": "Big Ten",
       "net": 10,
       "quad1": "8-8",
       "quad2": "6-0",
-      "quad3": "6-0",
+      "quad3": "7-0",
       "quad4": "3-0",
-      "sos": 14,
-      "nextGame": "Mar 12, 6:30pm ET",
-      "nextOpponent": "vs Northwestern",
+      "sos": 16,
+      "nextGame": "Mar 13, 6:30pm ET",
+      "nextOpponent": "@ Nebraska",
+      "recentResults": [
+        "L",
+        "L",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "2-3",
+      "currentStreak": "W1",
       "region": "South",
       "seed": 3,
       "isPlayIn": false
-    },
-    "PVAM": {
-      "id": "PVAM",
-      "code": "PVAM",
-      "name": "Prairie View",
-      "slug": "prairie-view",
-      "logo": "assets/logos/pvam.svg",
-      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21394.svg",
-      "pageSlug": "prairie-view-am-panthers",
-      "record": "16-17",
-      "wins": 16,
-      "losses": 17,
-      "conference": "SWAC",
-      "net": 310,
-      "quad1": "0-3",
-      "quad2": "0-2",
-      "quad3": "0-1",
-      "quad4": "12-11",
-      "sos": 353,
-      "nextGame": "Mar 13, 2:00pm ET",
-      "nextOpponent": "@ Alabama A&M",
-      "region": "Midwest",
-      "seed": 16,
-      "isPlayIn": true
     },
     "QUEENC": {
       "id": "QUEENC",
@@ -935,14 +1269,23 @@
       "conference": "Atlantic Sun",
       "net": 190,
       "quad1": "0-5",
-      "quad2": "0-0",
-      "quad3": "2-4",
+      "quad2": "0-1",
+      "quad3": "2-3",
       "quad4": "18-4",
-      "sos": 255,
+      "sos": 253,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "East",
-      "seed": 16,
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
+      "region": "West",
+      "seed": 15,
       "isPlayIn": false
     },
     "SAMHOU": {
@@ -960,11 +1303,20 @@
       "net": 100,
       "quad1": "0-2",
       "quad2": "0-2",
-      "quad3": "10-5",
-      "quad4": "9-1",
-      "sos": 171,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "quad3": "9-5",
+      "quad4": "10-1",
+      "sos": 176,
+      "nextGame": "Mar 13, 3:00pm ET",
+      "nextOpponent": "vs Kennesaw St.",
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W1",
       "region": "South",
       "seed": 13,
       "isPlayIn": false
@@ -981,16 +1333,25 @@
       "wins": 23,
       "losses": 8,
       "conference": "American",
-      "net": 47,
+      "net": 48,
       "quad1": "2-3",
       "quad2": "5-2",
       "quad3": "6-3",
       "quad4": "9-0",
-      "sos": 59,
+      "sos": 61,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W9",
       "region": "South",
-      "seed": 12,
+      "seed": 11,
       "isPlayIn": false
     },
     "SIENA": {
@@ -1005,41 +1366,26 @@
       "wins": 23,
       "losses": 11,
       "conference": "MAAC",
-      "net": 182,
+      "net": 184,
       "quad1": "0-1",
       "quad2": "0-0",
-      "quad3": "2-6",
-      "quad4": "21-4",
-      "sos": 277,
+      "quad3": "2-5",
+      "quad4": "21-5",
+      "sos": 276,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "East",
       "seed": 15,
       "isPlayIn": false
-    },
-    "SMU": {
-      "id": "SMU",
-      "code": "SMU",
-      "name": "SMU",
-      "slug": "smu",
-      "logo": "assets/logos/smu.svg",
-      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21433.svg",
-      "pageSlug": "smu-mustangs",
-      "record": "20-13",
-      "wins": 20,
-      "losses": 13,
-      "conference": "ACC",
-      "net": 37,
-      "quad1": "4-9",
-      "quad2": "5-4",
-      "quad3": "5-0",
-      "quad4": "6-0",
-      "sos": 19,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
-      "region": "Midwest",
-      "seed": 11,
-      "isPlayIn": true
     },
     "SNCLRA": {
       "id": "SNCLRA",
@@ -1058,11 +1404,53 @@
       "quad2": "6-1",
       "quad3": "10-0",
       "quad4": "7-1",
-      "sos": 46,
+      "sos": 43,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L1",
       "region": "East",
       "seed": 11,
+      "isPlayIn": true
+    },
+    "STHRN": {
+      "id": "STHRN",
+      "code": "STHRN",
+      "name": "Southern U.",
+      "slug": "southern-u",
+      "logo": "assets/logos/sthrn.svg",
+      "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21395.svg",
+      "pageSlug": "southern-jaguars",
+      "record": "16-16",
+      "wins": 16,
+      "losses": 16,
+      "conference": "SWAC",
+      "net": 278,
+      "quad1": "0-5",
+      "quad2": "0-2",
+      "quad3": "0-1",
+      "quad4": "13-8",
+      "sos": 331,
+      "nextGame": "Mar 13, 8:30pm ET",
+      "nextOpponent": "@ Florida A&M",
+      "recentResults": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W3",
+      "region": "Midwest",
+      "seed": 16,
       "isPlayIn": true
     },
     "STJOHN": {
@@ -1082,10 +1470,19 @@
       "quad2": "11-0",
       "quad3": "9-1",
       "quad4": "3-0",
-      "sos": 25,
+      "sos": 32,
       "nextGame": "Mar 13, 5:30pm ET",
       "nextOpponent": "vs Seton Hall",
-      "region": "East",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
+      "region": "South",
       "seed": 6,
       "isPlayIn": false
     },
@@ -1097,20 +1494,29 @@
       "logo": "assets/logos/stlou.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21244.svg",
       "pageSlug": "saint-louis-billikens",
-      "record": "27-4",
-      "wins": 27,
+      "record": "28-4",
+      "wins": 28,
       "losses": 4,
       "conference": "Atlantic 10",
-      "net": 28,
+      "net": 29,
       "quad1": "2-1",
-      "quad2": "4-2",
-      "quad3": "7-1",
+      "quad2": "6-2",
+      "quad3": "6-1",
       "quad4": "13-0",
-      "sos": 107,
-      "nextGame": "Mar 13, 11:30am ET",
-      "nextOpponent": "vs George Wash.",
-      "region": "West",
-      "seed": 10,
+      "sos": 108,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W1",
+      "region": "East",
+      "seed": 9,
       "isPlayIn": false
     },
     "TCU": {
@@ -1121,18 +1527,27 @@
       "logo": "assets/logos/tcu.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21434.svg",
       "pageSlug": "tcu-horned-frogs",
-      "record": "22-10",
+      "record": "22-11",
       "wins": 22,
-      "losses": 10,
+      "losses": 11,
       "conference": "Big 12",
-      "net": 39,
-      "quad1": "6-6",
+      "net": 38,
+      "quad1": "6-7",
       "quad2": "7-2",
       "quad3": "2-1",
       "quad4": "7-1",
-      "sos": 66,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "@ Kansas",
+      "sos": 60,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "L1",
       "region": "West",
       "seed": 9,
       "isPlayIn": false
@@ -1149,16 +1564,25 @@
       "wins": 22,
       "losses": 10,
       "conference": "SEC",
-      "net": 20,
-      "quad1": "5-9",
+      "net": 19,
+      "quad1": "6-9",
       "quad2": "6-1",
       "quad3": "3-0",
       "quad4": "7-0",
-      "sos": 21,
+      "sos": 22,
       "nextGame": "Mar 13, 3:30pm ET",
       "nextOpponent": "@ Vanderbilt",
+      "recentResults": [
+        "L",
+        "L",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "2-3",
+      "currentStreak": "W1",
       "region": "South",
-      "seed": 6,
+      "seed": 5,
       "isPlayIn": false
     },
     "TEXAM": {
@@ -1169,18 +1593,27 @@
       "logo": "assets/logos/texam.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21211.svg",
       "pageSlug": "texas-am-aggies",
-      "record": "21-10",
+      "record": "21-11",
       "wins": 21,
-      "losses": 10,
+      "losses": 11,
       "conference": "SEC",
-      "net": 42,
-      "quad1": "5-7",
+      "net": 43,
+      "quad1": "5-8",
       "quad2": "4-3",
       "quad3": "4-0",
       "quad4": "8-0",
-      "sos": 95,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "vs Oklahoma",
+      "sos": 96,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "L",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "2-3",
+      "currentStreak": "L1",
       "region": "South",
       "seed": 10,
       "isPlayIn": false
@@ -1197,17 +1630,26 @@
       "wins": 18,
       "losses": 14,
       "conference": "SEC",
-      "net": 43,
+      "net": 42,
       "quad1": "6-9",
       "quad2": "1-4",
       "quad3": "3-1",
       "quad4": "7-0",
-      "sos": 56,
+      "sos": 58,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "recentRecord": "1-4",
+      "currentStreak": "L3",
       "region": "East",
-      "seed": 10,
-      "isPlayIn": false
+      "seed": 11,
+      "isPlayIn": true
     },
     "TNST": {
       "id": "TNST",
@@ -1221,7 +1663,7 @@
       "wins": 23,
       "losses": 9,
       "conference": "Ohio Valley",
-      "net": 173,
+      "net": 174,
       "quad1": "0-2",
       "quad2": "1-0",
       "quad3": "3-1",
@@ -1229,6 +1671,15 @@
       "sos": 273,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W6",
       "region": "Midwest",
       "seed": 15,
       "isPlayIn": false
@@ -1245,14 +1696,23 @@
       "wins": 22,
       "losses": 11,
       "conference": "Sun Belt",
-      "net": 126,
+      "net": 125,
       "quad1": "1-0",
       "quad2": "2-1",
       "quad3": "4-7",
       "quad4": "13-3",
-      "sos": 162,
+      "sos": 154,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "South",
       "seed": 14,
       "isPlayIn": false
@@ -1269,16 +1729,25 @@
       "wins": 22,
       "losses": 10,
       "conference": "Big 12",
-      "net": 15,
+      "net": 20,
       "quad1": "7-9",
       "quad2": "5-1",
       "quad3": "7-0",
       "quad4": "3-0",
-      "sos": 2,
+      "sos": 1,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "East",
-      "seed": 4,
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "L",
+        "L"
+      ],
+      "recentRecord": "2-3",
+      "currentStreak": "L3",
+      "region": "Midwest",
+      "seed": 5,
       "isPlayIn": false
     },
     "UCF": {
@@ -1293,16 +1762,25 @@
       "wins": 21,
       "losses": 11,
       "conference": "Big 12",
-      "net": 50,
+      "net": 52,
       "quad1": "5-8",
       "quad2": "6-3",
       "quad3": "4-0",
       "quad4": "6-0",
-      "sos": 28,
+      "sos": 19,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
-      "region": "South",
-      "seed": 11,
+      "recentResults": [
+        "L",
+        "L",
+        "L",
+        "W",
+        "L"
+      ],
+      "recentRecord": "1-4",
+      "currentStreak": "L1",
+      "region": "Midwest",
+      "seed": 10,
       "isPlayIn": false
     },
     "UCIRV": {
@@ -1322,9 +1800,18 @@
       "quad2": "1-4",
       "quad3": "5-6",
       "quad4": "14-0",
-      "sos": 157,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "sos": 164,
+      "nextGame": "Mar 13, 9:00pm ET",
+      "nextOpponent": "vs CSNorthridge",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "West",
       "seed": 14,
       "isPlayIn": false
@@ -1337,19 +1824,28 @@
       "logo": "assets/logos/ucla.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21341.svg",
       "pageSlug": "ucla-bruins",
-      "record": "21-10",
-      "wins": 21,
+      "record": "22-10",
+      "wins": 22,
       "losses": 10,
       "conference": "Big Ten",
-      "net": 34,
+      "net": 33,
       "quad1": "4-7",
       "quad2": "5-3",
-      "quad3": "5-0",
+      "quad3": "6-0",
       "quad4": "7-0",
-      "sos": 53,
-      "nextGame": "Mar 12, 9:00pm ET",
-      "nextOpponent": "vs Rutgers",
-      "region": "South",
+      "sos": 57,
+      "nextGame": "Mar 13, 9:00pm ET",
+      "nextOpponent": "@ Michigan St.",
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
+      "region": "East",
       "seed": 8,
       "isPlayIn": false
     },
@@ -1361,18 +1857,27 @@
       "logo": "assets/logos/uconn.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21161.svg",
       "pageSlug": "connecticut-huskies",
-      "record": "27-4",
-      "wins": 27,
+      "record": "28-4",
+      "wins": 28,
       "losses": 4,
       "conference": "Big East",
       "net": 9,
       "quad1": "7-2",
-      "quad2": "9-1",
+      "quad2": "10-1",
       "quad3": "6-1",
       "quad4": "5-0",
-      "sos": 25,
-      "nextGame": "Mar 12, 7:00pm ET",
-      "nextOpponent": "vs Xavier",
+      "sos": 31,
+      "nextGame": "Mar 13, 8:00pm ET",
+      "nextOpponent": "vs Georgetown",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "L",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W1",
       "region": "Midwest",
       "seed": 2,
       "isPlayIn": false
@@ -1385,20 +1890,29 @@
       "logo": "assets/logos/uga.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21356.svg",
       "pageSlug": "georgia-bulldogs",
-      "record": "22-9",
+      "record": "22-10",
       "wins": 22,
-      "losses": 9,
+      "losses": 10,
       "conference": "SEC",
-      "net": 31,
+      "net": 32,
       "quad1": "6-7",
-      "quad2": "6-1",
+      "quad2": "6-2",
       "quad3": "1-1",
       "quad4": "9-0",
-      "sos": 63,
-      "nextGame": "Mar 12, 7:00pm ET",
-      "nextOpponent": "vs Ole Miss",
+      "sos": 74,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L1",
       "region": "Midwest",
-      "seed": 7,
+      "seed": 8,
       "isPlayIn": false
     },
     "UK": {
@@ -1409,19 +1923,28 @@
       "logo": "assets/logos/uk.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21357.svg",
       "pageSlug": "kentucky-wildcats",
-      "record": "21-12",
+      "record": "21-13",
       "wins": 21,
-      "losses": 12,
+      "losses": 13,
       "conference": "SEC",
-      "net": 27,
+      "net": 26,
       "quad1": "5-10",
       "quad2": "7-2",
       "quad3": "3-0",
       "quad4": "6-0",
-      "sos": 15,
-      "nextGame": "Mar 13, 1:00pm ET",
-      "nextOpponent": "@ Florida",
-      "region": "West",
+      "sos": 14,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "L",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W2",
+      "region": "East",
       "seed": 7,
       "isPlayIn": false
     },
@@ -1437,7 +1960,7 @@
       "wins": 23,
       "losses": 8,
       "conference": "America East",
-      "net": 202,
+      "net": 201,
       "quad1": "0-2",
       "quad2": "0-2",
       "quad3": "0-1",
@@ -1445,6 +1968,15 @@
       "sos": 363,
       "nextGame": "Mar 14, 11:00am ET",
       "nextOpponent": "vs Vermont",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W11",
       "region": "South",
       "seed": 16,
       "isPlayIn": true
@@ -1457,20 +1989,29 @@
       "logo": "assets/logos/unc.svg",
       "logoUrl": "https://sports.cbsimg.net/fly/images/team-logos/21134.svg",
       "pageSlug": "north-carolina-tar-heels",
-      "record": "24-7",
+      "record": "24-8",
       "wins": 24,
-      "losses": 7,
+      "losses": 8,
       "conference": "ACC",
       "net": 24,
-      "quad1": "6-7",
+      "quad1": "6-8",
       "quad2": "5-0",
       "quad3": "8-0",
       "quad4": "5-0",
-      "sos": 9,
-      "nextGame": "Mar 12, 9:30pm ET",
-      "nextOpponent": "vs Clemson",
+      "sos": 8,
+      "nextGame": "No Games Scheduled",
+      "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "L",
+        "L"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "L2",
       "region": "West",
-      "seed": 5,
+      "seed": 6,
       "isPlayIn": false
     },
     "UTAHST": {
@@ -1485,15 +2026,24 @@
       "wins": 26,
       "losses": 6,
       "conference": "Mountain West",
-      "net": 29,
+      "net": 28,
       "quad1": "3-4",
       "quad2": "9-1",
       "quad3": "8-1",
       "quad4": "5-0",
-      "sos": 51,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
-      "region": "Midwest",
+      "sos": 55,
+      "nextGame": "Mar 13, 9:30pm ET",
+      "nextOpponent": "vs Nevada",
+      "recentResults": [
+        "L",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W2",
+      "region": "South",
       "seed": 8,
       "isPlayIn": false
     },
@@ -1512,11 +2062,20 @@
       "net": 83,
       "quad1": "0-2",
       "quad2": "0-1",
-      "quad3": "9-2",
-      "quad4": "12-2",
+      "quad3": "11-2",
+      "quad4": "10-2",
       "sos": 168,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
+      "nextGame": "Mar 13, 9:00pm ET",
+      "nextOpponent": "vs UT Arlington",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W6",
       "region": "West",
       "seed": 13,
       "isPlayIn": false
@@ -1534,13 +2093,22 @@
       "losses": 4,
       "conference": "ACC",
       "net": 13,
-      "quad1": "7-3",
-      "quad2": "9-1",
+      "quad1": "8-3",
+      "quad2": "8-1",
       "quad3": "5-0",
       "quad4": "7-0",
-      "sos": 70,
+      "sos": 68,
       "nextGame": "Mar 13, 7:00pm ET",
       "nextOpponent": "vs Miami",
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
       "region": "South",
       "seed": 4,
       "isPlayIn": false
@@ -1557,14 +2125,23 @@
       "wins": 24,
       "losses": 7,
       "conference": "SEC",
-      "net": 16,
+      "net": 15,
       "quad1": "8-6",
       "quad2": "7-1",
       "quad3": "3-0",
       "quad4": "6-0",
-      "sos": 24,
+      "sos": 27,
       "nextGame": "Mar 13, 3:30pm ET",
       "nextOpponent": "vs Tennessee",
+      "recentResults": [
+        "L",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "3-2",
+      "currentStreak": "W2",
       "region": "Midwest",
       "seed": 4,
       "isPlayIn": false
@@ -1583,13 +2160,22 @@
       "conference": "Atlantic 10",
       "net": 44,
       "quad1": "2-5",
-      "quad2": "3-2",
-      "quad3": "8-0",
+      "quad2": "4-2",
+      "quad3": "7-0",
       "quad4": "11-0",
-      "sos": 62,
-      "nextGame": "No Games Scheduled",
-      "nextOpponent": "",
-      "region": "East",
+      "sos": 66,
+      "nextGame": "Mar 13, 5:00pm ET",
+      "nextOpponent": "vs Duquesne",
+      "recentResults": [
+        "W",
+        "L",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W3",
+      "region": "Midwest",
       "seed": 11,
       "isPlayIn": true
     },
@@ -1605,14 +2191,23 @@
       "wins": 23,
       "losses": 9,
       "conference": "Big Ten",
-      "net": 26,
-      "quad1": "7-7",
-      "quad2": "5-1",
+      "net": 27,
+      "quad1": "6-7",
+      "quad2": "6-1",
       "quad3": "5-1",
       "quad4": "6-0",
-      "sos": 44,
+      "sos": 48,
       "nextGame": "Mar 13, 2:30pm ET",
       "nextOpponent": "@ Illinois",
+      "recentResults": [
+        "L",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W4",
       "region": "Midwest",
       "seed": 6,
       "isPlayIn": false
@@ -1634,9 +2229,18 @@
       "quad2": "0-2",
       "quad3": "5-6",
       "quad4": "16-2",
-      "sos": 213,
+      "sos": 214,
       "nextGame": "No Games Scheduled",
       "nextOpponent": "",
+      "recentResults": [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      "recentRecord": "5-0",
+      "currentStreak": "W5",
       "region": "East",
       "seed": 14,
       "isPlayIn": false
@@ -1653,15 +2257,24 @@
       "wins": 23,
       "losses": 5,
       "conference": "Ivy",
-      "net": 65,
+      "net": 66,
       "quad1": "0-1",
       "quad2": "2-0",
       "quad3": "10-3",
       "quad4": "9-1",
-      "sos": 114,
+      "sos": 117,
       "nextGame": "Mar 14, 11:00am ET",
       "nextOpponent": "vs Cornell",
-      "region": "East",
+      "recentResults": [
+        "W",
+        "W",
+        "L",
+        "W",
+        "W"
+      ],
+      "recentRecord": "4-1",
+      "currentStreak": "W2",
+      "region": "West",
       "seed": 12,
       "isPlayIn": false
     }
@@ -1678,11 +2291,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "SNCLRA"
+          "teamId": "TEXAS"
         },
         {
           "type": "team",
-          "teamId": "VCU"
+          "teamId": "SNCLRA"
         }
       ]
     },
@@ -1697,11 +2310,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "SMU"
+          "teamId": "MIZZOU"
         },
         {
           "type": "team",
-          "teamId": "AUBURN"
+          "teamId": "VCU"
         }
       ]
     },
@@ -1716,11 +2329,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "LEHIGH"
+          "teamId": "STHRN"
         },
         {
           "type": "team",
-          "teamId": "PVAM"
+          "teamId": "LEHIGH"
         }
       ]
     },
@@ -1758,7 +2371,7 @@
         },
         {
           "type": "team",
-          "teamId": "QUEENC"
+          "teamId": "FURMAN"
         }
       ]
     },
@@ -1773,11 +2386,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "CLEM"
+          "teamId": "UCLA"
         },
         {
           "type": "team",
-          "teamId": "IOWA"
+          "teamId": "STLOU"
         }
       ]
     },
@@ -1792,11 +2405,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "KANSAS"
+          "teamId": "LVILLE"
         },
         {
           "type": "team",
-          "teamId": "YALE"
+          "teamId": "AKRON"
         }
       ]
     },
@@ -1811,7 +2424,7 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "TXTECH"
+          "teamId": "KANSAS"
         },
         {
           "type": "team",
@@ -1830,7 +2443,7 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "STJOHN"
+          "teamId": "MIAMI"
         },
         {
           "type": "winner",
@@ -1868,11 +2481,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "MIAMI"
+          "teamId": "UK"
         },
         {
           "type": "team",
-          "teamId": "TEXAS"
+          "teamId": "NCST"
         }
       ]
     },
@@ -2058,11 +2671,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "UTAHST"
+          "teamId": "UGA"
         },
         {
           "type": "team",
-          "teamId": "NCST"
+          "teamId": "IOWA"
         }
       ]
     },
@@ -2077,7 +2690,7 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "LVILLE"
+          "teamId": "TXTECH"
         },
         {
           "type": "team",
@@ -2153,11 +2766,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "UGA"
+          "teamId": "CLEM"
         },
         {
           "type": "team",
-          "teamId": "MIAOH"
+          "teamId": "UCF"
         }
       ]
     },
@@ -2343,7 +2956,7 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "UCLA"
+          "teamId": "UTAHST"
         },
         {
           "type": "team",
@@ -2362,11 +2975,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "ARK"
+          "teamId": "TENN"
         },
         {
           "type": "team",
-          "teamId": "SFLA"
+          "teamId": "MCNSE"
         }
       ]
     },
@@ -2400,11 +3013,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "TENN"
+          "teamId": "STJOHN"
         },
         {
           "type": "team",
-          "teamId": "UCF"
+          "teamId": "SFLA"
         }
       ]
     },
@@ -2461,7 +3074,7 @@
         },
         {
           "type": "team",
-          "teamId": "FURMAN"
+          "teamId": "IDAHO"
         }
       ]
     },
@@ -2647,11 +3260,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "UNC"
+          "teamId": "ARK"
         },
         {
           "type": "team",
-          "teamId": "MCNSE"
+          "teamId": "YALE"
         }
       ]
     },
@@ -2685,11 +3298,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "BYU"
+          "teamId": "UNC"
         },
         {
           "type": "team",
-          "teamId": "MIZZOU"
+          "teamId": "OKLA"
         }
       ]
     },
@@ -2723,11 +3336,11 @@
       "slots": [
         {
           "type": "team",
-          "teamId": "UK"
+          "teamId": "BYU"
         },
         {
           "type": "team",
-          "teamId": "STLOU"
+          "teamId": "MIAOH"
         }
       ]
     },
@@ -2746,7 +3359,7 @@
         },
         {
           "type": "team",
-          "teamId": "IDAHO"
+          "teamId": "QUEENC"
         }
       ]
     },
