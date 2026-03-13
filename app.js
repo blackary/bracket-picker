@@ -138,6 +138,7 @@ const elements = {
   newBracketNameInput: document.querySelector("#newBracketNameInput"),
   newBracketNameHint: document.querySelector("#newBracketNameHint"),
   newBracketModeInputs: document.querySelectorAll('input[name="newBracketMode"]'),
+  dismissNewBracketButton: document.querySelector("#dismissNewBracketButton"),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
   startNewBracketButton: document.querySelector("#startNewBracketButton"),
   resetButton: document.querySelector("#resetButton"),
@@ -486,6 +487,8 @@ function openNewBracketModal({ locked = false, initial = false } = {}) {
   elements.newBracketNameInput.setCustomValidity("");
   setPendingBracketMode(BRACKET_MODE_REGULAR);
   updateNewBracketModalCopy({ initial });
+  elements.dismissNewBracketButton.hidden = locked;
+  elements.dismissNewBracketButton.disabled = locked;
   elements.cancelNewBracketButton.hidden = locked;
   elements.cancelNewBracketButton.disabled = locked;
   elements.newBracketModal.hidden = false;
@@ -508,6 +511,8 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.setCustomValidity("");
+  elements.dismissNewBracketButton.hidden = false;
+  elements.dismissNewBracketButton.disabled = false;
   elements.cancelNewBracketButton.hidden = false;
   elements.cancelNewBracketButton.disabled = false;
   setPendingBracketMode(BRACKET_MODE_REGULAR);
@@ -2027,6 +2032,10 @@ function attachEvents() {
       setPendingBracketMode(event.target.value);
       updateNewBracketModalCopy({ initial: state.newBracketModalLocked });
     });
+  });
+
+  elements.dismissNewBracketButton.addEventListener("click", () => {
+    closeNewBracketModal();
   });
 
   elements.cancelNewBracketButton.addEventListener("click", () => {
