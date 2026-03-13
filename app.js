@@ -20,7 +20,6 @@ const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 const BRACKET_ZOOM_STEP = 0.15;
 const BRACKET_ZOOM_MIN = 0.85;
 const BRACKET_ZOOM_MAX = 1.75;
-const SCREEN_SWAP_DURATION = 240;
 const BRACKET_MODE_REGULAR = "regular";
 const BRACKET_MODE_BLINDFOLD = "blindfold";
 const BLINDFOLD_ADJECTIVES = [
@@ -116,8 +115,6 @@ const state = {
   newBracketModalLocked: false,
   deferredInstallPrompt: null,
   blindfoldProfileCache: new Map(),
-  viewTransition: null,
-  viewTransitionTimer: null,
   bracketCanvasTimer: null,
 };
 
@@ -137,7 +134,9 @@ const elements = {
   newBracketEyebrow: document.querySelector("#newBracketEyebrow"),
   newBracketTitle: document.querySelector("#newBracketTitle"),
   newBracketNote: document.querySelector("#newBracketNote"),
+  newBracketModeHint: document.querySelector("#newBracketModeHint"),
   newBracketNameInput: document.querySelector("#newBracketNameInput"),
+  newBracketNameHint: document.querySelector("#newBracketNameHint"),
   newBracketModeInputs: document.querySelectorAll('input[name="newBracketMode"]'),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
   useAutoNameButton: document.querySelector("#useAutoNameButton"),
@@ -386,30 +385,9 @@ function setViewMode(mode) {
     return;
   }
 
-  window.clearTimeout(state.viewTransitionTimer);
-
-  const applyMode = () => {
-    state.store.viewMode = nextMode;
-    persistStore();
-    render();
-  };
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    state.viewTransition = null;
-    applyMode();
-    return;
-  }
-
-  state.viewTransition = {
-    fromMode: currentMode,
-    toMode: nextMode,
-    height: Math.max(elements.screenShell?.getBoundingClientRect().height || 0, 0),
-  };
-  applyMode();
-  state.viewTransitionTimer = window.setTimeout(() => {
-    state.viewTransition = null;
-    render();
-  }, SCREEN_SWAP_DURATION);
+  state.store.viewMode = nextMode;
+  persistStore();
+  render();
 }
 
 function getCurrentBracket() {
@@ -482,18 +460,24 @@ function setPendingBracketMode(mode) {
 }
 
 function updateNewBracketModalCopy({ initial = false } = {}) {
-  elements.newBracketEyebrow.textContent = initial ? "Pick your bracket style" : "New bracket";
-  elements.newBracketTitle.textContent = initial ? "Start your first bracket" : "Start a new bracket";
-
-  const modeMessage =
+  elements.newBracketEyebrow.textContent = initial ? "Start here" : "New bracket";
+  elements.newBracketTitle.textContent = initial
+    ? "Choose how you want to play"
+    : "Start another bracket";
+  elements.newBracketNote.textContent = initial
+    ? "Bracket Parade has two ways to play. Pick a style, name your bracket, and then start making picks."
+    : "Pick a play style, give this bracket a name, and jump straight into the first matchup.";
+  elements.newBracketModeHint.textContent =
     state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
-      ? "Blindfold mode uses cute code names and made-up logos until the final reveal."
-      : "Regular mode shows the real teams, seeds, and logos from the start.";
-  elements.newBracketNote.textContent = `${modeMessage} Keep ${state.pendingBracketName} or type your own name.`;
-  elements.useAutoNameButton.textContent = `Use ${state.pendingBracketName}`;
+      ? "Blindfold hides the real schools and logos while you pick. You only see cute aliases, made-up logos, and simple clues until the final reveal."
+      : "Regular shows the real teams, seeds, logos, and simple stats from the very first matchup.";
+  elements.newBracketNameHint.textContent = `Suggested name: ${state.pendingBracketName}. Keep it or type your own.`;
+  elements.useAutoNameButton.textContent = `Use "${state.pendingBracketName}"`;
   elements.newBracketNameInput.placeholder = state.pendingBracketName;
   elements.startNewBracketButton.textContent =
-    state.pendingBracketMode === BRACKET_MODE_BLINDFOLD ? "Start blindfold bracket" : "Start picking";
+    state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
+      ? "Start blindfold bracket"
+      : "Start regular bracket";
 }
 
 function openNewBracketModal({ locked = false, initial = false } = {}) {
@@ -509,7 +493,7 @@ function openNewBracketModal({ locked = false, initial = false } = {}) {
   document.body.classList.add("has-modal");
 
   window.requestAnimationFrame(() => {
-    elements.newBracketNameInput.focus();
+    elements.newBracketModeInputs[0]?.focus();
   });
 }
 
@@ -524,15 +508,10 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.setCustomValidity("");
-  elements.newBracketEyebrow.textContent = "New bracket";
-  elements.newBracketTitle.textContent = "Start a new bracket";
-  elements.newBracketNote.textContent =
-    "Choose regular or blindfold mode, then keep the auto name or swap in your own.";
-  elements.useAutoNameButton.textContent = "Use auto name";
-  elements.startNewBracketButton.textContent = "Start picking";
   elements.cancelNewBracketButton.hidden = false;
   elements.cancelNewBracketButton.disabled = false;
   setPendingBracketMode(BRACKET_MODE_REGULAR);
+  updateNewBracketModalCopy();
   document.body.classList.remove("has-modal");
 
   if (restoreFocus) {
@@ -1806,32 +1785,12 @@ function renderMobileBracketSlot(slot, isWinner) {
 
 function renderViewMode(bracket, progress, currentContext) {
   const viewMode = bracket ? getViewMode() : "pick";
-  const transition =
-    bracket && state.viewTransition?.toMode === viewMode ? state.viewTransition : null;
-  const isTransitioning = Boolean(transition);
   document.body.dataset.viewMode = viewMode;
-  elements.screenShell.classList.toggle("is-transitioning", isTransitioning);
-  if (isTransitioning) {
-    elements.screenShell.style.setProperty(
-      "--screen-shell-transition-height",
-      `${Math.ceil(Math.max(transition.height, elements.screenShell.getBoundingClientRect().height || 0))}px`
-    );
-  } else {
-    elements.screenShell.style.removeProperty("--screen-shell-transition-height");
-  }
+  elements.screenShell.classList.remove("is-transitioning");
+  elements.screenShell.style.removeProperty("--screen-shell-transition-height");
 
-  applyScreenPanelState(elements.pickerScreen, {
-    active: viewMode === "pick",
-    entering: transition?.toMode === "pick",
-    exiting: transition?.fromMode === "pick",
-    transitioning: isTransitioning,
-  });
-  applyScreenPanelState(elements.bracketScreen, {
-    active: viewMode === "bracket",
-    entering: transition?.toMode === "bracket",
-    exiting: transition?.fromMode === "bracket",
-    transitioning: isTransitioning,
-  });
+  applyScreenPanelState(elements.pickerScreen, viewMode === "pick");
+  applyScreenPanelState(elements.bracketScreen, viewMode === "bracket");
 
   elements.pickViewButton.classList.toggle("is-active", viewMode === "pick");
   elements.pickViewButton.setAttribute("aria-pressed", viewMode === "pick");
@@ -1843,21 +1802,16 @@ function renderViewMode(bracket, progress, currentContext) {
   elements.revealBlindfoldButton.hidden = !canRevealBlindfold(bracket);
 
   renderBracketViewHeader(bracket, progress, currentContext);
-  scheduleBracketCanvasRender(bracket, {
-    defer: Boolean(transition?.toMode === "bracket"),
-    active: viewMode === "bracket",
-  });
+  scheduleBracketCanvasRender(bracket, { active: viewMode === "bracket" });
   applyBracketZoom();
 }
 
-function applyScreenPanelState(element, { active, entering, exiting, transitioning }) {
-  const visible = transitioning || active;
-  element.hidden = !visible;
-  element.classList.toggle("screen-panel--active", visible && (active || entering));
-  element.classList.toggle("screen-panel--inactive", transitioning ? Boolean(exiting) : !active);
-  element.classList.toggle("screen-panel--entering", Boolean(transitioning && entering));
-  element.classList.toggle("screen-panel--exiting", Boolean(transitioning && exiting));
-  element.setAttribute("aria-hidden", visible ? "false" : "true");
+function applyScreenPanelState(element, active) {
+  element.hidden = !active;
+  element.classList.toggle("screen-panel--active", active);
+  element.classList.toggle("screen-panel--inactive", !active);
+  element.classList.remove("screen-panel--entering", "screen-panel--exiting");
+  element.setAttribute("aria-hidden", active ? "false" : "true");
 }
 
 function renderBracketViewHeader(bracket, progress, currentContext) {
@@ -1952,7 +1906,7 @@ async function renderBracketCanvas(bracket) {
   applyBracketZoom();
 }
 
-function scheduleBracketCanvasRender(bracket, { defer = false, active = false } = {}) {
+function scheduleBracketCanvasRender(bracket, { active = false } = {}) {
   window.clearTimeout(state.bracketCanvasTimer);
   state.bracketCanvasTimer = null;
 
@@ -1979,17 +1933,12 @@ function scheduleBracketCanvasRender(bracket, { defer = false, active = false } 
     renderBracketCanvas(bracket);
   };
 
-  if (!defer) {
-    renderCanvas();
-    return;
-  }
-
   if (!elements.bracketCanvasWrap.querySelector("canvas")) {
     elements.bracketCanvasWrap.innerHTML =
       '<p class="bracket-canvas-wrap__loading">Building your bracket view...</p>';
   }
 
-  state.bracketCanvasTimer = window.setTimeout(renderCanvas, SCREEN_SWAP_DURATION + 40);
+  state.bracketCanvasTimer = window.setTimeout(renderCanvas, 24);
 }
 
 function attachEvents() {
