@@ -131,6 +131,7 @@ const elements = {
   newBracketModal: document.querySelector("#newBracketModal"),
   newBracketForm: document.querySelector("#newBracketForm"),
   newBracketEyebrow: document.querySelector("#newBracketEyebrow"),
+  newBracketTitle: document.querySelector("#newBracketTitle"),
   newBracketNote: document.querySelector("#newBracketNote"),
   newBracketNameInput: document.querySelector("#newBracketNameInput"),
   newBracketModeInputs: document.querySelectorAll('input[name="newBracketMode"]'),
@@ -1020,7 +1021,7 @@ function renderMatchup(bracket, context) {
   const champion = getChampion(bracket);
   const complete = getProgress(bracket).pickedCount === state.data.games.length;
 
-  if (!currentGame && complete && champion) {
+  if (complete && champion) {
     elements.matchupEyebrow.textContent = isBlindfoldHidden(bracket)
       ? "Blindfold bracket complete"
       : "Bracket complete";
