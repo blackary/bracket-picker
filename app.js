@@ -142,6 +142,7 @@ const state = {
   deferredInstallPrompt: null,
   blindfoldProfileCache: new Map(),
   bracketCanvasTimer: null,
+  mobileBracketToolsOpen: false,
 };
 
 const elements = {
@@ -149,6 +150,7 @@ const elements = {
   sourceNote: document.querySelector("#sourceNote"),
   appModeBurst: document.querySelector("#appModeBurst"),
   installAppButton: document.querySelector("#installAppButton"),
+  mobileToolbarToggleButton: document.querySelector("#mobileToolbarToggleButton"),
   pickViewButton: document.querySelector("#pickViewButton"),
   bracketViewButton: document.querySelector("#bracketViewButton"),
   bracketSelect: document.querySelector("#bracketSelect"),
@@ -223,6 +225,7 @@ async function init() {
     ensureCurrentBracket();
     attachEvents();
     setupInstallability();
+    window.addEventListener("resize", syncResponsiveChrome);
     render();
     if (!state.store.brackets.length) {
       openNewBracketModal({ locked: true, initial: true });
@@ -433,6 +436,9 @@ function setViewMode(mode) {
   };
 
   blurActiveControl();
+  if (compactMobileViewport) {
+    state.mobileBracketToolsOpen = false;
+  }
   if (compactMobileViewport && window.scrollY > 4) {
     document.documentElement.style.overflowAnchor = "none";
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -992,6 +998,7 @@ function render() {
   renderRecentPicks(bracket);
   renderBracketMobileBoard(bracket);
   renderViewMode(bracket, progress, currentContext);
+  renderMobileToolbarToggle(bracket);
 }
 
 function renderSourceBanner() {
@@ -1037,6 +1044,29 @@ function renderToolbar(bracket) {
   if (elements.bracketNameInput !== document.activeElement) {
     elements.bracketNameInput.value = bracket.name;
   }
+}
+
+function renderMobileToolbarToggle(bracket) {
+  if (!elements.mobileToolbarToggleButton) {
+    document.body.dataset.mobileToolsOpen = "false";
+    return;
+  }
+
+  const shouldShow = isCompactMobileViewport() && getViewMode() === "bracket" && Boolean(bracket);
+  const isOpen = shouldShow && state.mobileBracketToolsOpen;
+  document.body.dataset.mobileToolsOpen = isOpen ? "true" : "false";
+  elements.mobileToolbarToggleButton.hidden = !shouldShow;
+  elements.mobileToolbarToggleButton.disabled = !shouldShow;
+  elements.mobileToolbarToggleButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  elements.mobileToolbarToggleButton.textContent = isOpen ? "Hide tools" : "Bracket tools";
+}
+
+function syncResponsiveChrome() {
+  if (!isCompactMobileViewport()) {
+    state.mobileBracketToolsOpen = false;
+  }
+
+  renderMobileToolbarToggle(getCurrentBracket());
 }
 
 function renderProgress(progress) {
@@ -2141,6 +2171,17 @@ function attachEvents() {
       // Ignore user-choice lookup failures; the browser will re-fire when appropriate.
     }
   });
+
+  if (elements.mobileToolbarToggleButton) {
+    elements.mobileToolbarToggleButton.addEventListener("click", () => {
+      if (!isCompactMobileViewport() || getViewMode() !== "bracket" || !getCurrentBracket()) {
+        return;
+      }
+
+      state.mobileBracketToolsOpen = !state.mobileBracketToolsOpen;
+      renderMobileToolbarToggle(getCurrentBracket());
+    });
+  }
 
   elements.zoomOutButton.addEventListener("click", () => {
     setBracketZoom(state.bracketZoom - BRACKET_ZOOM_STEP);

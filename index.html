@@ -95,6 +95,16 @@
             <button id="installAppButton" class="button button--ghost button--install" type="button" hidden>
               Install app
             </button>
+            <button
+              id="mobileToolbarToggleButton"
+              class="button button--ghost button--mobile-tools"
+              type="button"
+              aria-expanded="false"
+              aria-controls="topbarControls"
+              hidden
+            >
+              Bracket tools
+            </button>
 
             <div class="view-switch" role="tablist" aria-label="View mode">
               <button
@@ -117,7 +127,7 @@
           </div>
         </div>
 
-        <div class="app-topbar__controls">
+        <div class="app-topbar__controls" id="topbarControls">
           <div class="toolbar__group toolbar__group--library">
             <label class="field">
               <span class="field__label">Saved brackets</span>
