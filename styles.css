@@ -650,14 +650,13 @@ img {
 
 .bracket-screen {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.82fr);
-  gap: 22px;
+  gap: 18px;
 }
 
 .bracket-screen__main {
   display: grid;
   gap: 18px;
-  padding: 22px;
+  padding: 20px 20px 22px;
   background:
     radial-gradient(circle at top left, rgba(99, 183, 255, 0.12), transparent 24%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 255, 0.96));
@@ -668,12 +667,12 @@ img {
   flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
-  align-items: start;
+  align-items: end;
 }
 
 .bracket-screen__copy {
   min-width: 0;
-  max-width: 44rem;
+  max-width: 52rem;
 }
 
 .bracket-screen__main h2 {
@@ -687,9 +686,17 @@ img {
   line-height: 1.6;
 }
 
+.bracket-screen__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 12px;
+  align-items: center;
+}
+
 .bracket-canvas-shell {
-  min-height: 520px;
-  padding: 12px;
+  min-height: 74vh;
+  padding: 10px;
   border: 2px solid rgba(31, 42, 58, 0.08);
   border-radius: 28px;
   background:
@@ -698,18 +705,19 @@ img {
 
 .bracket-canvas-wrap {
   height: 100%;
-  min-height: 496px;
+  min-height: calc(74vh - 24px);
   overflow: auto;
   border-radius: 22px;
   background:
     radial-gradient(circle at top left, rgba(255, 182, 63, 0.12), transparent 20%),
     linear-gradient(180deg, rgba(251, 246, 237, 0.94), rgba(237, 245, 255, 0.92));
   box-shadow: inset 0 0 0 1px rgba(31, 42, 58, 0.06);
+  scroll-padding: 18px;
 }
 
 .bracket-canvas-wrap__loading {
   margin: 0;
-  min-height: 496px;
+  min-height: calc(74vh - 24px);
   display: grid;
   place-items: center;
   padding: 24px;
@@ -722,7 +730,8 @@ img {
   display: block;
   width: 100%;
   height: auto;
-  min-width: 1100px;
+  min-width: 1320px;
+  max-width: none;
 }
 
 .bracket-mobile-board {
@@ -1632,12 +1641,13 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
 
 .sidebar {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   align-content: start;
 }
 
 .sidebar-card {
-  padding: 22px;
+  padding: 18px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 244, 234, 0.94));
 }
@@ -1653,8 +1663,45 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
 }
 
 .sidebar-card__title {
-  margin: 0 0 16px;
-  font: 800 1.46rem / 1 "Baloo 2", cursive;
+  margin: 0 0 12px;
+  font: 800 1.28rem / 1 "Baloo 2", cursive;
+}
+
+.zoom-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  gap: 8px;
+  padding: 8px;
+  border: 2px solid rgba(31, 42, 58, 0.08);
+  border-radius: 22px;
+  background: rgba(35, 52, 77, 0.06);
+}
+
+.zoom-switch__button {
+  min-height: 44px;
+  min-width: 52px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 900;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.zoom-switch__button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 16px rgba(31, 42, 58, 0.12);
+}
+
+.zoom-switch__button.is-active {
+  background: linear-gradient(180deg, #2b3f5d, #1f2f45);
+  color: white;
 }
 
 .snapshot {
@@ -2074,6 +2121,10 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
     color: var(--ink-soft);
     font-size: 0.72rem;
     line-height: 1.35;
+  }
+
+  .zoom-switch {
+    display: none;
   }
 
   body[data-view-mode="pick"] .app-topbar__controls {

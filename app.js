@@ -17,6 +17,9 @@ const STRONG_MID_MAJORS = new Set([
 ]);
 
 const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
+const BRACKET_ZOOM_STEP = 0.15;
+const BRACKET_ZOOM_MIN = 0.85;
+const BRACKET_ZOOM_MAX = 1.75;
 
 const state = {
   data: null,
@@ -32,6 +35,7 @@ const state = {
   imageCache: new Map(),
   bracketCanvasSignature: null,
   bracketCanvasRenderId: 0,
+  bracketZoom: 1,
   pendingBracketName: "",
 };
 
@@ -66,6 +70,9 @@ const elements = {
   seeBracketButton: document.querySelector("#seeBracketButton"),
   nextGameButton: document.querySelector("#nextGameButton"),
   returnToPickButton: document.querySelector("#returnToPickButton"),
+  zoomOutButton: document.querySelector("#zoomOutButton"),
+  fitBracketButton: document.querySelector("#fitBracketButton"),
+  zoomInButton: document.querySelector("#zoomInButton"),
   bracketViewTitle: document.querySelector("#bracketViewTitle"),
   bracketViewHint: document.querySelector("#bracketViewHint"),
   bracketCanvasWrap: document.querySelector("#bracketCanvasWrap"),
@@ -294,6 +301,22 @@ function animateScreenSwap(mode) {
       easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
     }
   );
+}
+
+function setBracketZoom(nextZoom) {
+  state.bracketZoom = Math.min(BRACKET_ZOOM_MAX, Math.max(BRACKET_ZOOM_MIN, nextZoom));
+  applyBracketZoom();
+}
+
+function applyBracketZoom() {
+  const canvas = elements.bracketCanvasWrap.querySelector("canvas");
+  if (canvas) {
+    canvas.style.width = `${Math.round(state.bracketZoom * 100)}%`;
+  }
+
+  elements.zoomOutButton.disabled = state.bracketZoom <= BRACKET_ZOOM_MIN + 0.001;
+  elements.zoomInButton.disabled = state.bracketZoom >= BRACKET_ZOOM_MAX - 0.001;
+  elements.fitBracketButton.classList.toggle("is-active", Math.abs(state.bracketZoom - 1) < 0.001);
 }
 
 function openNewBracketModal() {
@@ -1278,6 +1301,7 @@ function renderViewMode(bracket, progress, currentContext) {
 
   renderBracketViewHeader(bracket, progress, currentContext);
   renderBracketCanvas(bracket);
+  applyBracketZoom();
 }
 
 function renderBracketViewHeader(bracket, progress, currentContext) {
@@ -1331,6 +1355,7 @@ async function renderBracketCanvas(bracket) {
 
   elements.bracketCanvasWrap.innerHTML = "";
   elements.bracketCanvasWrap.append(canvas);
+  applyBracketZoom();
 }
 
 function attachEvents() {
@@ -1344,6 +1369,18 @@ function attachEvents() {
 
   elements.returnToPickButton.addEventListener("click", () => {
     setViewMode("pick");
+  });
+
+  elements.zoomOutButton.addEventListener("click", () => {
+    setBracketZoom(state.bracketZoom - BRACKET_ZOOM_STEP);
+  });
+
+  elements.fitBracketButton.addEventListener("click", () => {
+    setBracketZoom(1);
+  });
+
+  elements.zoomInButton.addEventListener("click", () => {
+    setBracketZoom(state.bracketZoom + BRACKET_ZOOM_STEP);
   });
 
   elements.bracketSelect.addEventListener("change", (event) => {
