@@ -20,6 +20,7 @@ const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 const BRACKET_ZOOM_STEP = 0.15;
 const BRACKET_ZOOM_MIN = 0.85;
 const BRACKET_ZOOM_MAX = 1.75;
+const SCREEN_SWAP_DURATION = 320;
 const BRACKET_MODE_REGULAR = "regular";
 const BRACKET_MODE_BLINDFOLD = "blindfold";
 const BLINDFOLD_ADJECTIVES = [
@@ -115,6 +116,8 @@ const state = {
   newBracketModalLocked: false,
   deferredInstallPrompt: null,
   blindfoldProfileCache: new Map(),
+  viewTransition: null,
+  viewTransitionTimer: null,
 };
 
 const elements = {
@@ -141,6 +144,7 @@ const elements = {
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
   exportImageButton: document.querySelector("#exportImageButton"),
+  screenShell: document.querySelector(".screen-shell"),
   pickerScreen: document.querySelector("#pickerScreen"),
   bracketScreen: document.querySelector("#bracketScreen"),
   matchupEyebrow: document.querySelector("#matchupEyebrow"),
@@ -375,45 +379,39 @@ function getViewMode() {
 
 function setViewMode(mode) {
   const nextMode = mode === "bracket" ? "bracket" : "pick";
-  if (getViewMode() === nextMode) {
+  const currentMode = getViewMode();
+  if (currentMode === nextMode) {
     return;
   }
+
+  window.clearTimeout(state.viewTransitionTimer);
 
   const applyMode = () => {
     state.store.viewMode = nextMode;
     persistStore();
     render();
-    animateScreenSwap(nextMode);
   };
 
-  if (typeof document.startViewTransition === "function") {
-    document.startViewTransition(applyMode);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    state.viewTransition = null;
+    applyMode();
     return;
   }
 
+  state.viewTransition = {
+    fromMode: currentMode,
+    toMode: nextMode,
+    height: Math.max(elements.screenShell?.getBoundingClientRect().height || 0, 0),
+  };
   applyMode();
+  state.viewTransitionTimer = window.setTimeout(() => {
+    state.viewTransition = null;
+    render();
+  }, SCREEN_SWAP_DURATION);
 }
 
 function getCurrentBracket() {
   return state.store.brackets.find((bracket) => bracket.id === state.store.currentBracketId);
-}
-
-function animateScreenSwap(mode) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
-
-  const target = mode === "bracket" ? elements.bracketScreen : elements.pickerScreen;
-  target.animate(
-    [
-      { opacity: 0.16, transform: "translateY(18px) scale(0.99)" },
-      { opacity: 1, transform: "translateY(0) scale(1)" },
-    ],
-    {
-      duration: 240,
-      easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
-    }
-  );
 }
 
 function isStandaloneApp() {
@@ -1806,9 +1804,32 @@ function renderMobileBracketSlot(slot, isWinner) {
 
 function renderViewMode(bracket, progress, currentContext) {
   const viewMode = bracket ? getViewMode() : "pick";
+  const transition =
+    bracket && state.viewTransition?.toMode === viewMode ? state.viewTransition : null;
+  const isTransitioning = Boolean(transition);
   document.body.dataset.viewMode = viewMode;
-  elements.pickerScreen.hidden = viewMode !== "pick";
-  elements.bracketScreen.hidden = viewMode !== "bracket";
+  elements.screenShell.classList.toggle("is-transitioning", isTransitioning);
+  if (isTransitioning) {
+    elements.screenShell.style.setProperty(
+      "--screen-shell-transition-height",
+      `${Math.ceil(Math.max(transition.height, elements.screenShell.getBoundingClientRect().height || 0))}px`
+    );
+  } else {
+    elements.screenShell.style.removeProperty("--screen-shell-transition-height");
+  }
+
+  applyScreenPanelState(elements.pickerScreen, {
+    active: viewMode === "pick",
+    entering: transition?.toMode === "pick",
+    exiting: transition?.fromMode === "pick",
+    transitioning: isTransitioning,
+  });
+  applyScreenPanelState(elements.bracketScreen, {
+    active: viewMode === "bracket",
+    entering: transition?.toMode === "bracket",
+    exiting: transition?.fromMode === "bracket",
+    transitioning: isTransitioning,
+  });
 
   elements.pickViewButton.classList.toggle("is-active", viewMode === "pick");
   elements.pickViewButton.setAttribute("aria-pressed", viewMode === "pick");
@@ -1822,6 +1843,16 @@ function renderViewMode(bracket, progress, currentContext) {
   renderBracketViewHeader(bracket, progress, currentContext);
   renderBracketCanvas(bracket);
   applyBracketZoom();
+}
+
+function applyScreenPanelState(element, { active, entering, exiting, transitioning }) {
+  const visible = transitioning || active;
+  element.hidden = !visible;
+  element.classList.toggle("screen-panel--active", visible && (active || entering));
+  element.classList.toggle("screen-panel--inactive", transitioning ? Boolean(exiting) : !active);
+  element.classList.toggle("screen-panel--entering", Boolean(transitioning && entering));
+  element.classList.toggle("screen-panel--exiting", Boolean(transitioning && exiting));
+  element.setAttribute("aria-hidden", visible ? "false" : "true");
 }
 
 function renderBracketViewHeader(bracket, progress, currentContext) {
