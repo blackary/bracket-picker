@@ -63,6 +63,7 @@ const elements = {
   matchupStage: document.querySelector("#matchupStage"),
   prevGameButton: document.querySelector("#prevGameButton"),
   clearPickButton: document.querySelector("#clearPickButton"),
+  seeBracketButton: document.querySelector("#seeBracketButton"),
   nextGameButton: document.querySelector("#nextGameButton"),
   returnToPickButton: document.querySelector("#returnToPickButton"),
   bracketViewTitle: document.querySelector("#bracketViewTitle"),
@@ -1089,10 +1090,7 @@ function renderViewMode(bracket, progress, currentContext) {
   elements.bracketViewButton.setAttribute("aria-pressed", viewMode === "bracket");
 
   renderBracketViewHeader(bracket, progress, currentContext);
-
-  if (viewMode === "bracket") {
-    renderBracketCanvas(bracket);
-  }
+  renderBracketCanvas(bracket);
 }
 
 function renderBracketViewHeader(bracket, progress, currentContext) {
@@ -1104,8 +1102,8 @@ function renderBracketViewHeader(bracket, progress, currentContext) {
   elements.bracketViewHint.textContent = champion
     ? `${champion.name} is your current champion pick. ${progress.pickedCount} of ${progress.total} games are locked in.`
     : nextOpen
-      ? `${progress.pickedCount} of ${progress.total} picks are locked in. Switch back to pick screen to choose ${getPreviewLabel(nextOpen, bracket.picks)}.`
-      : "Your bracket board is ready for a full look.";
+      ? `${progress.pickedCount} of ${progress.total} picks are locked in. This live bracket updates as you pick, and the next open game is ${getPreviewLabel(nextOpen, bracket.picks)}.`
+      : "Your live bracket board is ready for a full look.";
 }
 
 async function renderBracketCanvas(bracket) {
@@ -1140,7 +1138,7 @@ async function renderBracketCanvas(bracket) {
     return;
   }
 
-  if (renderId !== state.bracketCanvasRenderId || getViewMode() !== "bracket") {
+  if (renderId !== state.bracketCanvasRenderId) {
     return;
   }
 
@@ -1291,6 +1289,10 @@ function attachEvents() {
     }
 
     clearPick(state.activeGameId);
+  });
+
+  elements.seeBracketButton.addEventListener("click", () => {
+    setViewMode("bracket");
   });
 
   elements.matchupStage.addEventListener("click", (event) => {

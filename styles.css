@@ -1581,7 +1581,7 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   bottom: 14px;
   z-index: 4;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-top: 22px;
   padding: 12px;
