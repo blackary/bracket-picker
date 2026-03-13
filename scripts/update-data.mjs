@@ -195,10 +195,10 @@ function parseTeamIndex(html) {
     const nameCellIndex = cells.findIndex((cell) => /\(\d+-\d+\)$/.test(cell));
     ensure(nameCellIndex >= 0, `Unable to parse team row for ${codeMatch[1]}`);
 
-    const [displayName, record] = cells[nameCellIndex]
-      .replace(/\)$/, "")
-      .split("(")
-      .map((value) => value.trim());
+    const nameRecordMatch = cells[nameCellIndex].match(/^(.*)\((\d+-\d+)\)$/);
+    ensure(nameRecordMatch, `Unable to split name and record for ${codeMatch[1]}`);
+    const displayName = nameRecordMatch[1].trim();
+    const record = nameRecordMatch[2].trim();
 
     const [wins, losses] = record.split("-").map((value) => Number.parseInt(value, 10));
     const regionCell = cells[nameCellIndex - 2] || "";

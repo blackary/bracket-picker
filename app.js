@@ -513,8 +513,10 @@ function openNewBracketModal({ locked = false, initial = false } = {}) {
   elements.newBracketNameInput.setCustomValidity("");
   setPendingBracketMode(BRACKET_MODE_REGULAR);
   updateNewBracketModalCopy({ initial });
-  elements.dismissNewBracketButton.hidden = locked;
-  elements.dismissNewBracketButton.disabled = locked;
+  if (elements.dismissNewBracketButton) {
+    elements.dismissNewBracketButton.hidden = locked;
+    elements.dismissNewBracketButton.disabled = locked;
+  }
   elements.cancelNewBracketButton.hidden = locked;
   elements.cancelNewBracketButton.disabled = locked;
   elements.newBracketModal.hidden = false;
@@ -537,8 +539,10 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.setCustomValidity("");
-  elements.dismissNewBracketButton.hidden = false;
-  elements.dismissNewBracketButton.disabled = false;
+  if (elements.dismissNewBracketButton) {
+    elements.dismissNewBracketButton.hidden = false;
+    elements.dismissNewBracketButton.disabled = false;
+  }
   elements.cancelNewBracketButton.hidden = false;
   elements.cancelNewBracketButton.disabled = false;
   setPendingBracketMode(BRACKET_MODE_REGULAR);
@@ -2128,9 +2132,11 @@ function attachEvents() {
     });
   });
 
-  elements.dismissNewBracketButton.addEventListener("click", () => {
-    closeNewBracketModal();
-  });
+  if (elements.dismissNewBracketButton) {
+    elements.dismissNewBracketButton.addEventListener("click", () => {
+      closeNewBracketModal();
+    });
+  }
 
   elements.cancelNewBracketButton.addEventListener("click", () => {
     closeNewBracketModal();
@@ -3712,15 +3718,23 @@ function downloadBlob(blob, fileName) {
 }
 
 function renderFatal(error) {
-  elements.sourceStatus.textContent = "Could not load bracket data";
+  const message = String(error?.message || "Unknown startup error");
+  const looksLikeShellMismatch =
+    /addEventListener|Cannot read properties of null|querySelector/i.test(message);
+
+  elements.sourceStatus.textContent = looksLikeShellMismatch
+    ? "App update needed"
+    : "Could not load bracket data";
   elements.sourceNote.textContent = error.message;
   elements.matchupEyebrow.textContent = "Loading problem";
   elements.matchupTitle.textContent = "The bracket picker could not start";
-  elements.matchupHint.textContent = "Check the data file path and reload the page.";
+  elements.matchupHint.textContent = looksLikeShellMismatch
+    ? "The app files were out of sync. Reload once to grab the latest version."
+    : "Check the data file path and reload the page.";
   elements.matchupStage.innerHTML = `
     <div class="empty-state">
-      <h3>Bracket data missing</h3>
-      <p>${escapeHtml(error.message)}</p>
+      <h3>${looksLikeShellMismatch ? "App shell mismatch" : "Bracket data missing"}</h3>
+      <p>${escapeHtml(message)}</p>
     </div>
   `;
 }

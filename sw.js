@@ -1,5 +1,5 @@
-const APP_CACHE = "bracket-parade-app-v1";
-const RUNTIME_CACHE = "bracket-parade-runtime-v1";
+const APP_CACHE = "bracket-parade-app-v2";
+const RUNTIME_CACHE = "bracket-parade-runtime-v2";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -17,6 +17,12 @@ const CORE_ASSETS = [
   "./assets/fonts/nunito-700.ttf",
   "./assets/fonts/nunito-800.ttf",
   "./assets/fonts/nunito-900.ttf"
+];
+const SHELL_NETWORK_FIRST_MATCHERS = [
+  "/index.html",
+  "/styles.css",
+  "/app.js",
+  "/manifest.webmanifest"
 ];
 
 self.addEventListener("install", (event) => {
@@ -55,6 +61,11 @@ self.addEventListener("fetch", (event) => {
 
   if (event.request.mode === "navigate") {
     event.respondWith(handleNavigation(event.request));
+    return;
+  }
+
+  if (SHELL_NETWORK_FIRST_MATCHERS.some((suffix) => url.pathname.endsWith(suffix))) {
+    event.respondWith(networkFirst(event.request));
     return;
   }
 
