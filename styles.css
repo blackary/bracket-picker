@@ -47,6 +47,7 @@
 }
 
 :root {
+  color-scheme: only light;
   --paper: #f6ead1;
   --paper-soft: #fff8ef;
   --paper-cool: #edf5ff;
@@ -74,6 +75,13 @@
   --pill: #f4ebda;
   --success: #28a96d;
   --danger: #dd5b62;
+  --logo-plate:
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.98), rgba(247, 242, 233, 0.96));
+  --logo-plate-strong:
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.99), rgba(245, 239, 229, 0.97));
+  --logo-shadow:
+    0 10px 18px rgba(31, 42, 58, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.56);
   font-synthesis: none;
 }
 
@@ -1529,16 +1537,17 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   margin: 0;
   border: 2px solid rgba(31, 42, 58, 0.06);
   border-radius: 30px;
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.66)),
-    linear-gradient(180deg, var(--team-tint), rgba(255, 255, 255, 0.94));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  background: var(--logo-plate), linear-gradient(180deg, var(--team-tint), rgba(255, 255, 255, 0.94));
+  box-shadow: var(--logo-shadow);
 }
 
 .team-card__crest img {
   width: 74%;
   height: 74%;
   object-fit: contain;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.88))
+    drop-shadow(0 6px 10px rgba(31, 42, 58, 0.12));
 }
 
 .team-card__body {
@@ -1771,13 +1780,17 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   width: 114px;
   height: 114px;
   border-radius: 30px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--logo-plate-strong);
+  box-shadow: var(--logo-shadow);
 }
 
 .champion-card__logo img {
   width: 74%;
   height: 74%;
   object-fit: contain;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.88))
+    drop-shadow(0 6px 10px rgba(31, 42, 58, 0.12));
 }
 
 .nav-row {
@@ -1922,13 +1935,17 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   height: 56px;
   border: 1px solid rgba(31, 42, 58, 0.06);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--logo-plate-strong);
+  box-shadow: var(--logo-shadow);
 }
 
 .mini-team__logo img {
   width: 72%;
   height: 72%;
   object-fit: contain;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 255, 255, 0.88))
+    drop-shadow(0 5px 8px rgba(31, 42, 58, 0.1));
 }
 
 .mini-team__name {
@@ -2272,7 +2289,10 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
     width: 42px;
     height: 42px;
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.94);
+    background: var(--logo-plate-strong);
+    box-shadow:
+      0 8px 14px rgba(31, 42, 58, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.56);
     flex-shrink: 0;
   }
 
@@ -2285,6 +2305,9 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
     width: 26px;
     height: 26px;
     object-fit: contain;
+    filter:
+      drop-shadow(0 1px 0 rgba(255, 255, 255, 0.88))
+      drop-shadow(0 4px 6px rgba(31, 42, 58, 0.1));
   }
 
   .mobile-slot__copy {
@@ -2865,6 +2888,27 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
 
   .stack-item {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .team-card__crest,
+  .champion-card__logo,
+  .mini-team__logo,
+  .mobile-slot__logo-shell {
+    background: var(--logo-plate-strong);
+    box-shadow:
+      0 12px 22px rgba(12, 18, 28, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.66);
+  }
+
+  .team-card__crest img,
+  .champion-card__logo img,
+  .mini-team__logo img,
+  .mobile-slot__logo-shell img {
+    filter:
+      drop-shadow(0 1px 0 rgba(255, 255, 255, 0.94))
+      drop-shadow(0 8px 12px rgba(12, 18, 28, 0.14));
   }
 }
 

@@ -2463,9 +2463,7 @@ async function drawPosterHeaderPill(ctx, { x, y, width, height, label, value, ti
 
   let valueX = x + 16;
   if (logo) {
-    ctx.fillStyle = "rgba(255,255,255,0.82)";
-    roundRect(ctx, x + 12, y + 28, 32, 32, 12);
-    ctx.fill();
+    drawPosterLogoPlate(ctx, x + 12, y + 28, 32, 32, 12);
     const image = await loadImage(logo);
     ctx.drawImage(image, x + 18, y + 34, 20, 20);
     valueX = x + 50;
@@ -2855,9 +2853,9 @@ async function drawPosterChampionBadge(ctx, bracket, rect) {
   const theme = getDisplayTeamTheme(bracket, champion);
   const image = await loadImage(displayChampion.logo);
 
-  ctx.fillStyle = "rgba(255,255,255,0.96)";
-  roundRect(ctx, rect.x + 22, rect.y + 44, 116, 116, 26);
-  ctx.fill();
+  drawPosterLogoPlate(ctx, rect.x + 22, rect.y + 44, 116, 116, 26, {
+    shadowColor: "rgba(31, 42, 58, 0.14)",
+  });
   ctx.fillStyle = hexToRgba(theme.color, 0.16);
   roundRect(ctx, rect.x + 30, rect.y + 52, 100, 100, 22);
   ctx.fill();
@@ -2938,9 +2936,11 @@ async function drawPosterSlot(ctx, slot, slotRect, { isWinner, compact }) {
     const image = await loadImage(slot.displayTeam.logo);
     const shellX = slotRect.x + 6;
     const shellY = slotRect.y + 3;
-    ctx.fillStyle = "rgba(255,255,255,0.84)";
-    roundRect(ctx, shellX, shellY, iconShell, iconShell, compact ? 6 : 8);
-    ctx.fill();
+    drawPosterLogoPlate(ctx, shellX, shellY, iconShell, iconShell, compact ? 6 : 8, {
+      shadowBlur: compact ? 5 : 7,
+      shadowOffsetY: compact ? 2 : 3,
+      innerAlpha: 0.94,
+    });
     ctx.drawImage(
       image,
       shellX + (iconShell - iconSize) / 2,
@@ -3073,6 +3073,42 @@ function drawPosterConnector(ctx, from, to, color) {
   ctx.lineTo(midX, to.y);
   ctx.lineTo(to.x, to.y);
   ctx.stroke();
+}
+
+function drawPosterLogoPlate(
+  ctx,
+  x,
+  y,
+  width,
+  height,
+  radius,
+  options = {}
+) {
+  const {
+    shadowColor = "rgba(31, 42, 58, 0.12)",
+    shadowBlur = 8,
+    shadowOffsetY = 3,
+    innerAlpha = 0.96,
+  } = options;
+
+  ctx.save();
+  ctx.shadowColor = shadowColor;
+  ctx.shadowBlur = shadowBlur;
+  ctx.shadowOffsetY = shadowOffsetY;
+  const gradient = ctx.createLinearGradient(x, y, x, y + height);
+  gradient.addColorStop(0, `rgba(255,255,255,${Math.min(innerAlpha + 0.03, 1)})`);
+  gradient.addColorStop(1, `rgba(245,239,229,${innerAlpha})`);
+  ctx.fillStyle = gradient;
+  roundRect(ctx, x, y, width, height, radius);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,255,255,0.74)";
+  ctx.lineWidth = 1.25;
+  roundRect(ctx, x + 0.5, y + 0.5, width - 1, height - 1, Math.max(radius - 1, 0));
+  ctx.stroke();
+  ctx.restore();
 }
 
 function buildBlindfoldLogo({ alias, initials, palette, shape, pattern }) {
