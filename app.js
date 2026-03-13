@@ -404,6 +404,18 @@ function getViewMode() {
   return state.store.viewMode === "bracket" ? "bracket" : "pick";
 }
 
+function isCompactMobileViewport() {
+  return window.matchMedia(
+    "(max-width: 760px), (max-width: 900px) and (max-height: 540px) and (orientation: landscape)"
+  ).matches;
+}
+
+function blurActiveControl() {
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+}
+
 function setViewMode(mode) {
   const nextMode = mode === "bracket" ? "bracket" : "pick";
   const currentMode = getViewMode();
@@ -411,14 +423,35 @@ function setViewMode(mode) {
     return;
   }
 
-  state.store.viewMode = nextMode;
-  persistStore();
-  render();
-  window.requestAnimationFrame(() => {
+  const compactMobileViewport = isCompactMobileViewport();
+  const previousOverflowAnchor = document.documentElement.style.overflowAnchor;
+  const syncViewport = () => {
     if (nextMode === "bracket") {
       resetBracketCanvasViewport();
     }
     scrollToViewStart(nextMode);
+  };
+
+  blurActiveControl();
+  if (compactMobileViewport && window.scrollY > 4) {
+    document.documentElement.style.overflowAnchor = "none";
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+  state.store.viewMode = nextMode;
+  persistStore();
+  render();
+  if (compactMobileViewport) {
+    syncViewport();
+  }
+
+  window.requestAnimationFrame(() => {
+    syncViewport();
+    if (compactMobileViewport) {
+      window.requestAnimationFrame(() => {
+        syncViewport();
+        document.documentElement.style.overflowAnchor = previousOverflowAnchor;
+      });
+    }
   });
 }
 
@@ -2056,6 +2089,13 @@ function scheduleBracketCanvasRender(bracket, { active = false } = {}) {
 }
 
 function scrollToViewStart(viewMode) {
+  if (isCompactMobileViewport()) {
+    if (window.scrollY > 4) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    return;
+  }
+
   const target = viewMode === "bracket" ? elements.bracketScreen : elements.pickerScreen;
   if (!target || target.hidden) {
     return;
