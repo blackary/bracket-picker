@@ -978,6 +978,70 @@ img {
   gap: 10px;
 }
 
+.export-sheet {
+  width: min(100%, 720px);
+  max-height: min(calc(100dvh - 40px), 860px);
+}
+
+.export-sheet h2 {
+  max-width: none;
+}
+
+.export-sheet__copy {
+  display: grid;
+  gap: 10px;
+}
+
+.export-sheet__preview {
+  display: grid;
+  gap: 12px;
+}
+
+.export-sheet__loading,
+.export-sheet__code,
+.export-sheet__poster {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(31, 42, 58, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.export-sheet__loading {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  font-weight: 900;
+  text-align: center;
+}
+
+.export-sheet__poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+}
+
+.export-sheet__code {
+  max-height: 42vh;
+  overflow: auto;
+  color: var(--ink);
+  font: 700 0.84rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.export-sheet__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.export-sheet__button {
+  width: 100%;
+}
+
 .mode-picker {
   display: grid;
   gap: 12px;
@@ -2765,6 +2829,14 @@ body[data-view-mode="bracket"] .screen-shell {
   .modal-card__note {
     font-size: 0.95rem;
     line-height: 1.45;
+  }
+
+  .export-sheet {
+    width: 100%;
+  }
+
+  .export-sheet__actions {
+    grid-template-columns: 1fr;
   }
 
   .modal-intro {

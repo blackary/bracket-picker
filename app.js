@@ -143,6 +143,8 @@ const state = {
   blindfoldProfileCache: new Map(),
   bracketCanvasTimer: null,
   mobileBracketToolsOpen: false,
+  exportSheetUrl: null,
+  exportSheetReturnFocusId: "",
 };
 
 const elements = {
@@ -169,6 +171,13 @@ const elements = {
   dismissNewBracketButton: document.querySelector("#dismissNewBracketButton"),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
   startNewBracketButton: document.querySelector("#startNewBracketButton"),
+  exportSheetModal: document.querySelector("#exportSheetModal"),
+  exportSheetCard: document.querySelector("#exportSheetCard"),
+  dismissExportSheetButton: document.querySelector("#dismissExportSheetButton"),
+  exportSheetTitle: document.querySelector("#exportSheetTitle"),
+  exportSheetNote: document.querySelector("#exportSheetNote"),
+  exportSheetPreview: document.querySelector("#exportSheetPreview"),
+  exportSheetActions: document.querySelector("#exportSheetActions"),
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
   exportImageButton: document.querySelector("#exportImageButton"),
@@ -555,6 +564,13 @@ function updateNewBracketModalCopy({ initial = false } = {}) {
   elements.startNewBracketButton.textContent = "Start bracket";
 }
 
+function syncModalPresence() {
+  document.body.classList.toggle(
+    "has-modal",
+    !elements.newBracketModal.hidden || !elements.exportSheetModal.hidden
+  );
+}
+
 function openNewBracketModal({ locked = false, initial = false } = {}) {
   state.pendingBracketName = nextBracketName();
   state.newBracketModalLocked = locked;
@@ -570,7 +586,7 @@ function openNewBracketModal({ locked = false, initial = false } = {}) {
   elements.cancelNewBracketButton.hidden = locked;
   elements.cancelNewBracketButton.disabled = locked;
   elements.newBracketModal.hidden = false;
-  document.body.classList.add("has-modal");
+  syncModalPresence();
 
   window.requestAnimationFrame(() => {
     elements.newBracketModeInputs[0]?.focus();
@@ -597,11 +613,108 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   elements.cancelNewBracketButton.disabled = false;
   setPendingBracketMode(BRACKET_MODE_REGULAR);
   updateNewBracketModalCopy();
-  document.body.classList.remove("has-modal");
+  syncModalPresence();
 
   if (restoreFocus) {
     elements.newBracketButton.focus();
   }
+}
+
+function revokeExportSheetUrl() {
+  if (!state.exportSheetUrl) {
+    return;
+  }
+
+  URL.revokeObjectURL(state.exportSheetUrl);
+  state.exportSheetUrl = null;
+}
+
+function openMobileExportSheet(title, returnFocusId = "") {
+  revokeExportSheetUrl();
+  state.exportSheetReturnFocusId = returnFocusId;
+  elements.exportSheetTitle.textContent = title || "Preparing export";
+  elements.exportSheetNote.textContent = "Getting your file ready for this device.";
+  elements.exportSheetPreview.innerHTML =
+    '<div class="export-sheet__loading">Preparing your export...</div>';
+  elements.exportSheetActions.innerHTML = "";
+  elements.exportSheetModal.hidden = false;
+  syncModalPresence();
+  window.requestAnimationFrame(() => {
+    elements.dismissExportSheetButton?.focus();
+  });
+}
+
+function closeMobileExportSheet({ restoreFocus = true } = {}) {
+  revokeExportSheetUrl();
+  state.exportSheetReturnFocusId ||= "";
+  elements.exportSheetModal.hidden = true;
+  elements.exportSheetTitle.textContent = "Preparing export";
+  elements.exportSheetNote.textContent = "Getting your file ready for this device.";
+  elements.exportSheetPreview.innerHTML = "";
+  elements.exportSheetActions.innerHTML = "";
+  syncModalPresence();
+
+  if (restoreFocus && state.exportSheetReturnFocusId) {
+    document.getElementById(state.exportSheetReturnFocusId)?.focus();
+  }
+
+  state.exportSheetReturnFocusId = "";
+}
+
+async function populateMobileExportSheet(blob, fileName, title) {
+  revokeExportSheetUrl();
+  const objectUrl = URL.createObjectURL(blob);
+  state.exportSheetUrl = objectUrl;
+
+  const isImage = (blob.type || "").startsWith("image/");
+  const fullText = isImage ? "" : await blob.text();
+  const previewText = isImage ? "" : escapeHtml(fullText.slice(0, 2400));
+  const clipped = !isImage && fullText.length > 2400;
+
+  elements.exportSheetTitle.textContent = title;
+  elements.exportSheetNote.textContent = isImage
+    ? "Tap save to try a direct download. If Android opens the poster instead, long-press the image or use the open button to save/share it."
+    : "Tap save to try a direct download. If Android opens the file instead, use copy or open it and share from there.";
+  elements.exportSheetPreview.innerHTML = isImage
+    ? `<figure class="export-sheet__poster"><img src="${objectUrl}" alt="${escapeAttribute(title)}" /></figure>`
+    : `<pre class="export-sheet__code">${previewText}${clipped ? "\n\n..." : ""}</pre>`;
+
+  const copyButton = !isImage
+    ? '<button class="button button--ghost export-sheet__button" id="copyExportButton" type="button">Copy JSON</button>'
+    : "";
+  const openLabel = isImage ? "Open poster" : "Open JSON";
+  const saveLabel = isImage ? "Save poster" : "Save JSON";
+
+  elements.exportSheetActions.innerHTML = `
+    <a
+      class="button button--accent export-sheet__button"
+      href="${objectUrl}"
+      download="${escapeAttribute(fileName)}"
+      target="_blank"
+      rel="noopener"
+    >
+      ${saveLabel}
+    </a>
+    <a
+      class="button button--ghost export-sheet__button"
+      href="${objectUrl}"
+      target="_blank"
+      rel="noopener"
+    >
+      ${openLabel}
+    </a>
+    ${copyButton}
+  `;
+
+  const copyExportButton = elements.exportSheetActions.querySelector("#copyExportButton");
+  copyExportButton?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(fullText);
+      copyExportButton.textContent = "Copied";
+    } catch {
+      copyExportButton.textContent = "Copy failed";
+    }
+  });
 }
 
 function startNewBracket(name = "", mode = state.pendingBracketMode) {
@@ -2280,13 +2393,33 @@ function attachEvents() {
     closeNewBracketModal();
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || elements.newBracketModal.hidden) {
+  elements.dismissExportSheetButton?.addEventListener("click", () => {
+    closeMobileExportSheet();
+  });
+
+  elements.exportSheetModal?.addEventListener("click", (event) => {
+    if (event.target !== elements.exportSheetModal) {
       return;
     }
 
-    event.preventDefault();
-    closeNewBracketModal();
+    closeMobileExportSheet();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") {
+      return;
+    }
+
+    if (!elements.exportSheetModal.hidden) {
+      event.preventDefault();
+      closeMobileExportSheet();
+      return;
+    }
+
+    if (!elements.newBracketModal.hidden) {
+      event.preventDefault();
+      closeNewBracketModal();
+    }
   });
 
   elements.deleteBracketButton.addEventListener("click", () => {
@@ -2452,7 +2585,7 @@ async function exportJson() {
     `${bracket.name} picks`,
     exportRelay
   );
-  if (result !== "cancelled") {
+  if (result !== "cancelled" && result !== "sheet") {
     showToast(
       result === "shared"
         ? "JSON ready to share."
@@ -2519,7 +2652,7 @@ async function exportPoster() {
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
   const result = await saveBlob(blob, fileName, `${bracket.name} bracket poster`, exportRelay);
-  if (result !== "cancelled") {
+  if (result !== "cancelled" && result !== "sheet") {
     showToast(
       result === "shared"
         ? "Poster ready to share."
@@ -3887,18 +4020,27 @@ async function saveBlob(blob, fileName, title, exportRelay = null) {
         title,
         files: [file],
       });
-      if (exportRelay && !exportRelay.closed) {
+      if (exportRelay?.type === "sheet") {
+        closeMobileExportSheet({ restoreFocus: false });
+      } else if (exportRelay && !exportRelay.closed) {
         exportRelay.close();
       }
       return "shared";
     } catch (error) {
-      if (exportRelay && !exportRelay.closed && error?.name === "AbortError") {
+      if (exportRelay?.type === "sheet" && error?.name === "AbortError") {
+        closeMobileExportSheet({ restoreFocus: false });
+      } else if (exportRelay && !exportRelay.closed && error?.name === "AbortError") {
         exportRelay.close();
       }
       if (error?.name === "AbortError") {
         return "cancelled";
       }
     }
+  }
+
+  if (exportRelay?.type === "sheet") {
+    await populateMobileExportSheet(blob, fileName, title);
+    return "sheet";
   }
 
   if (exportRelay && !exportRelay.closed) {
@@ -3920,7 +4062,7 @@ function shouldPrepareMobileExportRelay() {
   }
 
   if (typeof File !== "function" || !navigator.canShare) {
-    return false;
+    return true;
   }
 
   try {
@@ -3937,17 +4079,16 @@ function openMobileExportRelay(title) {
     return null;
   }
 
-  const relay = window.open("", "_blank");
-  if (!relay) {
-    return null;
-  }
-
-  relay.document.write(buildMobileExportRelayHtml({ title: escapeHtml(title) }));
-  relay.document.close();
-  return relay;
+  openMobileExportSheet(title);
+  return { type: "sheet" };
 }
 
 async function populateMobileExportRelay(relay, blob, fileName, title) {
+  if (relay?.type === "sheet") {
+    await populateMobileExportSheet(blob, fileName, title);
+    return;
+  }
+
   const objectUrl = URL.createObjectURL(blob);
   const isImage = (blob.type || "").startsWith("image/");
   const relayTitle = escapeHtml(title);
