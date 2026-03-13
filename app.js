@@ -1616,11 +1616,11 @@ async function renderPosterCanvas(canvas, bracket, { width, height }) {
 function buildPosterLayout(width, height) {
   const margin = 52;
   const headerHeight = 112;
-  const stripHeight = 98;
+  const stripHeight = 104;
   const gapAfterHeader = 18;
-  const gapAfterStrip = 24;
-  const bodyGapY = 38;
-  const sideGapX = 34;
+  const gapAfterStrip = 30;
+  const bodyGapY = 50;
+  const sideGapX = 40;
   const centerWidth = 560;
   const bodyY = margin + headerHeight + gapAfterHeader + stripHeight + gapAfterStrip;
   const bodyHeight = height - bodyY - margin;
@@ -1816,10 +1816,10 @@ async function drawPosterHeaderPill(ctx, { x, y, width, height, label, value, ti
 async function drawPosterFirstFourRail(ctx, bracket, layout) {
   const games = state.navigationGames.filter((game) => game.round === 0);
   const { firstFour } = layout;
-  const labelWidth = 150;
+  const labelWidth = 144;
   const gap = 14;
-  const cardWidth = (firstFour.width - labelWidth - 32 - gap * 3) / 4;
-  const cardHeight = 70;
+  const cardWidth = (firstFour.width - labelWidth - 28 - gap * 3) / 4;
+  const cardHeight = 74;
   let x = firstFour.x + labelWidth;
 
   ctx.fillStyle = "rgba(255,255,255,0.82)";
@@ -1838,21 +1838,21 @@ async function drawPosterFirstFourRail(ctx, bracket, layout) {
     const theme = state.regionThemes[game.region] || CHAMPIONSHIP_THEME;
 
     ctx.fillStyle = "rgba(255,255,255,0.92)";
-    roundRect(ctx, x, firstFour.y + 14, cardWidth, cardHeight, 22);
+    roundRect(ctx, x, firstFour.y + 16, cardWidth, cardHeight, 22);
     ctx.fill();
 
     ctx.fillStyle = hexToRgba(theme.color, 0.12);
-    roundRect(ctx, x + 10, firstFour.y + 24, cardWidth - 20, cardHeight - 20, 16);
+    roundRect(ctx, x + 10, firstFour.y + 24, cardWidth - 20, cardHeight - 22, 16);
     ctx.fill();
 
     ctx.fillStyle = "#5c6a79";
     ctx.font = '800 14px "Nunito"';
-    ctx.fillText(`${game.region} No. ${game.seedLine}`, x + 16, firstFour.y + 32);
+    ctx.fillText(`${game.region} No. ${game.seedLine}`, x + 16, firstFour.y + 34);
 
     await drawPosterGameBox(
       ctx,
       game,
-      { x: x + 12, y: firstFour.y + 30, width: cardWidth - 24, height: 42 },
+      { x: x + 12, y: firstFour.y + 38, width: cardWidth - 24, height: 40 },
       bracket,
       { neutralColor: theme.color, compact: true }
     );
@@ -2057,26 +2057,24 @@ function drawPosterRegionConnectors(
 
 async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
   const { center } = layout;
-  const topMidY = (regionAnchors.East.championAnchor.y + regionAnchors.Midwest.championAnchor.y) / 2;
-  const rightMidY = (regionAnchors.South.championAnchor.y + regionAnchors.West.championAnchor.y) / 2;
-  const semiCenterY = (topMidY + rightMidY) / 2;
   const semiHeight = 68;
-  const semiWidth = 222;
-  const titleWidth = 276;
-  const titleHeight = 72;
+  const semiWidth = 234;
+  const titleWidth = 292;
+  const titleHeight = 76;
   const semifinalOne = state.gamesById.get("final-four-g1");
   const semifinalTwo = state.gamesById.get("final-four-g2");
   const titleGame = state.gamesById.get("championship");
-  const leftSemiRect = createPosterRect(center.x + 22, semiCenterY - semiHeight / 2, semiWidth, semiHeight);
+  const semiY = center.y + 332;
+  const leftSemiRect = createPosterRect(center.x + 26, semiY, semiWidth, semiHeight);
   const rightSemiRect = createPosterRect(
-    center.x + center.width - semiWidth - 22,
-    semiCenterY - semiHeight / 2,
+    center.x + center.width - semiWidth - 26,
+    semiY,
     semiWidth,
     semiHeight
   );
   const titleRect = createPosterRect(
     center.x + (center.width - titleWidth) / 2,
-    semiCenterY + 176,
+    semiY + 232,
     titleWidth,
     titleHeight
   );
@@ -2131,7 +2129,9 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
 
   ctx.fillStyle = "#23303d";
   ctx.font = '800 24px "Baloo 2"';
-  ctx.fillText("National Championship", titleRect.x - 8, titleRect.y - 18);
+  ctx.textAlign = "center";
+  ctx.fillText("National Championship", titleRect.x + titleRect.width / 2, titleRect.y - 20);
+  ctx.textAlign = "left";
 
   drawPosterConnector(
     ctx,
@@ -2152,10 +2152,10 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
   });
 
   await drawPosterChampionBadge(ctx, bracket, {
-    x: center.x + 44,
-    y: titleRect.y + 120,
-    width: center.width - 88,
-    height: 182,
+    x: center.x + 38,
+    y: titleRect.y + 126,
+    width: center.width - 76,
+    height: 178,
   });
 }
 
