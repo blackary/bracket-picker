@@ -2362,15 +2362,23 @@ async function exportJson() {
     return;
   }
 
+  const exportRelay = openMobileExportRelay(`${bracket.name} picks`);
   const snapshot = buildExportSnapshot(bracket);
   const fileName = `${slugifyFileName(bracket.name)}-2026-picks.json`;
   const result = await saveBlob(
     new Blob([JSON.stringify(snapshot, null, 2)], { type: "application/json" }),
     fileName,
-    `${bracket.name} picks`
+    `${bracket.name} picks`,
+    exportRelay
   );
   if (result !== "cancelled") {
-    showToast(result === "shared" ? "JSON ready to share." : "JSON export ready.");
+    showToast(
+      result === "shared"
+        ? "JSON ready to share."
+        : result === "opened"
+          ? "JSON opened in a new tab."
+          : "JSON export ready."
+    );
   }
 }
 
@@ -2423,14 +2431,21 @@ async function exportPoster() {
     return;
   }
 
+  const exportRelay = openMobileExportRelay(`${bracket.name} bracket poster`);
   const canvas = document.createElement("canvas");
   await renderPosterCanvas(canvas, bracket, { width: 2600, height: 1800 });
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
-  const result = await saveBlob(blob, fileName, `${bracket.name} bracket poster`);
+  const result = await saveBlob(blob, fileName, `${bracket.name} bracket poster`, exportRelay);
   if (result !== "cancelled") {
-    showToast(result === "shared" ? "Poster ready to share." : "Poster export ready.");
+    showToast(
+      result === "shared"
+        ? "Poster ready to share."
+        : result === "opened"
+          ? "Poster opened in a new tab."
+          : "Poster export ready."
+    );
   }
 }
 
@@ -3723,7 +3738,7 @@ async function loadImage(src) {
   return state.imageCache.get(src);
 }
 
-async function saveBlob(blob, fileName, title) {
+async function saveBlob(blob, fileName, title, exportRelay = null) {
   const file =
     typeof File === "function"
       ? new File([blob], fileName, {
@@ -3741,16 +3756,250 @@ async function saveBlob(blob, fileName, title) {
         title,
         files: [file],
       });
+      if (exportRelay && !exportRelay.closed) {
+        exportRelay.close();
+      }
       return "shared";
     } catch (error) {
+      if (exportRelay && !exportRelay.closed && error?.name === "AbortError") {
+        exportRelay.close();
+      }
       if (error?.name === "AbortError") {
         return "cancelled";
       }
     }
   }
 
+  if (exportRelay && !exportRelay.closed) {
+    await populateMobileExportRelay(exportRelay, blob, fileName, title);
+    return "opened";
+  }
+
   downloadBlob(blob, fileName);
   return "downloaded";
+}
+
+function shouldPrepareMobileExportRelay() {
+  if (!window.matchMedia("(pointer: coarse)").matches) {
+    return false;
+  }
+
+  if (!navigator.share) {
+    return true;
+  }
+
+  if (typeof File !== "function" || !navigator.canShare) {
+    return false;
+  }
+
+  try {
+    return !navigator.canShare({
+      files: [new File(["relay"], "relay-check.txt", { type: "text/plain" })],
+    });
+  } catch {
+    return true;
+  }
+}
+
+function openMobileExportRelay(title) {
+  if (!shouldPrepareMobileExportRelay()) {
+    return null;
+  }
+
+  const relay = window.open("", "_blank");
+  if (!relay) {
+    return null;
+  }
+
+  relay.document.write(buildMobileExportRelayHtml({ title: escapeHtml(title) }));
+  relay.document.close();
+  return relay;
+}
+
+async function populateMobileExportRelay(relay, blob, fileName, title) {
+  const objectUrl = URL.createObjectURL(blob);
+  const isImage = (blob.type || "").startsWith("image/");
+  const relayTitle = escapeHtml(title);
+  const relayFileName = escapeHtml(fileName);
+  const fullText = isImage ? "" : await blob.text();
+  const previewText = isImage ? "" : escapeHtml(fullText.slice(0, 2400));
+  const needsClip = !isImage && fullText.length > 2400;
+
+  relay.document.open();
+  relay.document.write(
+    buildMobileExportRelayHtml({
+      title: relayTitle,
+      fileName: relayFileName,
+      objectUrl,
+      isImage,
+      previewText,
+      fullText,
+      clipped: needsClip,
+    })
+  );
+  relay.document.close();
+
+  window.setTimeout(() => {
+    URL.revokeObjectURL(objectUrl);
+  }, 120000);
+}
+
+function buildMobileExportRelayHtml({
+  title,
+  fileName = "",
+  objectUrl = "",
+  isImage = false,
+  previewText = "",
+  fullText = "",
+  clipped = false,
+} = {}) {
+  const previewMarkup = isImage
+    ? `<figure class="export-relay__preview"><img src="${objectUrl}" alt="${title}" /></figure>`
+    : `<pre class="export-relay__code">${previewText}${clipped ? "\n\n..." : ""}</pre>`;
+  const copyButton = !isImage
+    ? '<button class="export-relay__ghost" id="copyExportButton" type="button">Copy JSON</button>'
+    : "";
+  const copyScript = !isImage
+    ? `<script>
+        const copyButton = document.getElementById("copyExportButton");
+        const exportText = ${JSON.stringify(fullText)};
+        copyButton?.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(exportText);
+            copyButton.textContent = "Copied";
+          } catch {
+            copyButton.textContent = "Copy failed";
+          }
+        });
+      </script>`
+    : "";
+  const note = isImage
+    ? "Use the big button below or long-press the poster image to save or share it from your phone."
+    : "Use the big button below to save the JSON file. If your browser prefers previewing it first, you can still share or copy it from this tab.";
+
+  return `<!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>${title || "Preparing export"}</title>
+        <style>
+          :root {
+            color-scheme: light;
+            --ink: #1f2a3a;
+            --ink-soft: #637388;
+            --paper: #fffdf8;
+            --panel: #ffffff;
+            --accent: #24344d;
+            --accent-bright: #ff8d52;
+            --line: rgba(31, 42, 58, 0.1);
+          }
+          * { box-sizing: border-box; }
+          body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px 16px 28px;
+            background:
+              radial-gradient(circle at top left, rgba(255, 182, 63, 0.18), transparent 28%),
+              linear-gradient(180deg, #fff9f1, #eef5ff);
+            color: var(--ink);
+            font: 600 16px/1.45 Nunito, system-ui, sans-serif;
+          }
+          main {
+            width: min(100%, 740px);
+            margin: 0 auto;
+            display: grid;
+            gap: 16px;
+          }
+          .export-relay__card {
+            display: grid;
+            gap: 14px;
+            padding: 18px;
+            border: 2px solid var(--line);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 18px 28px rgba(31, 42, 58, 0.1);
+          }
+          h1 {
+            margin: 0;
+            font: 800 clamp(1.5rem, 7vw, 2.3rem)/1.05 "Baloo 2", "Trebuchet MS", sans-serif;
+          }
+          p {
+            margin: 0;
+            color: var(--ink-soft);
+          }
+          .export-relay__actions {
+            display: grid;
+            gap: 10px;
+          }
+          .export-relay__button,
+          .export-relay__ghost {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 52px;
+            padding: 0 18px;
+            border-radius: 18px;
+            border: 0;
+            text-decoration: none;
+            font: 800 1rem/1 Nunito, system-ui, sans-serif;
+          }
+          .export-relay__button {
+            background: linear-gradient(180deg, var(--accent-bright), #ff7343);
+            color: white;
+          }
+          .export-relay__ghost {
+            border: 2px solid var(--line);
+            background: #fff8ee;
+            color: var(--ink);
+          }
+          .export-relay__preview {
+            margin: 0;
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248, 251, 255, 0.96));
+          }
+          .export-relay__preview img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 14px;
+          }
+          .export-relay__code {
+            margin: 0;
+            max-height: 48vh;
+            overflow: auto;
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: #f8fbff;
+            color: var(--ink);
+            font: 700 0.82rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+          }
+        </style>
+      </head>
+      <body>
+        <main>
+          <section class="export-relay__card">
+            <p>${fileName ? `Ready to export ${fileName}.` : "Preparing your export..."}</p>
+            <h1>${title || "Preparing export"}</h1>
+            <p>${note}</p>
+            ${fileName ? previewMarkup : ""}
+            <div class="export-relay__actions">
+              ${
+                fileName
+                  ? `<a class="export-relay__button" href="${objectUrl}" download="${fileName}">Save ${isImage ? "poster" : "JSON file"}</a>${copyButton}`
+                  : '<div class="export-relay__button">Preparing export...</div>'
+              }
+            </div>
+          </section>
+        </main>
+        ${copyScript}
+      </body>
+    </html>`;
 }
 
 function downloadBlob(blob, fileName) {
@@ -3758,12 +4007,10 @@ function downloadBlob(blob, fileName) {
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
-  if (window.matchMedia("(pointer: coarse)").matches) {
-    link.target = "_blank";
-    link.rel = "noopener";
-  }
+  link.setAttribute("download", fileName);
+  link.style.display = "none";
   document.body.append(link);
-  link.click();
+  link.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
   link.remove();
   window.setTimeout(() => {
     URL.revokeObjectURL(url);
