@@ -482,6 +482,7 @@ function updateInstallButton() {
   const canInstall = Boolean(state.deferredInstallPrompt) && !isStandaloneApp();
   elements.installAppButton.hidden = !canInstall;
   elements.installAppButton.disabled = !canInstall;
+  elements.installAppButton.textContent = isCompactMobileViewport() ? "Install" : "Install app";
 }
 
 function setupInstallability() {
@@ -1175,7 +1176,7 @@ function renderMobileToolbarToggle(bracket) {
   elements.mobileToolbarToggleButton.hidden = !shouldShow;
   elements.mobileToolbarToggleButton.disabled = !shouldShow;
   elements.mobileToolbarToggleButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  elements.mobileToolbarToggleButton.textContent = isOpen ? "Hide tools" : "Bracket tools";
+  elements.mobileToolbarToggleButton.textContent = isOpen ? "Hide" : "Tools";
 }
 
 function syncResponsiveChrome() {
@@ -1183,6 +1184,7 @@ function syncResponsiveChrome() {
     state.mobileBracketToolsOpen = false;
   }
 
+  updateInstallButton();
   renderMobileToolbarToggle(getCurrentBracket());
 }
 
