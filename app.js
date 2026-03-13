@@ -164,6 +164,7 @@ const elements = {
   fitBracketButton: document.querySelector("#fitBracketButton"),
   zoomInButton: document.querySelector("#zoomInButton"),
   bracketViewTitle: document.querySelector("#bracketViewTitle"),
+  bracketViewChips: document.querySelector("#bracketViewChips"),
   bracketViewHint: document.querySelector("#bracketViewHint"),
   bracketCanvasWrap: document.querySelector("#bracketCanvasWrap"),
   bracketMobileBoard: document.querySelector("#bracketMobileBoard"),
@@ -1858,6 +1859,7 @@ function applyScreenPanelState(element, { active, entering, exiting, transitioni
 function renderBracketViewHeader(bracket, progress, currentContext) {
   if (!bracket) {
     elements.bracketViewTitle.textContent = "Start a bracket";
+    renderBracketViewChips(["Pick mode first"]);
     elements.bracketViewHint.textContent =
       "Pick regular mode for real teams or blindfold mode for clue-only mascot picking.";
     return;
@@ -1866,15 +1868,36 @@ function renderBracketViewHeader(bracket, progress, currentContext) {
   const champion = getChampion(bracket);
   const nextOpen =
     currentContext.visibleGames.find((game) => !bracket.picks[game.id]) || currentContext.currentGame;
+  const chips = [`${progress.pickedCount}/${progress.total} locked`];
 
   elements.bracketViewTitle.textContent = bracket.name || "Untitled bracket";
+  chips.push(
+    champion ? `Champion: ${getDisplayTeamName(bracket, champion)}` : "Champion slot open"
+  );
+
+  if (canRevealBlindfold(bracket)) {
+    chips.push("Ready to reveal");
+  } else if (nextOpen) {
+    chips.push(`Next: ${getPreviewLabel(nextOpen, bracket.picks, bracket)}`);
+  } else {
+    chips.push("Board ready");
+  }
+
+  renderBracketViewChips(chips);
   elements.bracketViewHint.textContent = canRevealBlindfold(bracket)
-    ? "Every pick is locked in. Take off the blindfold to reveal the real teams behind your bracket."
+    ? "Every pick is in. Take off the blindfold whenever you want to see the real teams."
     : champion
-    ? `${getDisplayTeamName(bracket, champion)} is your current champion pick. ${progress.pickedCount} of ${progress.total} games are locked in.`
+    ? "The board is filled in and ready for a full look."
     : nextOpen
-      ? `${progress.pickedCount} of ${progress.total} picks are locked in. This live bracket updates as you pick, and the next open game is ${getPreviewLabel(nextOpen, bracket.picks, bracket)}.`
+      ? "This live board updates as you pick, so you can hop back to the next matchup without losing your place."
       : "Your live bracket board is ready for a full look.";
+}
+
+function renderBracketViewChips(chips) {
+  elements.bracketViewChips.innerHTML = chips
+    .filter(Boolean)
+    .map((chip) => `<span class="bracket-screen__chip">${escapeHtml(chip)}</span>`)
+    .join("");
 }
 
 async function renderBracketCanvas(bracket) {
