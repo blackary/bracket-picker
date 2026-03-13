@@ -1814,14 +1814,6 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   }
 }
 
-@media (min-width: 761px) {
-  .app-topbar {
-    position: sticky;
-    top: 12px;
-    z-index: 14;
-  }
-}
-
 @media (max-width: 1180px) {
   .app-topbar__main,
   .bracket-screen,
