@@ -67,6 +67,10 @@
   --mint: #6fdaa7;
   --sky: #63b7ff;
   --rose: #ff7a7a;
+  --trim-warm: #efad5a;
+  --trim-sand: #f6dec2;
+  --trim-cool: #8cb2d6;
+  --trim-deep: #506b8c;
   --pill: #f4ebda;
   --success: #28a96d;
   --danger: #dd5b62;
@@ -206,9 +210,18 @@ img {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
-  height: 9px;
-  background: linear-gradient(90deg, var(--gold), var(--orange) 40%, var(--sky) 72%, var(--mint));
-  opacity: 0.8;
+  height: 8px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--trim-warm) 0%,
+      var(--trim-sand) 28%,
+      #f8f1e7 54%,
+      var(--trim-cool) 82%,
+      var(--trim-deep) 100%
+    );
+  opacity: 0.96;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .hero {
@@ -746,9 +759,18 @@ img {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
-  height: 9px;
+  height: 8px;
   border-radius: 30px 30px 0 0;
-  background: linear-gradient(90deg, var(--gold), var(--orange) 38%, var(--sky) 74%, var(--mint));
+  background:
+    linear-gradient(
+      90deg,
+      var(--trim-warm) 0%,
+      var(--trim-sand) 28%,
+      #f8f1e7 54%,
+      var(--trim-cool) 82%,
+      var(--trim-deep) 100%
+    );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .modal-card h2 {
