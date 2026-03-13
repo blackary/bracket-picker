@@ -2919,8 +2919,8 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
   const { center } = layout;
   const semiHeight = 68;
   const semiWidth = 234;
-  const titleWidth = 292;
-  const titleHeight = 76;
+  const titleWidth = 308;
+  const titleHeight = 82;
   const semifinalOne = state.gamesById.get("final-four-g1");
   const semifinalTwo = state.gamesById.get("final-four-g2");
   const titleGame = state.gamesById.get("championship");
@@ -2934,10 +2934,18 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
   );
   const titleRect = createPosterRect(
     center.x + (center.width - titleWidth) / 2,
-    semiY + 232,
+    semiY + 180,
     titleWidth,
     titleHeight
   );
+  const titleLabelRect = {
+    x: center.x + (center.width - 260) / 2,
+    y: titleRect.y - 52,
+    width: 260,
+    height: 34,
+  };
+  const leftTitleLaneX = titleRect.x - 20;
+  const rightTitleLaneX = titleRect.x + titleRect.width + 20;
 
   ctx.fillStyle = "rgba(255,255,255,0.84)";
   roundRect(ctx, center.x, center.y, center.width, center.height, 34);
@@ -2987,22 +2995,51 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
     neutralColor: "#63b7ff",
   });
 
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  roundRect(
+    ctx,
+    titleLabelRect.x,
+    titleLabelRect.y,
+    titleLabelRect.width,
+    titleLabelRect.height,
+    17
+  );
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(35, 48, 61, 0.08)";
+  ctx.lineWidth = 1.5;
+  roundRect(
+    ctx,
+    titleLabelRect.x,
+    titleLabelRect.y,
+    titleLabelRect.width,
+    titleLabelRect.height,
+    17
+  );
+  ctx.stroke();
+
   ctx.fillStyle = "#23303d";
-  ctx.font = '800 24px "Baloo 2"';
+  ctx.font = '800 22px "Baloo 2"';
   ctx.textAlign = "center";
-  ctx.fillText("National Championship", titleRect.x + titleRect.width / 2, titleRect.y - 20);
+  ctx.fillText(
+    "National Championship",
+    titleLabelRect.x + titleLabelRect.width / 2,
+    titleLabelRect.y + 23
+  );
   ctx.textAlign = "left";
 
-  drawPosterConnector(
+  drawPosterCenterConnector(
     ctx,
     getPosterWinnerAnchor(semifinalOne, leftSemiRect, bracket, "left"),
     getPosterTargetAnchor(titleRect, 0, "left"),
+    leftTitleLaneX,
     getPosterConnectionColor(semifinalOne, bracket, "#ff8a5b")
   );
-  drawPosterConnector(
+  drawPosterCenterConnector(
     ctx,
     getPosterWinnerAnchor(semifinalTwo, rightSemiRect, bracket, "right"),
     getPosterTargetAnchor(titleRect, 1, "right"),
+    rightTitleLaneX,
     getPosterConnectionColor(semifinalTwo, bracket, "#63b7ff")
   );
 
@@ -3013,7 +3050,7 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
 
   await drawPosterChampionBadge(ctx, bracket, {
     x: center.x + 38,
-    y: titleRect.y + 126,
+    y: titleRect.y + 118,
     width: center.width - 76,
     height: 178,
   });
@@ -3266,6 +3303,19 @@ function drawPosterConnector(ctx, from, to, color) {
   ctx.moveTo(from.x, from.y);
   ctx.lineTo(midX, from.y);
   ctx.lineTo(midX, to.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+}
+
+function drawPosterCenterConnector(ctx, from, to, laneX, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(laneX, from.y);
+  ctx.lineTo(laneX, to.y);
   ctx.lineTo(to.x, to.y);
   ctx.stroke();
 }
