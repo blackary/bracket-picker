@@ -139,7 +139,6 @@ const elements = {
   newBracketNameHint: document.querySelector("#newBracketNameHint"),
   newBracketModeInputs: document.querySelectorAll('input[name="newBracketMode"]'),
   cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
-  useAutoNameButton: document.querySelector("#useAutoNameButton"),
   startNewBracketButton: document.querySelector("#startNewBracketButton"),
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
@@ -388,6 +387,9 @@ function setViewMode(mode) {
   state.store.viewMode = nextMode;
   persistStore();
   render();
+  window.requestAnimationFrame(() => {
+    scrollToViewStart(nextMode);
+  });
 }
 
 function getCurrentBracket() {
@@ -471,19 +473,16 @@ function updateNewBracketModalCopy({ initial = false } = {}) {
     state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
       ? "Blindfold hides the real schools and logos while you pick. You only see cute aliases, made-up logos, and simple clues until the final reveal."
       : "Regular shows the real teams, seeds, logos, and simple stats from the very first matchup.";
-  elements.newBracketNameHint.textContent = `Suggested name: ${state.pendingBracketName}. Keep it or type your own.`;
-  elements.useAutoNameButton.textContent = `Use "${state.pendingBracketName}"`;
+  elements.newBracketNameHint.textContent = `Auto-generated name: ${state.pendingBracketName}. Change it if you want.`;
   elements.newBracketNameInput.placeholder = state.pendingBracketName;
-  elements.startNewBracketButton.textContent =
-    state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
-      ? "Start blindfold bracket"
-      : "Start regular bracket";
+  elements.startNewBracketButton.textContent = "Start bracket";
 }
 
 function openNewBracketModal({ locked = false, initial = false } = {}) {
   state.pendingBracketName = nextBracketName();
   state.newBracketModalLocked = locked;
-  elements.newBracketNameInput.value = "";
+  elements.newBracketModal.dataset.locked = locked ? "true" : "false";
+  elements.newBracketNameInput.value = state.pendingBracketName;
   elements.newBracketNameInput.setCustomValidity("");
   setPendingBracketMode(BRACKET_MODE_REGULAR);
   updateNewBracketModalCopy({ initial });
@@ -505,6 +504,7 @@ function closeNewBracketModal({ restoreFocus = true } = {}) {
   state.pendingBracketName = "";
   state.pendingBracketMode = BRACKET_MODE_REGULAR;
   state.newBracketModalLocked = false;
+  elements.newBracketModal.dataset.locked = "false";
   elements.newBracketModal.hidden = true;
   elements.newBracketNameInput.value = "";
   elements.newBracketNameInput.setCustomValidity("");
@@ -531,7 +531,6 @@ function startNewBracket(name = "", mode = state.pendingBracketMode) {
   state.newBracketModalLocked = false;
   closeNewBracketModal({ restoreFocus: false });
   render();
-  showToast(`Created ${bracket.name}.`);
 }
 
 function touchBracket(bracket) {
@@ -1941,6 +1940,20 @@ function scheduleBracketCanvasRender(bracket, { active = false } = {}) {
   state.bracketCanvasTimer = window.setTimeout(renderCanvas, 24);
 }
 
+function scrollToViewStart(viewMode) {
+  const target = viewMode === "bracket" ? elements.bracketScreen : elements.pickerScreen;
+  if (!target || target.hidden) {
+    return;
+  }
+
+  const targetTop = Math.max(0, window.scrollY + target.getBoundingClientRect().top - 10);
+  if (Math.abs(window.scrollY - targetTop) < 6) {
+    return;
+  }
+
+  window.scrollTo({ top: targetTop, behavior: "auto" });
+}
+
 function attachEvents() {
   elements.pickViewButton.addEventListener("click", () => {
     setViewMode("pick");
@@ -2000,20 +2013,9 @@ function attachEvents() {
 
   elements.newBracketForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const typedName = elements.newBracketNameInput.value.trim();
-    if (!typedName) {
-      elements.newBracketNameInput.setCustomValidity("Type a bracket name, or use the auto name button.");
-      elements.newBracketNameInput.reportValidity();
-      return;
-    }
-
+    const typedName = elements.newBracketNameInput.value.trim() || state.pendingBracketName;
     elements.newBracketNameInput.setCustomValidity("");
     startNewBracket(typedName, state.pendingBracketMode);
-  });
-
-  elements.useAutoNameButton.addEventListener("click", () => {
-    elements.newBracketNameInput.setCustomValidity("");
-    startNewBracket(state.pendingBracketName, state.pendingBracketMode);
   });
 
   elements.newBracketNameInput.addEventListener("input", () => {
@@ -3333,7 +3335,7 @@ function showToast(message) {
 
   state.toastTimer = window.setTimeout(() => {
     elements.toast.classList.remove("is-visible");
-  }, 2200);
+  }, 1500);
 }
 
 function hexToRgba(hex, alpha) {
