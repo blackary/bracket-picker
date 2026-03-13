@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "Bracket Parade",
+  "short_name": "Bracket Parade",
+  "description": "A kid-friendly March Madness bracket picker with one matchup at a time, team logos, named brackets, and exports.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff8ef",
+  "theme_color": "#24344d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/brand/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/brand/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

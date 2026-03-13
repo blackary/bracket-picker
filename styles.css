@@ -578,6 +578,12 @@ img {
   line-height: 1.45;
 }
 
+.topbar-utility {
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
 .view-switch {
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -956,6 +962,14 @@ img {
 
 .button--accent {
   background: linear-gradient(180deg, #ff9c59, #ff774c);
+}
+
+.button--install {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 15px;
+  border-bottom-width: 4px;
+  font-size: 0.82rem;
 }
 
 .layout {
@@ -1912,6 +1926,10 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   .view-switch {
     width: 100%;
   }
+
+  .topbar-utility {
+    justify-items: stretch;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1941,6 +1959,10 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   .app-topbar__main,
   .app-topbar__controls {
     grid-template-columns: 1fr;
+  }
+
+  .topbar-utility {
+    justify-items: stretch;
   }
 
   .toolbar__group {

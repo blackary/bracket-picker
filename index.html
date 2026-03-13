@@ -9,7 +9,12 @@
       content="Bracket Parade is a kid-friendly 2026 March Madness bracket picker with logos, one matchup at a time, local saves, and export tools."
     />
     <meta name="theme-color" content="#24344d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Bracket Parade" />
     <link rel="icon" href="assets/brand/bracket-parade-icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="assets/brand/pwa/apple-touch-icon.png" />
     <link
       rel="preload"
       href="assets/fonts/bungee-400.ttf"
@@ -86,23 +91,29 @@
             <p class="app-topbar__status-note" id="sourceNote"></p>
           </div>
 
-          <div class="view-switch" role="tablist" aria-label="View mode">
-            <button
-              id="pickViewButton"
-              class="view-switch__button"
-              type="button"
-              aria-pressed="true"
-            >
-              Pick screen
+          <div class="topbar-utility">
+            <button id="installAppButton" class="button button--ghost button--install" type="button" hidden>
+              Install app
             </button>
-            <button
-              id="bracketViewButton"
-              class="view-switch__button"
-              type="button"
-              aria-pressed="false"
-            >
-              Bracket view
-            </button>
+
+            <div class="view-switch" role="tablist" aria-label="View mode">
+              <button
+                id="pickViewButton"
+                class="view-switch__button"
+                type="button"
+                aria-pressed="true"
+              >
+                Pick screen
+              </button>
+              <button
+                id="bracketViewButton"
+                class="view-switch__button"
+                type="button"
+                aria-pressed="false"
+              >
+                Bracket view
+              </button>
+            </div>
           </div>
         </div>
 

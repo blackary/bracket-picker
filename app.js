@@ -37,11 +37,13 @@ const state = {
   bracketCanvasRenderId: 0,
   bracketZoom: 1,
   pendingBracketName: "",
+  deferredInstallPrompt: null,
 };
 
 const elements = {
   sourceStatus: document.querySelector("#sourceStatus"),
   sourceNote: document.querySelector("#sourceNote"),
+  installAppButton: document.querySelector("#installAppButton"),
   pickViewButton: document.querySelector("#pickViewButton"),
   bracketViewButton: document.querySelector("#bracketViewButton"),
   bracketSelect: document.querySelector("#bracketSelect"),
@@ -105,7 +107,9 @@ async function init() {
 
     ensureCurrentBracket();
     attachEvents();
+    setupInstallability();
     render();
+    registerServiceWorker();
   } catch (error) {
     renderFatal(error);
   }
@@ -301,6 +305,47 @@ function animateScreenSwap(mode) {
       easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
     }
   );
+}
+
+function isStandaloneApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function updateInstallButton() {
+  const canInstall = Boolean(state.deferredInstallPrompt) && !isStandaloneApp();
+  elements.installAppButton.hidden = !canInstall;
+  elements.installAppButton.disabled = !canInstall;
+}
+
+function setupInstallability() {
+  updateInstallButton();
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    state.deferredInstallPrompt = event;
+    updateInstallButton();
+  });
+
+  window.addEventListener("appinstalled", () => {
+    state.deferredInstallPrompt = null;
+    updateInstallButton();
+    showToast("Bracket Parade installed.");
+  });
+
+  const standaloneQuery = window.matchMedia("(display-mode: standalone)");
+  standaloneQuery.addEventListener?.("change", updateInstallButton);
+}
+
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  try {
+    await navigator.serviceWorker.register("./sw.js");
+  } catch (error) {
+    console.error("Service worker registration failed.", error);
+  }
 }
 
 function setBracketZoom(nextZoom) {
@@ -1368,6 +1413,26 @@ function attachEvents() {
 
   elements.returnToPickButton.addEventListener("click", () => {
     setViewMode("pick");
+  });
+
+  elements.installAppButton.addEventListener("click", async () => {
+    if (!state.deferredInstallPrompt) {
+      return;
+    }
+
+    const promptEvent = state.deferredInstallPrompt;
+    state.deferredInstallPrompt = null;
+    updateInstallButton();
+    await promptEvent.prompt();
+
+    try {
+      const outcome = await promptEvent.userChoice;
+      if (outcome?.outcome === "dismissed") {
+        showToast("Install prompt dismissed.");
+      }
+    } catch {
+      // Ignore user-choice lookup failures; the browser will re-fire when appropriate.
+    }
   });
 
   elements.zoomOutButton.addEventListener("click", () => {
