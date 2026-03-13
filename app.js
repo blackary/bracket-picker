@@ -1122,7 +1122,6 @@ function renderRecentPicks(bracket) {
                 <p class="stack-item__label">${escapeHtml(winner.name)}</p>
                 <p class="stack-item__meta">${escapeHtml(game.roundLabel)} • ${escapeHtml(getPreviewLabel(game, bracket.picks))}</p>
               </div>
-              <span class="stack-item__count">W</span>
             </div>
           `
         )
