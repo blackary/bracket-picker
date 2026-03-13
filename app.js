@@ -502,8 +502,6 @@ function renderToolbar(bracket) {
   if (elements.bracketNameInput !== document.activeElement) {
     elements.bracketNameInput.value = bracket.name;
   }
-
-  elements.deleteBracketButton.disabled = state.store.brackets.length <= 1;
 }
 
 function renderProgress(progress) {
@@ -1207,8 +1205,12 @@ function attachEvents() {
 
   elements.deleteBracketButton.addEventListener("click", () => {
     const bracket = getCurrentBracket();
+    const deletingLastBracket = state.store.brackets.length === 1;
+    const confirmMessage = deletingLastBracket
+      ? `Delete "${bracket.name}"? A fresh blank bracket will be created right away.`
+      : `Delete "${bracket.name}"? This removes its saved picks from this device.`;
 
-    if (!window.confirm(`Delete "${bracket.name}"? This removes its saved picks from this device.`)) {
+    if (!window.confirm(confirmMessage)) {
       return;
     }
 
@@ -1218,7 +1220,7 @@ function attachEvents() {
     state.bracketCanvasSignature = null;
     persistStore();
     render();
-    showToast("Bracket deleted.");
+    showToast(deletingLastBracket ? "Bracket deleted. Fresh bracket ready." : "Bracket deleted.");
   });
 
   elements.bracketNameInput.addEventListener("input", (event) => {
