@@ -464,16 +464,16 @@ function setPendingBracketMode(mode) {
 function updateNewBracketModalCopy({ initial = false } = {}) {
   elements.newBracketEyebrow.textContent = initial ? "Start here" : "New bracket";
   elements.newBracketTitle.textContent = initial
-    ? "Choose how you want to play"
+    ? "Pick your bracket style"
     : "Start another bracket";
   elements.newBracketNote.textContent = initial
-    ? "Bracket Parade has two ways to play. Pick a style, name your bracket, and then start making picks."
-    : "Pick a play style, give this bracket a name, and jump straight into the first matchup.";
+    ? "Regular shows the real teams. Blindfold hides them until the reveal. Name your bracket and jump into the first game."
+    : "Pick a style, tweak the name if you want, and jump straight into the first matchup.";
   elements.newBracketModeHint.textContent =
     state.pendingBracketMode === BRACKET_MODE_BLINDFOLD
       ? "Blindfold hides the real schools and logos while you pick. You only see cute aliases, made-up logos, and simple clues until the final reveal."
       : "Regular shows the real teams, seeds, logos, and simple stats from the very first matchup.";
-  elements.newBracketNameHint.textContent = `Auto-generated name: ${state.pendingBracketName}. Change it if you want.`;
+  elements.newBracketNameHint.textContent = "Auto name ready. Edit it if you want.";
   elements.newBracketNameInput.placeholder = state.pendingBracketName;
   elements.startNewBracketButton.textContent = "Start bracket";
 }

@@ -254,111 +254,121 @@
         aria-labelledby="newBracketTitle"
         aria-describedby="newBracketNote"
       >
-        <p class="eyebrow" id="newBracketEyebrow">New bracket</p>
-        <h2 id="newBracketTitle">Start a new bracket</h2>
-        <p class="modal-card__note" id="newBracketNote">
-          Choose regular or blindfold mode, then keep the auto name or swap in your own.
-        </p>
+        <div class="modal-header">
+          <div class="modal-copy">
+            <p class="eyebrow" id="newBracketEyebrow">New bracket</p>
+            <h2 id="newBracketTitle">Start a new bracket</h2>
+            <p class="modal-card__note" id="newBracketNote">
+              Choose regular or blindfold mode, then keep the auto name or swap in your own.
+            </p>
+          </div>
 
-        <div class="modal-intro" aria-hidden="true">
-          <div class="modal-intro__step">
-            <span class="modal-intro__number">1</span>
-            <div>
-              <p class="modal-intro__label">Choose a style</p>
-              <p class="modal-intro__text">Regular or Blindfold.</p>
+          <div class="modal-intro" aria-hidden="true">
+            <div class="modal-intro__step">
+              <span class="modal-intro__number">1</span>
+              <div>
+                <p class="modal-intro__label">Choose a style</p>
+                <p class="modal-intro__text">Regular or Blindfold.</p>
+              </div>
             </div>
-          </div>
-          <div class="modal-intro__step">
-            <span class="modal-intro__number">2</span>
-            <div>
-              <p class="modal-intro__label">Name your bracket</p>
-              <p class="modal-intro__text">Use the suggestion or type your own.</p>
+            <div class="modal-intro__step">
+              <span class="modal-intro__number">2</span>
+              <div>
+                <p class="modal-intro__label">Name your bracket</p>
+                <p class="modal-intro__text">Use the suggestion or type your own.</p>
+              </div>
             </div>
-          </div>
-          <div class="modal-intro__step">
-            <span class="modal-intro__number">3</span>
-            <div>
-              <p class="modal-intro__label">Start picking</p>
-              <p class="modal-intro__text">One matchup at a time.</p>
+            <div class="modal-intro__step">
+              <span class="modal-intro__number">3</span>
+              <div>
+                <p class="modal-intro__label">Start picking</p>
+                <p class="modal-intro__text">One matchup at a time.</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="mode-picker" role="radiogroup" aria-labelledby="newBracketModeLabel">
-          <p class="field__label" id="newBracketModeLabel">Choose a play style</p>
-          <div class="mode-picker__grid">
-            <label class="mode-choice">
+        <div class="modal-layout">
+          <section class="modal-panel modal-panel--mode">
+            <div class="mode-picker" role="radiogroup" aria-labelledby="newBracketModeLabel">
+              <p class="field__label" id="newBracketModeLabel">Choose a play style</p>
+              <div class="mode-picker__grid">
+                <label class="mode-choice">
+                  <input
+                    class="mode-choice__input"
+                    type="radio"
+                    name="newBracketMode"
+                    value="regular"
+                    checked
+                  />
+                  <span class="mode-choice__body">
+                    <span class="mode-choice__kicker">Classic bracket</span>
+                    <span class="mode-choice__title">Regular</span>
+                    <span class="mode-choice__note">
+                      Real team names, seeds, logos, and simple stats from the start.
+                    </span>
+                    <span class="mode-choice__list">
+                      <span>Real schools and logos</span>
+                      <span>Best for a normal bracket</span>
+                      <span>Everything is visible right away</span>
+                    </span>
+                  </span>
+                </label>
+
+                <label class="mode-choice">
+                  <input
+                    class="mode-choice__input"
+                    type="radio"
+                    name="newBracketMode"
+                    value="blindfold"
+                  />
+                  <span class="mode-choice__body">
+                    <span class="mode-choice__kicker">Mystery reveal</span>
+                    <span class="mode-choice__title">Blindfold</span>
+                    <span class="mode-choice__note">
+                      Cute code names and made-up logos now, real teams revealed after every pick is in.
+                    </span>
+                    <span class="mode-choice__list">
+                      <span>School names stay hidden</span>
+                      <span>Pick using clues and simple stats</span>
+                      <span>Reveal the real bracket at the end</span>
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <p class="mode-picker__hint" id="newBracketModeHint">
+              Regular shows the real teams, seeds, logos, and simple stats from the very first matchup.
+            </p>
+          </section>
+
+          <section class="modal-panel modal-panel--name">
+            <label class="field field--grow">
+              <span class="field__label">Bracket name</span>
               <input
-                class="mode-choice__input"
-                type="radio"
-                name="newBracketMode"
-                value="regular"
-                checked
+                id="newBracketNameInput"
+                class="field__control"
+                type="text"
+                maxlength="40"
+                placeholder="Victory Parade"
+                spellcheck="false"
+                enterkeyhint="done"
               />
-              <span class="mode-choice__body">
-                <span class="mode-choice__kicker">Classic bracket</span>
-                <span class="mode-choice__title">Regular</span>
-                <span class="mode-choice__note">
-                  Real team names, seeds, logos, and simple stats from the start.
-                </span>
-                <span class="mode-choice__list">
-                  <span>Real schools and logos</span>
-                  <span>Best for a normal bracket</span>
-                  <span>Everything is visible right away</span>
-                </span>
-              </span>
             </label>
+            <p class="modal-card__helper" id="newBracketNameHint">
+              Auto name ready. Edit it if you want.
+            </p>
 
-            <label class="mode-choice">
-              <input
-                class="mode-choice__input"
-                type="radio"
-                name="newBracketMode"
-                value="blindfold"
-              />
-              <span class="mode-choice__body">
-                <span class="mode-choice__kicker">Mystery reveal</span>
-                <span class="mode-choice__title">Blindfold</span>
-                <span class="mode-choice__note">
-                  Cute code names and made-up logos now, real teams revealed after every pick is in.
-                </span>
-                <span class="mode-choice__list">
-                  <span>School names stay hidden</span>
-                  <span>Pick using clues and simple stats</span>
-                  <span>Reveal the real bracket at the end</span>
-                </span>
-              </span>
-            </label>
-          </div>
-        </div>
-
-        <p class="mode-picker__hint" id="newBracketModeHint">
-          Regular shows the real teams, seeds, logos, and simple stats from the very first matchup.
-        </p>
-
-        <label class="field field--grow">
-          <span class="field__label">Bracket name</span>
-          <input
-            id="newBracketNameInput"
-            class="field__control"
-            type="text"
-            maxlength="40"
-            placeholder="Victory Parade"
-            spellcheck="false"
-            enterkeyhint="done"
-          />
-        </label>
-        <p class="modal-card__helper" id="newBracketNameHint">
-          We picked a name for you. Change it if you want, then start.
-        </p>
-
-        <div class="modal-card__actions">
-          <button id="cancelNewBracketButton" class="button button--ghost" type="button">
-            Cancel
-          </button>
-          <button id="startNewBracketButton" class="button button--accent" type="submit">
-            Start bracket
-          </button>
+            <div class="modal-card__actions">
+              <button id="startNewBracketButton" class="button button--accent" type="submit">
+                Start bracket
+              </button>
+              <button id="cancelNewBracketButton" class="button button--ghost" type="button">
+                Cancel
+              </button>
+            </div>
+          </section>
         </div>
       </form>
     </div>
