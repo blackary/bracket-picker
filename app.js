@@ -69,6 +69,7 @@ const elements = {
   bracketViewTitle: document.querySelector("#bracketViewTitle"),
   bracketViewHint: document.querySelector("#bracketViewHint"),
   bracketCanvasWrap: document.querySelector("#bracketCanvasWrap"),
+  bracketMobileBoard: document.querySelector("#bracketMobileBoard"),
   snapshotCard: document.querySelector("#snapshotCard"),
   roundProgress: document.querySelector("#roundProgress"),
   recentPicks: document.querySelector("#recentPicks"),
@@ -258,13 +259,41 @@ function setViewMode(mode) {
     return;
   }
 
-  state.store.viewMode = nextMode;
-  persistStore();
-  render();
+  const applyMode = () => {
+    state.store.viewMode = nextMode;
+    persistStore();
+    render();
+    animateScreenSwap(nextMode);
+  };
+
+  if (typeof document.startViewTransition === "function") {
+    document.startViewTransition(applyMode);
+    return;
+  }
+
+  applyMode();
 }
 
 function getCurrentBracket() {
   return state.store.brackets.find((bracket) => bracket.id === state.store.currentBracketId);
+}
+
+function animateScreenSwap(mode) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const target = mode === "bracket" ? elements.bracketScreen : elements.pickerScreen;
+  target.animate(
+    [
+      { opacity: 0.16, transform: "translateY(18px) scale(0.99)" },
+      { opacity: 1, transform: "translateY(0) scale(1)" },
+    ],
+    {
+      duration: 240,
+      easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+    }
+  );
 }
 
 function openNewBracketModal() {
@@ -477,6 +506,7 @@ function render() {
   renderSnapshot(bracket);
   renderRoundProgress(bracket);
   renderRecentPicks(bracket);
+  renderBracketMobileBoard(bracket);
   renderViewMode(bracket, progress, currentContext);
 }
 
@@ -1078,6 +1108,163 @@ function renderRecentPicks(bracket) {
   `;
 }
 
+function renderBracketMobileBoard(bracket) {
+  const sections = [];
+  const firstFourGames = state.navigationGames.filter((game) => game.round === 0);
+  const finalGames = state.navigationGames.filter((game) => game.round >= 4);
+
+  if (firstFourGames.length) {
+    sections.push(
+      renderMobileBracketSection("First Four", "Play-in winners", firstFourGames, bracket)
+    );
+  }
+
+  for (const region of state.data.regions) {
+    sections.push(renderMobileRegionSection(region, bracket));
+  }
+
+  sections.push(
+    renderMobileBracketSection("Final Four", "Semifinals and title game", finalGames, bracket)
+  );
+
+  elements.bracketMobileBoard.innerHTML = sections.join("");
+}
+
+function renderMobileRegionSection(region, bracket) {
+  const rounds = [
+    { label: "Round 1", games: getPosterGamesForRound(region.name, 1) },
+    { label: "Round 2", games: getPosterGamesForRound(region.name, 2) },
+    { label: "Sweet 16", games: getPosterGamesForRound(region.name, 3) },
+    { label: "Elite 8", games: getPosterGamesForRound(region.name, 4) },
+  ].filter((round) => round.games.length);
+
+  const pickedCount = rounds.reduce(
+    (total, round) => total + round.games.filter((game) => bracket.picks[game.id]).length,
+    0
+  );
+  const gameCount = rounds.reduce((total, round) => total + round.games.length, 0);
+
+  return `
+    <section class="mobile-bracket-card">
+      <div class="mobile-bracket-card__header">
+        <div>
+          <p class="mobile-bracket-card__eyebrow">Region</p>
+          <h3>${escapeHtml(region.name)}</h3>
+        </div>
+        <span class="mobile-bracket-card__badge">${pickedCount}/${gameCount}</span>
+      </div>
+      <div class="mobile-round-stack">
+        ${rounds
+          .map(
+            (round) => `
+              <div class="mobile-round-group">
+                <div class="mobile-round-group__header">
+                  <h4>${escapeHtml(round.label)}</h4>
+                  <span>${round.games.filter((game) => bracket.picks[game.id]).length}/${round.games.length}</span>
+                </div>
+                <div class="mobile-game-stack">
+                  ${round.games.map((game) => renderMobileBracketGame(game, bracket)).join("")}
+                </div>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderMobileBracketSection(title, note, games, bracket) {
+  const pickedCount = games.filter((game) => bracket.picks[game.id]).length;
+
+  return `
+    <section class="mobile-bracket-card mobile-bracket-card--special">
+      <div class="mobile-bracket-card__header">
+        <div>
+          <p class="mobile-bracket-card__eyebrow">${escapeHtml(note)}</p>
+          <h3>${escapeHtml(title)}</h3>
+        </div>
+        <span class="mobile-bracket-card__badge">${pickedCount}/${games.length}</span>
+      </div>
+      <div class="mobile-game-stack">
+        ${games.map((game) => renderMobileBracketGame(game, bracket)).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderMobileBracketGame(game, bracket) {
+  const slots = game.slots.map((slot) => getMobileBracketSlotDetails(slot, bracket.picks));
+  const winnerId = bracket.picks[game.id] || null;
+
+  return `
+    <article class="mobile-game-card ${winnerId ? "is-picked" : ""}">
+      <p class="mobile-game-card__label">${escapeHtml(game.title || getPreviewLabel(game, bracket.picks))}</p>
+      <div class="mobile-slot-stack">
+        ${slots
+          .map((slot) => renderMobileBracketSlot(slot, slot.team?.id === winnerId))
+          .join("")}
+      </div>
+    </article>
+  `;
+}
+
+function getMobileBracketSlotDetails(slot, picks) {
+  if (slot.type === "team") {
+    return {
+      team: state.teamsById[slot.teamId] || null,
+      label: state.teamsById[slot.teamId]?.name || "TBD",
+      note: state.teamsById[slot.teamId]
+        ? `${state.teamsById[slot.teamId].conference} • No. ${state.teamsById[slot.teamId].seed}`
+        : "Waiting on teams",
+    };
+  }
+
+  const pickedTeamId = picks[slot.gameId];
+  if (pickedTeamId) {
+    const team = state.teamsById[pickedTeamId] || null;
+    return {
+      team,
+      label: team?.name || "TBD",
+      note: team ? `${team.conference} • No. ${team.seed}` : "Winner locked in",
+    };
+  }
+
+  const sourceGame = state.gamesById.get(slot.gameId);
+  if (sourceGame) {
+    return {
+      team: null,
+      label: `Winner of ${sourceGame.title}`,
+      note: sourceGame.roundLabel,
+    };
+  }
+
+  return {
+    team: null,
+    label: "TBD",
+    note: "Waiting on earlier game",
+  };
+}
+
+function renderMobileBracketSlot(slot, isWinner) {
+  return `
+    <div class="mobile-slot ${isWinner ? "is-winner" : ""}">
+      <div class="mobile-slot__logo-shell ${slot.team ? "" : "is-empty"}">
+        ${
+          slot.team
+            ? `<img src="${escapeAttribute(slot.team.logo)}" alt="${escapeAttribute(slot.team.name)} logo" />`
+            : `<span>?</span>`
+        }
+      </div>
+      <div class="mobile-slot__copy">
+        <p class="mobile-slot__name">${escapeHtml(slot.team?.name || slot.label)}</p>
+        <p class="mobile-slot__meta">${escapeHtml(slot.note)}</p>
+      </div>
+      <span class="mobile-slot__tag">${isWinner ? "Picked" : slot.team ? `No. ${slot.team.seed}` : "Open"}</span>
+    </div>
+  `;
+}
+
 function renderViewMode(bracket, progress, currentContext) {
   const viewMode = getViewMode();
   document.body.dataset.viewMode = viewMode;
@@ -1308,16 +1495,18 @@ function attachEvents() {
   elements.exportImageButton.addEventListener("click", exportPoster);
 }
 
-function exportJson() {
+async function exportJson() {
   const bracket = getCurrentBracket();
   const snapshot = buildExportSnapshot(bracket);
   const fileName = `${slugifyFileName(bracket.name)}-2026-picks.json`;
-
-  downloadBlob(
+  const result = await saveBlob(
     new Blob([JSON.stringify(snapshot, null, 2)], { type: "application/json" }),
-    fileName
+    fileName,
+    `${bracket.name} picks`
   );
-  showToast("JSON export ready.");
+  if (result !== "cancelled") {
+    showToast(result === "shared" ? "JSON ready to share." : "JSON export ready.");
+  }
 }
 
 function buildExportSnapshot(bracket) {
@@ -1360,8 +1549,10 @@ async function exportPoster() {
 
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   const fileName = `${slugifyFileName(bracket.name)}-2026-poster.png`;
-  downloadBlob(blob, fileName);
-  showToast("Poster export ready.");
+  const result = await saveBlob(blob, fileName, `${bracket.name} bracket poster`);
+  if (result !== "cancelled") {
+    showToast(result === "shared" ? "Poster ready to share." : "Poster export ready.");
+  }
 }
 
 async function renderPosterCanvas(canvas, bracket, { width, height }) {
@@ -2225,15 +2416,51 @@ async function loadImage(src) {
   return state.imageCache.get(src);
 }
 
+async function saveBlob(blob, fileName, title) {
+  const file =
+    typeof File === "function"
+      ? new File([blob], fileName, {
+          type: blob.type || "application/octet-stream",
+        })
+      : null;
+
+  if (
+    navigator.share &&
+    file &&
+    (!navigator.canShare || navigator.canShare({ files: [file] }))
+  ) {
+    try {
+      await navigator.share({
+        title,
+        files: [file],
+      });
+      return "shared";
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        return "cancelled";
+      }
+    }
+  }
+
+  downloadBlob(blob, fileName);
+  return "downloaded";
+}
+
 function downloadBlob(blob, fileName) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
+  if (window.matchMedia("(pointer: coarse)").matches) {
+    link.target = "_blank";
+    link.rel = "noopener";
+  }
   document.body.append(link);
   link.click();
   link.remove();
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1200);
 }
 
 function renderFatal(error) {
