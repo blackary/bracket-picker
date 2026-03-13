@@ -212,6 +212,46 @@
       </main>
     </div>
 
+    <div class="modal-shell" id="newBracketModal" hidden>
+      <form
+        class="modal-card"
+        id="newBracketForm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="newBracketTitle"
+        aria-describedby="newBracketNote"
+      >
+        <p class="eyebrow">New bracket</p>
+        <h2 id="newBracketTitle">Name your next bracket</h2>
+        <p class="modal-card__note" id="newBracketNote">
+          Keep the auto name or swap in your own before the first pick.
+        </p>
+
+        <label class="field field--grow">
+          <span class="field__label">Bracket name</span>
+          <input
+            id="newBracketNameInput"
+            class="field__control"
+            type="text"
+            maxlength="40"
+            placeholder="Victory Parade"
+            spellcheck="false"
+            enterkeyhint="done"
+          />
+        </label>
+
+        <div class="modal-card__actions">
+          <button id="cancelNewBracketButton" class="button button--ghost" type="button">
+            Cancel
+          </button>
+          <button id="useAutoNameButton" class="button" type="button">Use auto name</button>
+          <button id="startNewBracketButton" class="button button--accent" type="submit">
+            Start picking
+          </button>
+        </div>
+      </form>
+    </div>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script type="module" src="app.js"></script>

@@ -32,6 +32,7 @@ const state = {
   imageCache: new Map(),
   bracketCanvasSignature: null,
   bracketCanvasRenderId: 0,
+  pendingBracketName: "",
 };
 
 const elements = {
@@ -43,6 +44,11 @@ const elements = {
   newBracketButton: document.querySelector("#newBracketButton"),
   deleteBracketButton: document.querySelector("#deleteBracketButton"),
   bracketNameInput: document.querySelector("#bracketNameInput"),
+  newBracketModal: document.querySelector("#newBracketModal"),
+  newBracketForm: document.querySelector("#newBracketForm"),
+  newBracketNameInput: document.querySelector("#newBracketNameInput"),
+  cancelNewBracketButton: document.querySelector("#cancelNewBracketButton"),
+  useAutoNameButton: document.querySelector("#useAutoNameButton"),
   resetButton: document.querySelector("#resetButton"),
   exportJsonButton: document.querySelector("#exportJsonButton"),
   exportImageButton: document.querySelector("#exportImageButton"),
@@ -258,6 +264,44 @@ function setViewMode(mode) {
 
 function getCurrentBracket() {
   return state.store.brackets.find((bracket) => bracket.id === state.store.currentBracketId);
+}
+
+function openNewBracketModal() {
+  state.pendingBracketName = nextBracketName();
+  elements.newBracketNameInput.value = state.pendingBracketName;
+  elements.newBracketNameInput.placeholder = state.pendingBracketName;
+  elements.newBracketModal.hidden = false;
+  document.body.classList.add("has-modal");
+
+  window.requestAnimationFrame(() => {
+    elements.newBracketNameInput.focus();
+    elements.newBracketNameInput.select();
+  });
+}
+
+function closeNewBracketModal({ restoreFocus = true } = {}) {
+  state.pendingBracketName = "";
+  elements.newBracketModal.hidden = true;
+  elements.newBracketNameInput.value = "";
+  document.body.classList.remove("has-modal");
+
+  if (restoreFocus) {
+    elements.newBracketButton.focus();
+  }
+}
+
+function startNewBracket(name = "") {
+  const finalName = name.trim() || state.pendingBracketName || nextBracketName();
+  const bracket = createBracket(finalName);
+  state.store.brackets.unshift(bracket);
+  state.store.currentBracketId = bracket.id;
+  state.store.viewMode = "pick";
+  state.activeGameId = null;
+  state.bracketCanvasSignature = null;
+  persistStore();
+  closeNewBracketModal({ restoreFocus: false });
+  render();
+  showToast(`Created ${bracket.name}.`);
 }
 
 function touchBracket(bracket) {
@@ -1128,14 +1172,37 @@ function attachEvents() {
   });
 
   elements.newBracketButton.addEventListener("click", () => {
-    const bracket = createBracket();
-    state.store.brackets.unshift(bracket);
-    state.store.currentBracketId = bracket.id;
-    state.activeGameId = null;
-    state.bracketCanvasSignature = null;
-    persistStore();
-    render();
-    showToast(`Created ${bracket.name}.`);
+    openNewBracketModal();
+  });
+
+  elements.newBracketForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    startNewBracket(elements.newBracketNameInput.value);
+  });
+
+  elements.useAutoNameButton.addEventListener("click", () => {
+    startNewBracket(state.pendingBracketName);
+  });
+
+  elements.cancelNewBracketButton.addEventListener("click", () => {
+    closeNewBracketModal();
+  });
+
+  elements.newBracketModal.addEventListener("click", (event) => {
+    if (event.target !== elements.newBracketModal) {
+      return;
+    }
+
+    closeNewBracketModal();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || elements.newBracketModal.hidden) {
+      return;
+    }
+
+    event.preventDefault();
+    closeNewBracketModal();
   });
 
   elements.deleteBracketButton.addEventListener("click", () => {
