@@ -935,9 +935,11 @@ function setPick(gameId, teamId) {
   clearDescendantPicks(bracket.picks, gameId);
   touchBracket(bracket);
   state.bracketCanvasSignature = null;
+  blurActiveControl();
   persistStore();
   moveToNextOpen(gameId);
   render();
+  stabilizeCompactPickerViewport();
 }
 
 function clearPick(gameId) {
@@ -954,9 +956,11 @@ function clearPick(gameId) {
   clearDescendantPicks(bracket.picks, gameId);
   touchBracket(bracket);
   state.bracketCanvasSignature = null;
+  blurActiveControl();
   persistStore();
   state.activeGameId = gameId;
   render();
+  stabilizeCompactPickerViewport();
 }
 
 function moveToNextOpen(originGameId = null) {
@@ -1067,6 +1071,38 @@ function syncResponsiveChrome() {
   }
 
   renderMobileToolbarToggle(getCurrentBracket());
+}
+
+function stabilizeCompactPickerViewport() {
+  if (getViewMode() !== "pick") {
+    return;
+  }
+
+  if (!isCompactMobileViewport()) {
+    scrollToViewStart("pick");
+    return;
+  }
+
+  const previousOverflowAnchor = document.documentElement.style.overflowAnchor;
+  const syncViewport = () => {
+    scrollToViewStart("pick");
+  };
+
+  document.documentElement.style.overflowAnchor = "none";
+  syncViewport();
+  window.requestAnimationFrame(() => {
+    syncViewport();
+    window.requestAnimationFrame(() => {
+      syncViewport();
+      window.setTimeout(() => {
+        syncViewport();
+        window.setTimeout(() => {
+          syncViewport();
+          document.documentElement.style.overflowAnchor = previousOverflowAnchor;
+        }, 90);
+      }, 40);
+    });
+  });
 }
 
 function renderProgress(progress) {
@@ -2343,8 +2379,10 @@ function attachEvents() {
       return;
     }
 
+    blurActiveControl();
     state.activeGameId = visibleGames[currentIndex - 1].id;
     render();
+    stabilizeCompactPickerViewport();
   });
 
   elements.nextGameButton.addEventListener("click", () => {
@@ -2353,8 +2391,10 @@ function attachEvents() {
       return;
     }
 
+    blurActiveControl();
     state.activeGameId = visibleGames[currentIndex + 1].id;
     render();
+    stabilizeCompactPickerViewport();
   });
 
   elements.clearPickButton.addEventListener("click", () => {

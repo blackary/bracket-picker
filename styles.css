@@ -3310,9 +3310,9 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .app-topbar__controls {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     gap: 8px;
-    align-items: end;
+    align-items: stretch;
   }
 
   body[data-view-mode="pick"] .toolbar__group {
@@ -3331,14 +3331,6 @@ body[data-view-mode="bracket"] .screen-shell {
 
   body[data-view-mode="pick"] .toolbar__group--library {
     grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  body[data-view-mode="pick"] .toolbar__group--library .field {
-    grid-column: 1 / -1;
-  }
-
-  body[data-view-mode="pick"] .toolbar__group--library {
-    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: 8px;
     align-items: center;
   }
@@ -3346,6 +3338,10 @@ body[data-view-mode="bracket"] .screen-shell {
   body[data-view-mode="pick"] .toolbar__group--library .field {
     grid-column: auto;
     gap: 0;
+  }
+
+  body[data-view-mode="pick"] #deleteBracketButton {
+    display: none;
   }
 
   body[data-view-mode="pick"] .toolbar__group--grow .field {
@@ -3408,16 +3404,16 @@ body[data-view-mode="bracket"] .screen-shell {
   body[data-view-mode="pick"] .picker-screen .matchup-stage {
     margin-top: 8px;
     min-height: 0;
+    align-items: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-board {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 10px;
+    grid-template-columns: 1fr;
+    gap: 8px;
     align-items: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-board__center {
-    grid-column: 1 / -1;
     order: -1;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -3425,6 +3421,17 @@ body[data-view-mode="bracket"] .screen-shell {
     align-items: center;
     gap: 6px 10px;
     margin-bottom: 0;
+  }
+
+  body[data-view-mode="pick"] .picker-screen .matchup-lane {
+    padding: 8px;
+    border-radius: 22px;
+  }
+
+  body[data-view-mode="pick"] .picker-screen .matchup-lane::before {
+    inset: 7px;
+    border-radius: 16px;
+    opacity: 0.4;
   }
 
   body[data-view-mode="pick"] .picker-screen .versus-track__round {
@@ -3459,10 +3466,20 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card {
-    gap: 6px 8px;
-    padding: 9px;
-    border-radius: 18px;
+    grid-template-columns: 74px minmax(0, 1fr) minmax(200px, 230px);
+    grid-template-areas:
+      "top top top"
+      "crest body facts"
+      "crest scouting footer";
+    gap: 8px 10px;
+    padding: 10px;
+    border-radius: 20px;
     border-bottom-width: 3px;
+  }
+
+  body[data-view-mode="pick"] .picker-screen .team-card--left,
+  body[data-view-mode="pick"] .picker-screen .team-card--right {
+    --tilt: 0deg;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__top {
@@ -3477,30 +3494,39 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__crest {
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
+    align-self: start;
+    width: 74px;
+    height: 74px;
+    border-radius: 18px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__name {
-    font-size: 0.86rem;
+    font-size: 0.96rem;
     line-height: 0.98;
   }
 
+  body[data-view-mode="pick"] .picker-screen .team-card__body {
+    align-content: start;
+    gap: 4px;
+  }
+
   body[data-view-mode="pick"] .picker-screen .team-card__conference {
-    font-size: 0.56rem;
+    font-size: 0.6rem;
+    line-height: 1.28;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 5px;
+    align-self: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__scouting {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 5px;
     padding: 6px;
-    border-radius: 14px;
+    border-radius: 12px;
+    align-self: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .scout-row {
@@ -3513,8 +3539,13 @@ body[data-view-mode="bracket"] .screen-shell {
     font-size: 0.58rem;
   }
 
+  body[data-view-mode="pick"] .picker-screen .scout-row__note {
+    display: none;
+  }
+
   body[data-view-mode="pick"] .picker-screen .scout-row__meter {
     gap: 3px;
+    justify-content: flex-start;
   }
 
   body[data-view-mode="pick"] .picker-screen .scout-row__dot {
@@ -3541,7 +3572,7 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__section-label {
-    font-size: 0.5rem;
+    display: none;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__button {
@@ -3557,8 +3588,16 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__footer {
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    justify-content: flex-end;
+    justify-self: end;
+    align-self: end;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  body[data-view-mode="pick"] .picker-screen .team-card__pulse {
+    display: none;
   }
 
   body[data-view-mode="pick"] .nav-row {
