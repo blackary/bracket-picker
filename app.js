@@ -74,6 +74,32 @@ const BLINDFOLD_ANIMALS = [
   "Bobcats",
   "Parrots",
 ];
+const BLINDFOLD_ANIMAL_ART = {
+  Otters: "otter",
+  Foxes: "fox",
+  Koalas: "koala",
+  Puffins: "puffin",
+  Raccoons: "raccoon",
+  Bunnies: "bunny",
+  Kittens: "cat",
+  Cubs: "bear",
+  Owls: "owl",
+  Turtles: "turtle",
+  Penguins: "penguin",
+  Hedgehogs: "hedgehog",
+  Llamas: "llama",
+  Alpacas: "llama",
+  Fireflies: "firefly",
+  Squirrels: "squirrel",
+  Beavers: "beaver",
+  Ducks: "duck",
+  Seals: "seal",
+  Ponies: "pony",
+  Badgers: "badger",
+  Falcons: "falcon",
+  Bobcats: "cat",
+  Parrots: "parrot",
+};
 const BLINDFOLD_BADGES = [
   "Mystery mascot",
   "Scout squad",
@@ -623,7 +649,6 @@ function getBlindfoldProfiles(bracket) {
       BLINDFOLD_PATTERNS[
         hashString(`${cacheKey}:${teamId}:pattern`) % BLINDFOLD_PATTERNS.length
       ];
-    const initials = `${aliasEntry.adjective[0]}${aliasEntry.animal[0]}`.toUpperCase();
 
     profiles[teamId] = {
       alias: aliasEntry.alias,
@@ -634,7 +659,7 @@ function getBlindfoldProfiles(bracket) {
       pattern,
       logo: buildBlindfoldLogo({
         alias: aliasEntry.alias,
-        initials,
+        animal: aliasEntry.animal,
         palette,
         shape,
         pattern,
@@ -684,7 +709,7 @@ function getDisplayTeamData(bracket, team) {
     name: identity.alias,
     compactName: compactTeamName(identity.alias),
     logo: identity.logo,
-    logoAlt: `${identity.alias} badge`,
+    logoAlt: `${identity.alias} mascot logo`,
     subtitle: getConferenceProfile(team.conference),
     seedTag: "Code name",
     sticker: identity.badge,
@@ -3138,19 +3163,313 @@ function drawPosterLogoPlate(
   ctx.restore();
 }
 
-function buildBlindfoldLogo({ alias, initials, palette, shape, pattern }) {
+function buildBlindfoldLogo({ alias, animal, palette, shape, pattern }) {
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${escapeSvgText(alias)} badge">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="${escapeSvgText(alias)} mascot logo">
       <title>${escapeSvgText(alias)}</title>
       <rect x="4" y="4" width="112" height="112" rx="30" fill="${palette.tint}" stroke="${palette.glow}" stroke-width="4" />
       ${getBlindfoldPatternMarkup(pattern, palette)}
-      ${getBlindfoldShapeMarkup(shape, palette)}
-      <circle cx="60" cy="60" r="24" fill="#ffffff" opacity="0.88" />
-      <text x="60" y="68" text-anchor="middle" font-family="Trebuchet MS, Arial, sans-serif" font-size="26" font-weight="900" fill="${palette.accent}">${escapeSvgText(initials)}</text>
+      <g opacity="0.18" transform="translate(0 5)">${getBlindfoldShapeMarkup(shape, palette)}</g>
+      <rect x="16" y="16" width="88" height="88" rx="28" fill="#ffffff" opacity="0.52" stroke="${palette.glow}" stroke-width="2.6" />
+      <circle cx="60" cy="64" r="29" fill="#fffdf9" opacity="0.9" />
+      ${getBlindfoldAnimalMarkup(animal, palette)}
     </svg>
   `;
 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function getBlindfoldAnimalMarkup(animal, palette) {
+  const art = BLINDFOLD_ANIMAL_ART[animal] || "bear";
+  const color = palette.color;
+  const glow = palette.glow;
+  const ink = palette.accent;
+  const cream = "#fffdf8";
+  const blush = hexToRgba(color, 0.18);
+  const mask = hexToRgba(ink, 0.15);
+
+  if (art === "bunny") {
+    return `
+      <ellipse cx="46" cy="34" rx="10" ry="24" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <ellipse cx="74" cy="34" rx="10" ry="24" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <ellipse cx="46" cy="36" rx="4" ry="14" fill="${blush}" />
+      <ellipse cx="74" cy="36" rx="4" ry="14" fill="${blush}" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.6" />
+      <ellipse cx="60" cy="75" rx="15" ry="11" fill="${cream}" />
+      <circle cx="50" cy="62" r="3.3" fill="${ink}" />
+      <circle cx="70" cy="62" r="3.3" fill="${ink}" />
+      <ellipse cx="60" cy="71" rx="5" ry="3.8" fill="${ink}" />
+      <path d="M54 78q6 5 12 0" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "fox") {
+    return `
+      <path d="M60 30 81 46 75 80Q68 89 60 95Q52 89 45 80L39 46Z" fill="${color}" stroke="${ink}" stroke-width="2.2" />
+      <path d="M48 42 38 28 34 48Z" fill="${color}" stroke="${ink}" stroke-width="2" />
+      <path d="M72 42 82 28 86 48Z" fill="${color}" stroke="${ink}" stroke-width="2" />
+      <path d="M60 55 78 82H42Z" fill="${cream}" />
+      <circle cx="50" cy="61" r="3.1" fill="${ink}" />
+      <circle cx="70" cy="61" r="3.1" fill="${ink}" />
+      <ellipse cx="60" cy="70" rx="4.7" ry="3.6" fill="${ink}" />
+      <path d="M54 76q6 4 12 0" fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "koala") {
+    return `
+      <circle cx="39" cy="55" r="15" fill="${color}" opacity="0.95" />
+      <circle cx="81" cy="55" r="15" fill="${color}" opacity="0.95" />
+      <circle cx="39" cy="55" r="7" fill="${glow}" opacity="0.85" />
+      <circle cx="81" cy="55" r="7" fill="${glow}" opacity="0.85" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.6" />
+      <circle cx="50" cy="62" r="3.3" fill="${ink}" />
+      <circle cx="70" cy="62" r="3.3" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="10" ry="8.5" fill="${ink}" />
+      <path d="M54 80q6 4 12 0" fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "puffin") {
+    return `
+      <path d="M60 36c17 0 29 12 29 29S77 94 60 94 31 82 31 65s12-29 29-29z" fill="${ink}" />
+      <path d="M60 44c13 0 22 9 22 22S73 88 60 88 38 79 38 66s9-22 22-22z" fill="${cream}" />
+      <ellipse cx="49" cy="62" rx="4.2" ry="5.6" fill="${ink}" />
+      <ellipse cx="71" cy="62" rx="4.2" ry="5.6" fill="${ink}" />
+      <path d="M60 68h20c-3 9-10 15-20 17-6-1-10-6-10-11 0-4 3-6 10-6z" fill="#f6a34c" />
+      <path d="M60 68h12" stroke="${cream}" stroke-width="2.4" stroke-linecap="round" />
+      <path d="M38 42l9 10M82 42l-9 10" stroke="${ink}" stroke-width="4" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "raccoon") {
+    return `
+      <circle cx="44" cy="45" r="8.5" fill="${ink}" />
+      <circle cx="76" cy="45" r="8.5" fill="${ink}" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${ink}" stroke-width="2.2" />
+      <path d="M38 60c8-9 36-9 44 0-6 11-15 16-22 16s-16-5-22-16z" fill="${mask}" />
+      <circle cx="50" cy="63" r="3.3" fill="${ink}" />
+      <circle cx="70" cy="63" r="3.3" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="5.5" ry="4" fill="${ink}" />
+      <path d="M44 74h10M66 74h10" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+      <path d="M55 79q5 4 10 0" fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "cat") {
+    return `
+      <path d="M41 50 48 31l12 15" fill="${color}" stroke="${ink}" stroke-width="2.2" stroke-linejoin="round" />
+      <path d="M79 50 72 31 60 46" fill="${color}" stroke="${ink}" stroke-width="2.2" stroke-linejoin="round" />
+      <circle cx="60" cy="67" r="27" fill="${glow}" stroke="${color}" stroke-width="2.6" />
+      <circle cx="50" cy="62" r="3.2" fill="${ink}" />
+      <circle cx="70" cy="62" r="3.2" fill="${ink}" />
+      <path d="M60 69l-4 6h8z" fill="${ink}" />
+      <path d="M54 77q6 5 12 0" fill="none" stroke="${ink}" stroke-width="2.1" stroke-linecap="round" />
+      <path d="M40 70h12M38 76h13M68 70h12M69 76h13" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "owl") {
+    return `
+      <path d="M44 40l8 8M76 40l-8 8" stroke="${color}" stroke-width="6" stroke-linecap="round" />
+      <path d="M60 38c18 0 29 12 29 31S78 97 60 97 31 86 31 69s11-31 29-31z" fill="${color}" stroke="${ink}" stroke-width="2.2" />
+      <circle cx="49" cy="64" r="10" fill="${cream}" />
+      <circle cx="71" cy="64" r="10" fill="${cream}" />
+      <circle cx="49" cy="64" r="4.4" fill="${ink}" />
+      <circle cx="71" cy="64" r="4.4" fill="${ink}" />
+      <path d="M60 70l-5 7h10z" fill="#f4a340" />
+      <path d="M48 84q12 8 24 0" fill="none" stroke="${glow}" stroke-width="4" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "turtle") {
+    return `
+      <ellipse cx="60" cy="66" rx="24" ry="20" fill="${color}" stroke="${ink}" stroke-width="2.4" />
+      <circle cx="60" cy="42" r="10" fill="${glow}" stroke="${ink}" stroke-width="2" />
+      <circle cx="52" cy="40" r="2.4" fill="${ink}" />
+      <circle cx="68" cy="40" r="2.4" fill="${ink}" />
+      <path d="M49 58h22M60 47v37M41 66h38" stroke="${glow}" stroke-width="2" opacity="0.88" />
+      <ellipse cx="40" cy="70" rx="6" ry="8" fill="${glow}" />
+      <ellipse cx="80" cy="70" rx="6" ry="8" fill="${glow}" />
+      <ellipse cx="50" cy="84" rx="6" ry="7" fill="${glow}" />
+      <ellipse cx="70" cy="84" rx="6" ry="7" fill="${glow}" />
+    `;
+  }
+
+  if (art === "penguin") {
+    return `
+      <ellipse cx="60" cy="68" rx="24" ry="30" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="16" ry="22" fill="${cream}" />
+      <ellipse cx="43" cy="68" rx="6" ry="16" fill="${ink}" />
+      <ellipse cx="77" cy="68" rx="6" ry="16" fill="${ink}" />
+      <circle cx="52" cy="58" r="3.2" fill="${ink}" />
+      <circle cx="68" cy="58" r="3.2" fill="${ink}" />
+      <path d="M60 64l-6 7h12z" fill="#f4a340" />
+      <path d="M50 92h8M62 92h8" stroke="#f4a340" stroke-width="4" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "hedgehog") {
+    return `
+      <path d="M34 72c0-20 16-34 34-34 10 0 20 4 28 12l-7 4 6 7-8 3 4 9-10 1 1 11-10-5-5 10-7-9-9 5 1-10-11-1 4-8-8-4 7-6-8-6z" fill="${color}" opacity="0.94" />
+      <path d="M44 69c0-14 10-23 22-23 11 0 20 9 20 21 0 13-10 23-22 23-11 0-20-9-20-21z" fill="${glow}" stroke="${ink}" stroke-width="2" />
+      <circle cx="53" cy="65" r="3.1" fill="${ink}" />
+      <circle cx="71" cy="65" r="3.1" fill="${ink}" />
+      <ellipse cx="62" cy="74" rx="5.2" ry="3.8" fill="${ink}" />
+      <path d="M57 80q5 4 10 0" fill="none" stroke="${ink}" stroke-width="2.1" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "llama") {
+    return `
+      <path d="M47 42 43 22l11 12" fill="${color}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <path d="M73 42 77 22 66 34" fill="${color}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <path d="M45 53c0-11 7-18 15-18s15 7 15 18v13c0 14-7 24-15 24s-15-10-15-24z" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <rect x="48" y="70" width="24" height="15" rx="8" fill="${cream}" />
+      <circle cx="52" cy="57" r="3" fill="${ink}" />
+      <circle cx="68" cy="57" r="3" fill="${ink}" />
+      <ellipse cx="60" cy="74" rx="6" ry="4.5" fill="${ink}" />
+    `;
+  }
+
+  if (art === "firefly") {
+    return `
+      <ellipse cx="49" cy="54" rx="12" ry="16" fill="${glow}" opacity="0.65" stroke="${color}" stroke-width="1.8" />
+      <ellipse cx="71" cy="54" rx="12" ry="16" fill="${glow}" opacity="0.65" stroke="${color}" stroke-width="1.8" />
+      <ellipse cx="60" cy="62" rx="12" ry="18" fill="${ink}" />
+      <ellipse cx="60" cy="82" rx="12" ry="13" fill="${color}" />
+      <ellipse cx="60" cy="82" rx="8" ry="9" fill="${glow}" opacity="0.88" />
+      <circle cx="55" cy="56" r="2.4" fill="${cream}" />
+      <circle cx="65" cy="56" r="2.4" fill="${cream}" />
+      <path d="M60 45v-8M54 47l-6-6M66 47l6-6" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "squirrel") {
+    return `
+      <path d="M40 48c-8 6-12 16-10 25 2 11 12 18 24 18 10 0 18-5 22-13-10 3-20 1-27-6-7-8-9-18-9-24z" fill="${color}" opacity="0.92" />
+      <circle cx="65" cy="65" r="23" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <path d="M56 46 50 31l12 10M76 50 72 35l10 10" fill="${color}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <circle cx="58" cy="62" r="3" fill="${ink}" />
+      <circle cx="73" cy="62" r="3" fill="${ink}" />
+      <ellipse cx="66" cy="72" rx="6" ry="4.5" fill="${ink}" />
+      <path d="M60 79q6 4 12 0" fill="none" stroke="${ink}" stroke-width="2.1" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "beaver") {
+    return `
+      <circle cx="44" cy="46" r="8" fill="${color}" />
+      <circle cx="76" cy="46" r="8" fill="${color}" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <circle cx="50" cy="62" r="3.1" fill="${ink}" />
+      <circle cx="70" cy="62" r="3.1" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="6.2" ry="4.4" fill="${ink}" />
+      <rect x="52" y="76" width="7" height="8" rx="2.2" fill="${cream}" />
+      <rect x="61" y="76" width="7" height="8" rx="2.2" fill="${cream}" />
+      <path d="M44 72h10M66 72h10" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "duck") {
+    return `
+      <circle cx="60" cy="62" r="25" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <path d="M42 44 48 28l10 13" fill="${color}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <circle cx="54" cy="56" r="3.1" fill="${ink}" />
+      <path d="M60 64h22c-1 10-8 16-20 16-7 0-10-3-10-8 0-5 3-8 8-8z" fill="#f4a340" />
+      <path d="M60 68h15" stroke="${cream}" stroke-width="2" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "seal") {
+    return `
+      <ellipse cx="44" cy="83" rx="9" ry="6" fill="${color}" opacity="0.88" />
+      <ellipse cx="76" cy="83" rx="9" ry="6" fill="${color}" opacity="0.88" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <circle cx="50" cy="61" r="3.1" fill="${ink}" />
+      <circle cx="70" cy="61" r="3.1" fill="${ink}" />
+      <ellipse cx="60" cy="71" rx="5.5" ry="4.2" fill="${ink}" />
+      <path d="M45 74h10M65 74h10" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+      <path d="M54 79q6 4 12 0" fill="none" stroke="${ink}" stroke-width="2.1" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "pony") {
+    return `
+      <path d="M45 48 53 28l10 14" fill="${color}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <path d="M66 32q14 5 17 20-4 0-9-2 0 19-14 33c-12-7-19-18-19-33 0-9 6-16 14-18z" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <path d="M47 43q7-10 19-11" fill="none" stroke="${ink}" stroke-width="3" stroke-linecap="round" />
+      <circle cx="51" cy="58" r="3" fill="${ink}" />
+      <circle cx="67" cy="58" r="3" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="11" ry="8" fill="${cream}" />
+      <ellipse cx="60" cy="72" rx="5.5" ry="4" fill="${ink}" />
+    `;
+  }
+
+  if (art === "badger") {
+    return `
+      <circle cx="43" cy="45" r="8.5" fill="${ink}" />
+      <circle cx="77" cy="45" r="8.5" fill="${ink}" />
+      <circle cx="60" cy="66" r="27" fill="${color}" stroke="${ink}" stroke-width="2.4" />
+      <path d="M44 44c5-4 11-6 16-6s11 2 16 6v42H44z" fill="${cream}" />
+      <path d="M52 40h16v45H52z" fill="${glow}" opacity="0.88" />
+      <path d="M44 54c4 8 9 12 16 12s12-4 16-12" fill="${mask}" />
+      <circle cx="52" cy="63" r="3" fill="${ink}" />
+      <circle cx="68" cy="63" r="3" fill="${ink}" />
+      <ellipse cx="60" cy="72" rx="5.5" ry="4" fill="${ink}" />
+      <path d="M55 79q5 4 10 0" fill="none" stroke="${ink}" stroke-width="2.1" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "falcon") {
+    return `
+      <path d="M60 34c17 0 28 11 28 28 0 19-13 31-28 31S32 81 32 62c0-17 11-28 28-28z" fill="${glow}" stroke="${ink}" stroke-width="2.4" />
+      <path d="M42 48c10-7 26-9 38 0-6 4-12 6-20 6s-14-2-18-6z" fill="${color}" />
+      <path d="M42 66c6-8 12-11 18-11s12 3 18 11c-5 7-11 12-18 12s-13-5-18-12z" fill="${mask}" />
+      <circle cx="51" cy="61" r="3.1" fill="${ink}" />
+      <circle cx="69" cy="61" r="3.1" fill="${ink}" />
+      <path d="M60 66l-5 8h10z" fill="#f4a340" />
+      <path d="M48 53l9-4M72 53l-9-4" stroke="${ink}" stroke-width="2.4" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "parrot") {
+    return `
+      <circle cx="60" cy="63" r="26" fill="${color}" stroke="${ink}" stroke-width="2.2" />
+      <path d="M45 43 40 28l13 9" fill="${glow}" stroke="${ink}" stroke-width="2" stroke-linejoin="round" />
+      <path d="M49 56c5-5 18-6 25 1-3 8-9 12-16 12-5 0-8-6-9-13z" fill="${cream}" />
+      <circle cx="53" cy="56" r="3" fill="${ink}" />
+      <path d="M61 62c8-1 15 3 15 10-3 5-7 7-12 8 2-4 2-8 0-12-2-3-3-4-3-6z" fill="#f4a340" />
+      <path d="M64 62c4 1 7 4 8 8" fill="none" stroke="${ink}" stroke-width="1.8" stroke-linecap="round" />
+    `;
+  }
+
+  if (art === "otter") {
+    return `
+      <circle cx="45" cy="46" r="7" fill="${color}" />
+      <circle cx="75" cy="46" r="7" fill="${color}" />
+      <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+      <path d="M46 50c5-4 9-5 14-5s9 1 14 5v13H46z" fill="${color}" opacity="0.24" />
+      <ellipse cx="60" cy="74" rx="16" ry="12" fill="${cream}" />
+      <circle cx="50" cy="62" r="3.1" fill="${ink}" />
+      <circle cx="70" cy="62" r="3.1" fill="${ink}" />
+      <ellipse cx="60" cy="71" rx="5.4" ry="4" fill="${ink}" />
+      <path d="M43 73h10M67 73h10" stroke="${ink}" stroke-width="2" stroke-linecap="round" />
+    `;
+  }
+
+  return `
+    <circle cx="42" cy="45" r="9" fill="${color}" />
+    <circle cx="78" cy="45" r="9" fill="${color}" />
+    <circle cx="60" cy="66" r="27" fill="${glow}" stroke="${color}" stroke-width="2.4" />
+    <circle cx="42" cy="45" r="4" fill="${blush}" />
+    <circle cx="78" cy="45" r="4" fill="${blush}" />
+    <ellipse cx="60" cy="75" rx="15" ry="11" fill="${cream}" />
+    <circle cx="50" cy="62" r="3.2" fill="${ink}" />
+    <circle cx="70" cy="62" r="3.2" fill="${ink}" />
+    <ellipse cx="60" cy="71" rx="5.5" ry="4" fill="${ink}" />
+    <path d="M54 78q6 5 12 0" fill="none" stroke="${ink}" stroke-width="2.2" stroke-linecap="round" />
+  `;
 }
 
 function getBlindfoldShapeMarkup(shape, palette) {
