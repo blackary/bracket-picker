@@ -20,7 +20,7 @@ const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 const BRACKET_ZOOM_STEP = 0.15;
 const BRACKET_ZOOM_MIN = 0.85;
 const BRACKET_ZOOM_MAX = 1.75;
-const SCREEN_SWAP_DURATION = 320;
+const SCREEN_SWAP_DURATION = 240;
 const BRACKET_MODE_REGULAR = "regular";
 const BRACKET_MODE_BLINDFOLD = "blindfold";
 const BLINDFOLD_ADJECTIVES = [
@@ -118,6 +118,7 @@ const state = {
   blindfoldProfileCache: new Map(),
   viewTransition: null,
   viewTransitionTimer: null,
+  bracketCanvasTimer: null,
 };
 
 const elements = {
@@ -1842,7 +1843,10 @@ function renderViewMode(bracket, progress, currentContext) {
   elements.revealBlindfoldButton.hidden = !canRevealBlindfold(bracket);
 
   renderBracketViewHeader(bracket, progress, currentContext);
-  renderBracketCanvas(bracket);
+  scheduleBracketCanvasRender(bracket, {
+    defer: Boolean(transition?.toMode === "bracket"),
+    active: viewMode === "bracket",
+  });
   applyBracketZoom();
 }
 
@@ -1946,6 +1950,46 @@ async function renderBracketCanvas(bracket) {
   elements.bracketCanvasWrap.innerHTML = "";
   elements.bracketCanvasWrap.append(canvas);
   applyBracketZoom();
+}
+
+function scheduleBracketCanvasRender(bracket, { defer = false, active = false } = {}) {
+  window.clearTimeout(state.bracketCanvasTimer);
+  state.bracketCanvasTimer = null;
+
+  if (!bracket) {
+    renderBracketCanvas(null);
+    return;
+  }
+
+  if (!active) {
+    return;
+  }
+
+  const signature = `${bracket.id}:${bracket.updatedAt}`;
+  const hasMatchingCanvas =
+    state.bracketCanvasSignature === signature &&
+    Boolean(elements.bracketCanvasWrap.querySelector("canvas"));
+
+  if (hasMatchingCanvas) {
+    return;
+  }
+
+  const renderCanvas = () => {
+    state.bracketCanvasTimer = null;
+    renderBracketCanvas(bracket);
+  };
+
+  if (!defer) {
+    renderCanvas();
+    return;
+  }
+
+  if (!elements.bracketCanvasWrap.querySelector("canvas")) {
+    elements.bracketCanvasWrap.innerHTML =
+      '<p class="bracket-canvas-wrap__loading">Building your bracket view...</p>';
+  }
+
+  state.bracketCanvasTimer = window.setTimeout(renderCanvas, SCREEN_SWAP_DURATION + 40);
 }
 
 function attachEvents() {
