@@ -605,9 +605,9 @@ img {
 
 .app-topbar__controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(280px, 1.1fr) auto;
-  gap: 16px 18px;
-  align-items: end;
+  grid-template-columns: minmax(320px, 420px) minmax(280px, 1fr) auto;
+  gap: 14px;
+  align-items: stretch;
 }
 
 .screen-shell {
@@ -794,10 +794,44 @@ img {
   flex-wrap: wrap;
   gap: 10px;
   align-items: end;
+  min-width: 0;
+  padding: 14px 16px 16px;
+  border: 2px solid rgba(31, 42, 58, 0.08);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(252, 247, 239, 0.82));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 10px 22px rgba(31, 42, 58, 0.06);
 }
 
 .toolbar__group--grow {
+  display: grid;
+  align-content: start;
   min-width: 0;
+}
+
+.toolbar__group--library {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+}
+
+.toolbar__group--library .field {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.toolbar__group--library .button {
+  min-width: 0;
+}
+
+.toolbar__group--actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-content: end;
+  align-content: end;
 }
 
 .field {
@@ -808,6 +842,10 @@ img {
 
 .field--grow {
   width: 100%;
+}
+
+.toolbar__group--grow .field {
+  min-width: 0;
 }
 
 .field__label {
@@ -1729,11 +1767,18 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
 
 @media (max-width: 1180px) {
   .app-topbar__main,
-  .app-topbar__controls,
   .bracket-screen,
   .hero,
   .layout {
     grid-template-columns: 1fr;
+  }
+
+  .app-topbar__controls {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .toolbar__group--grow {
+    grid-column: 1 / -1;
   }
 
   .hero__deck {
@@ -1800,6 +1845,24 @@ body[data-view-mode="pick"] .picker-screen .nav-row {
   .app-topbar__main,
   .app-topbar__controls {
     grid-template-columns: 1fr;
+  }
+
+  .toolbar__group {
+    padding: 12px 14px 14px;
+    border-radius: 22px;
+  }
+
+  .toolbar__group--library,
+  .toolbar__group--actions {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    justify-content: stretch;
+  }
+
+  .toolbar__group--library .button,
+  .toolbar__group--actions .button {
+    width: 100%;
   }
 
   .app-brand {
