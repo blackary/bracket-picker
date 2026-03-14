@@ -3328,17 +3328,17 @@ body[data-view-mode="bracket"] .screen-shell {
 @media (max-width: 900px) and (max-height: 540px) and (orientation: landscape) {
   body[data-view-mode="pick"] .page-shell {
     width: min(100vw - 12px, 100%);
-    padding-top: 10px;
+    padding-top: 8px;
   }
 
   body[data-view-mode="pick"] .app-topbar {
-    gap: 6px;
-    padding: 10px 12px 12px;
+    gap: 4px;
+    padding: 8px 10px 10px;
   }
 
   body[data-view-mode="pick"] .app-topbar__main {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) minmax(264px, 320px);
+    gap: 10px;
     align-items: center;
   }
 
@@ -3354,42 +3354,49 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .app-brand__mark {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   body[data-view-mode="pick"] .app-brand h1 {
-    font-size: 1.06rem;
+    font-size: 1rem;
     line-height: 0.94;
     letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   body[data-view-mode="pick"] .topbar-utility {
-    justify-items: stretch;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
   }
 
   body[data-view-mode="pick"] .view-switch {
-    width: auto;
-    padding: 6px;
-    border-radius: 18px;
+    width: 100%;
+    padding: 4px;
+    border-radius: 16px;
   }
 
   body[data-view-mode="pick"] .view-switch__button {
-    min-height: 34px;
-    padding: 0 10px;
-    font-size: 0.68rem;
-    border-radius: 12px;
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 0.64rem;
+    border-radius: 10px;
   }
 
   body[data-view-mode="pick"] .app-topbar__controls {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 8px;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+    gap: 6px;
     align-items: stretch;
   }
 
   body[data-view-mode="pick"] .toolbar__group {
-    padding: 8px;
-    border-radius: 16px;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 14px;
   }
 
   body[data-view-mode="pick"] .toolbar__group--actions {
@@ -3403,7 +3410,7 @@ body[data-view-mode="bracket"] .screen-shell {
 
   body[data-view-mode="pick"] .toolbar__group--library {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
   }
 
@@ -3426,47 +3433,66 @@ body[data-view-mode="bracket"] .screen-shell {
 
   body[data-view-mode="pick"] .field__control,
   body[data-view-mode="pick"] .toolbar__group .button {
-    min-height: 36px;
+    min-height: 32px;
   }
 
   body[data-view-mode="pick"] .toolbar__group .button {
-    padding: 0 12px;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-size: 0.68rem;
+  }
+
+  body[data-view-mode="pick"] .field__control {
     border-radius: 12px;
-    font-size: 0.76rem;
+    padding: 0 10px;
+    font-size: 0.82rem;
   }
 
   body[data-view-mode="pick"] .screen-shell {
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   body[data-view-mode="pick"] .picker-screen {
-    padding: 10px;
+    padding: 8px;
     min-height: auto;
   }
 
   body[data-view-mode="pick"] .picker-screen__header {
-    grid-template-columns: minmax(0, 1fr) 106px;
-    gap: 8px;
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 6px;
     align-items: center;
   }
 
+  body[data-view-mode="pick"] .picker-screen__copy {
+    display: grid;
+    gap: 2px;
+  }
+
+  body[data-view-mode="pick"] .picker-screen__copy .eyebrow {
+    display: none;
+  }
+
   body[data-view-mode="pick"] .picker-screen__copy h2 {
-    font-size: 1.08rem;
+    font-size: 0.98rem;
     line-height: 1.02;
   }
 
+  body[data-view-mode="pick"] .matchup-panel__hint {
+    display: none;
+  }
+
   body[data-view-mode="pick"] .progress-card--picker {
-    padding: 6px 8px;
-    border-radius: 16px;
+    padding: 5px 7px;
+    border-radius: 14px;
   }
 
   body[data-view-mode="pick"] .progress-card__label {
-    font-size: 0.52rem;
+    font-size: 0.5rem;
   }
 
   body[data-view-mode="pick"] .progress-card__value {
-    margin: 2px 0 5px;
-    font-size: 0.74rem;
+    margin: 1px 0 4px;
+    font-size: 0.68rem;
   }
 
   body[data-view-mode="pick"] .round-pills {
@@ -3474,36 +3500,36 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-stage {
-    margin-top: 8px;
+    margin-top: 4px;
     min-height: 0;
     align-items: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-board {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr);
+    gap: 6px;
+    align-items: stretch;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-board__center {
-    order: -1;
+    grid-column: auto;
+    order: 0;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    justify-items: stretch;
-    align-items: center;
-    gap: 6px 10px;
+    align-content: center;
+    justify-items: center;
+    gap: 6px;
     margin-bottom: 0;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-lane {
     padding: 8px;
-    border-radius: 22px;
+    border-radius: 18px;
   }
 
   body[data-view-mode="pick"] .picker-screen .matchup-lane::before {
-    inset: 7px;
-    border-radius: 16px;
-    opacity: 0.4;
+    inset: 6px;
+    border-radius: 14px;
+    opacity: 0.24;
   }
 
   body[data-view-mode="pick"] .picker-screen .versus-track__round {
@@ -3520,32 +3546,32 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .versus-badge {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-width: 4px;
-    font-size: 0.66rem;
-    transform: rotate(-5deg);
+    font-size: 0.62rem;
+    transform: rotate(-4deg);
   }
 
   body[data-view-mode="pick"] .picker-screen .versus-track {
+    justify-items: center;
+    gap: 4px;
     width: 100%;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: 8px;
-    padding: 6px 9px;
+    padding: 6px 4px;
     border-radius: 12px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card {
-    grid-template-columns: 74px minmax(0, 1fr) minmax(200px, 230px);
+    grid-template-columns: 58px minmax(0, 1fr);
     grid-template-areas:
-      "top top top"
-      "crest body facts"
-      "crest scouting footer";
-    gap: 8px 10px;
-    padding: 10px;
-    border-radius: 20px;
+      "top top"
+      "crest body"
+      "facts facts"
+      "scouting scouting"
+      "footer footer";
+    gap: 6px 8px;
+    padding: 8px;
+    border-radius: 18px;
     border-bottom-width: 3px;
   }
 
@@ -3560,55 +3586,55 @@ body[data-view-mode="bracket"] .screen-shell {
 
   body[data-view-mode="pick"] .picker-screen .team-card__seed,
   body[data-view-mode="pick"] .picker-screen .team-card__sticker {
-    min-height: 22px;
-    padding: 0 7px;
-    font-size: 0.54rem;
+    min-height: 20px;
+    padding: 0 6px;
+    font-size: 0.5rem;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__crest {
     align-self: start;
-    width: 74px;
-    height: 74px;
-    border-radius: 18px;
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__name {
-    font-size: 0.96rem;
+    font-size: 0.88rem;
     line-height: 0.98;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__body {
     align-content: start;
-    gap: 4px;
+    gap: 2px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__conference {
-    font-size: 0.6rem;
-    line-height: 1.28;
+    font-size: 0.54rem;
+    line-height: 1.2;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 5px;
+    gap: 4px;
     align-self: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__scouting {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
-    padding: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    padding: 5px;
     border-radius: 12px;
     align-self: start;
   }
 
   body[data-view-mode="pick"] .picker-screen .scout-row {
-    padding: 5px 6px;
-    gap: 3px;
-    border-radius: 10px;
+    padding: 4px 5px;
+    gap: 2px;
+    border-radius: 9px;
   }
 
   body[data-view-mode="pick"] .picker-screen .scout-row__label {
-    font-size: 0.58rem;
+    font-size: 0.54rem;
   }
 
   body[data-view-mode="pick"] .picker-screen .scout-row__note {
@@ -3626,7 +3652,8 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__fact {
-    padding: 6px 7px;
+    min-height: 0;
+    padding: 5px 6px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__fact:last-child {
@@ -3634,12 +3661,12 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__fact-label {
-    font-size: 0.48rem;
+    font-size: 0.45rem;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__fact-value {
     margin-top: 2px;
-    font-size: 0.66rem;
+    font-size: 0.6rem;
     line-height: 1.2;
   }
 
@@ -3648,10 +3675,10 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__button {
-    min-height: 32px;
+    min-height: 28px;
     padding: 0 8px;
-    font-size: 0.7rem;
-    border-radius: 12px;
+    font-size: 0.64rem;
+    border-radius: 10px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__pulse {
@@ -3660,12 +3687,9 @@ body[data-view-mode="bracket"] .screen-shell {
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__footer {
-    flex-direction: column;
     justify-content: flex-end;
-    justify-self: end;
-    align-self: end;
-    align-items: flex-end;
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
   }
 
   body[data-view-mode="pick"] .picker-screen .team-card__pulse {
@@ -3675,23 +3699,23 @@ body[data-view-mode="bracket"] .screen-shell {
   body[data-view-mode="pick"] .nav-row {
     position: static;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 10px;
-    padding: 8px;
-    border-radius: 16px;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 6px;
+    border-radius: 14px;
     background: rgba(255, 255, 255, 0.88);
     backdrop-filter: none;
   }
 
   body[data-view-mode="pick"] .nav-row .button {
-    min-height: 36px;
-    padding: 0 8px;
-    font-size: 0.68rem;
-    border-radius: 12px;
+    min-height: 32px;
+    padding: 0 6px;
+    font-size: 0.62rem;
+    border-radius: 10px;
   }
 }
 
-@media (max-width: 760px), (max-width: 900px) and (max-height: 540px) and (orientation: landscape) {
+@media (max-width: 760px) {
   body[data-view-mode="pick"] .app-topbar {
     gap: 10px;
     padding: 12px;
