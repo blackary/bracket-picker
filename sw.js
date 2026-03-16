@@ -1,11 +1,12 @@
-const APP_CACHE = "bracket-parade-app-v2";
-const RUNTIME_CACHE = "bracket-parade-runtime-v2";
+const APP_CACHE = "bracket-parade-app-v3";
+const RUNTIME_CACHE = "bracket-parade-runtime-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
+  "./data/bracket-2026.json",
   "./data/bracket-2026-projected.json",
   "./assets/brand/bracket-parade-icon.svg",
   "./assets/brand/pwa/icon-192.png",
@@ -69,7 +70,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.endsWith("/data/bracket-2026-projected.json")) {
+  if (
+    url.pathname.endsWith("/data/bracket-2026.json") ||
+    url.pathname.endsWith("/data/bracket-2026-projected.json")
+  ) {
     event.respondWith(networkFirst(event.request));
     return;
   }

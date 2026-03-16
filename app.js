@@ -215,7 +215,7 @@ init();
 
 async function init() {
   try {
-    const response = await fetch("data/bracket-2026-projected.json");
+    const response = await fetch("data/bracket-2026.json");
     if (!response.ok) {
       throw new Error(`Failed to load bracket data (${response.status})`);
     }
@@ -317,11 +317,15 @@ function readStoredState() {
 }
 
 function normalizeBracket(bracket) {
+  const currentDatasetId = state.data.meta.tournamentId;
+  const isCurrentDataset = bracket?.datasetId === currentDatasetId;
   const cleanPicks = {};
 
-  for (const [gameId, teamId] of Object.entries(bracket?.picks || {})) {
-    if (state.gamesById.has(gameId) && state.teamsById[teamId]) {
-      cleanPicks[gameId] = teamId;
+  if (isCurrentDataset) {
+    for (const [gameId, teamId] of Object.entries(bracket?.picks || {})) {
+      if (state.gamesById.has(gameId) && state.teamsById[teamId]) {
+        cleanPicks[gameId] = teamId;
+      }
     }
   }
 
@@ -334,10 +338,12 @@ function normalizeBracket(bracket) {
     picks: cleanPicks,
     createdAt: bracket?.createdAt || new Date().toISOString(),
     updatedAt: bracket?.updatedAt || new Date().toISOString(),
-    datasetId: bracket?.datasetId || state.data.meta.tournamentId,
+    datasetId: currentDatasetId,
     mode,
     blindfoldRevealed:
-      mode === BRACKET_MODE_BLINDFOLD ? Boolean(bracket?.blindfoldRevealed) : false,
+      mode === BRACKET_MODE_BLINDFOLD && isCurrentDataset
+        ? Boolean(bracket?.blindfoldRevealed)
+        : false,
     blindfoldSeed:
       mode === BRACKET_MODE_BLINDFOLD ? String(bracket?.blindfoldSeed || createBlindfoldSeed()) : "",
   };
@@ -1125,9 +1131,11 @@ function renderSourceBanner() {
     ? `Official bracket • ${state.data.meta.sourceUpdatedLabel}`
     : `Projected bracket • ${state.data.meta.sourceUpdatedLabel}`;
 
-  elements.sourceNote.textContent = state.data.meta.officialBracket
-    ? "The field is official."
-    : "Selection Sunday is March 15, 2026, so this build uses the latest projected matchups and teams.";
+  elements.sourceNote.textContent =
+    state.data.meta.note ||
+    (state.data.meta.officialBracket
+      ? "The field is official."
+      : "Selection Sunday is March 15, 2026, so this build uses the latest projected matchups and teams.");
   elements.appModeBurst.textContent = bracket ? getBracketModeLabel(bracket) : "Pick a style";
 }
 
@@ -1476,8 +1484,12 @@ function getTeamFacts(team) {
 
 function getTeamScoutRows(team) {
   const hotStreak = getHotStreakSummary(team);
-  const bigWins = getRecordNumbers(team.quad1).wins;
-  const badLosses = getRecordNumbers(team.quad3).losses + getRecordNumbers(team.quad4).losses;
+  const hasQuadrantData = teamHasQuadrantData(team);
+  const bigWins = hasQuadrantData ? getRecordNumbers(team.quad1).wins : null;
+  const badLosses = hasQuadrantData
+    ? getRecordNumbers(team.quad3).losses + getRecordNumbers(team.quad4).losses
+    : null;
+  const sos = getNumericValue(team.sos);
 
   return [
     {
@@ -1487,20 +1499,23 @@ function getTeamScoutRows(team) {
     },
     {
       label: "Big wins",
-      note: bigWins
-        ? `${bigWins} wins against strong teams`
-        : "Still hunting a signature win",
-      rating: getBigWinsRating(bigWins),
+      note:
+        bigWins === null
+          ? "Signature wins readout coming soon"
+          : bigWins
+            ? `${bigWins} wins against strong teams`
+            : "Still hunting a signature win",
+      rating: bigWins === null ? 3 : getBigWinsRating(bigWins),
     },
     {
       label: "Battle-tested",
-      note: getScheduleNote(team.sos),
-      rating: getScheduleRating(team.sos),
+      note: getScheduleNote(sos),
+      rating: getScheduleRating(sos),
     },
     {
       label: "Steady season",
-      note: getStabilityNote(badLosses),
-      rating: getStabilityRating(badLosses),
+      note: badLosses === null ? "Season consistency readout coming soon" : getStabilityNote(badLosses),
+      rating: badLosses === null ? 3 : getStabilityRating(badLosses),
     },
   ];
 }
@@ -1606,19 +1621,24 @@ function getRecordNumbers(value) {
 }
 
 function getTeamRankLabel(net) {
-  if (net <= 10) {
+  const rank = getNumericValue(net);
+  if (rank === null) {
+    return "Rank coming soon";
+  }
+
+  if (rank <= 10) {
     return "Top 10";
   }
 
-  if (net <= 25) {
+  if (rank <= 25) {
     return "Top 25";
   }
 
-  if (net <= 50) {
+  if (rank <= 50) {
     return "Top 50";
   }
 
-  if (net <= 100) {
+  if (rank <= 100) {
     return "Top 100";
   }
 
@@ -1626,6 +1646,10 @@ function getTeamRankLabel(net) {
 }
 
 function getConferenceProfile(conference) {
+  if (!conference) {
+    return "Conference readout coming soon";
+  }
+
   if (POWER_CONFERENCES.has(conference)) {
     return "Power conference";
   }
@@ -1689,6 +1713,10 @@ function getBigWinsRating(bigWins) {
 }
 
 function getScheduleRating(sos) {
+  if (sos === null) {
+    return 3;
+  }
+
   if (sos <= 20) {
     return 5;
   }
@@ -1709,6 +1737,10 @@ function getScheduleRating(sos) {
 }
 
 function getScheduleNote(sos) {
+  if (sos === null) {
+    return "Schedule readout coming soon";
+  }
+
   if (sos <= 20) {
     return "Played one of the toughest schedules";
   }
@@ -1762,6 +1794,18 @@ function getStabilityNote(badLosses) {
   }
 
   return `${badLosses} losses against lighter competition`;
+}
+
+function getNumericValue(value) {
+  const parsed =
+    typeof value === "number" ? value : Number.parseFloat(String(value ?? "").trim());
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function teamHasQuadrantData(team) {
+  return [team?.quad1, team?.quad2, team?.quad3, team?.quad4].some((value) =>
+    /\d+\s*-\s*\d+/.test(String(value || ""))
+  );
 }
 
 function setNavState({ canGoBack, canGoForward, canClear }) {
