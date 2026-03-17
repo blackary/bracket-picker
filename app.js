@@ -428,6 +428,12 @@ function isCompactMobileViewport() {
   ).matches;
 }
 
+function isShortLandscapeViewport() {
+  return window.matchMedia(
+    "(max-width: 900px) and (max-height: 540px) and (orientation: landscape)"
+  ).matches;
+}
+
 function blurActiveControl() {
   if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
@@ -1198,6 +1204,13 @@ function syncResponsiveChrome() {
 
 function stabilizeCompactPickerViewport() {
   if (getViewMode() !== "pick") {
+    return;
+  }
+
+  if (!isShortLandscapeViewport()) {
+    if (!isCompactMobileViewport()) {
+      scrollToViewStart("pick");
+    }
     return;
   }
 
@@ -2314,7 +2327,7 @@ function scheduleBracketCanvasRender(bracket, { active = false } = {}) {
 }
 
 function scrollToViewStart(viewMode) {
-  if (isCompactMobileViewport()) {
+  if (isShortLandscapeViewport()) {
     if (window.scrollY > 4) {
       window.scrollTo({ top: 0, behavior: "auto" });
     }
