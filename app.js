@@ -3223,36 +3223,28 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
   ctx.font = '800 16px "Nunito"';
   ctx.fillText("Regional champions move through the center lane to the title game.", center.x + 24, center.y + 74);
 
-  drawPosterConnector(
+  drawPosterSemifinalConnectors(
     ctx,
-    regionAnchors.East.championAnchor,
-    getPosterTargetAnchor(leftSemiRect, 0, "left"),
-    getPosterConnectionColor(semifinalOne, bracket, regionAnchors.East.theme.color)
+    semifinalOne,
+    leftSemiRect,
+    "left",
+    bracket,
+    regionAnchors
   );
-  drawPosterConnector(
+  drawPosterSemifinalConnectors(
     ctx,
-    regionAnchors.Midwest.championAnchor,
-    getPosterTargetAnchor(leftSemiRect, 1, "left"),
-    getPosterConnectionColor(semifinalOne, bracket, regionAnchors.Midwest.theme.color)
-  );
-  drawPosterConnector(
-    ctx,
-    regionAnchors.South.championAnchor,
-    getPosterTargetAnchor(rightSemiRect, 0, "right"),
-    getPosterConnectionColor(semifinalTwo, bracket, regionAnchors.South.theme.color)
-  );
-  drawPosterConnector(
-    ctx,
-    regionAnchors.West.championAnchor,
-    getPosterTargetAnchor(rightSemiRect, 1, "right"),
-    getPosterConnectionColor(semifinalTwo, bracket, regionAnchors.West.theme.color)
+    semifinalTwo,
+    rightSemiRect,
+    "right",
+    bracket,
+    regionAnchors
   );
 
   await drawPosterGameBox(ctx, semifinalOne, leftSemiRect, bracket, {
-    neutralColor: "#ff8a5b",
+    neutralColor: getPosterSourceGameColor(semifinalOne, regionAnchors, "#ff8a5b"),
   });
   await drawPosterGameBox(ctx, semifinalTwo, rightSemiRect, bracket, {
-    neutralColor: "#63b7ff",
+    neutralColor: getPosterSourceGameColor(semifinalTwo, regionAnchors, "#63b7ff"),
   });
 
   ctx.fillStyle = "rgba(255,255,255,0.96)";
@@ -3293,14 +3285,22 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
     getPosterWinnerAnchor(semifinalOne, leftSemiRect, bracket, "left"),
     getPosterTargetAnchor(titleRect, 0, "left"),
     leftTitleLaneX,
-    getPosterConnectionColor(semifinalOne, bracket, "#ff8a5b")
+    getPosterConnectionColor(
+      semifinalOne,
+      bracket,
+      getPosterSourceGameColor(semifinalOne, regionAnchors, "#ff8a5b")
+    )
   );
   drawPosterCenterConnector(
     ctx,
     getPosterWinnerAnchor(semifinalTwo, rightSemiRect, bracket, "right"),
     getPosterTargetAnchor(titleRect, 1, "right"),
     rightTitleLaneX,
-    getPosterConnectionColor(semifinalTwo, bracket, "#63b7ff")
+    getPosterConnectionColor(
+      semifinalTwo,
+      bracket,
+      getPosterSourceGameColor(semifinalTwo, regionAnchors, "#63b7ff")
+    )
   );
 
   await drawPosterGameBox(ctx, titleGame, titleRect, bracket, {
@@ -3543,6 +3543,46 @@ function getPosterTargetAnchor(rect, slotIndex, orientation) {
     x: orientation === "left" ? rect.x : rect.x + rect.width,
     y: rect.slotYs[slotIndex],
   };
+}
+
+function getPosterSourceGames(game) {
+  return game.slots
+    .filter((slot) => slot.type === "winner")
+    .map((slot) => state.gamesById.get(slot.gameId))
+    .filter(Boolean);
+}
+
+function getPosterSourceGameColor(game, regionAnchors, fallbackColor) {
+  const sourceGame = getPosterSourceGames(game)[0];
+  const regionName = sourceGame?.region;
+  return regionName && regionAnchors[regionName]
+    ? regionAnchors[regionName].theme.color
+    : fallbackColor;
+}
+
+function drawPosterSemifinalConnectors(
+  ctx,
+  semifinalGame,
+  semifinalRect,
+  orientation,
+  bracket,
+  regionAnchors
+) {
+  const sourceGames = getPosterSourceGames(semifinalGame);
+
+  sourceGames.forEach((sourceGame, slotIndex) => {
+    const regionAnchor = regionAnchors[sourceGame.region];
+    if (!regionAnchor) {
+      return;
+    }
+
+    drawPosterConnector(
+      ctx,
+      regionAnchor.championAnchor,
+      getPosterTargetAnchor(semifinalRect, slotIndex, orientation),
+      getPosterConnectionColor(sourceGame, bracket, regionAnchor.theme.color)
+    );
+  });
 }
 
 function getPosterConnectionColor(game, bracket, fallbackColor) {
