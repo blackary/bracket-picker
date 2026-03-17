@@ -61,9 +61,10 @@ ESPN does not offer a native JSON import for Tournament Challenge, but this repo
 2. Open ESPN's men's bracket page:
    [https://fantasy.espn.com/games/tournament-challenge-bracket-2026/bracket](https://fantasy.espn.com/games/tournament-challenge-bracket-2026/bracket)
 3. Open DevTools console in that tab (`F12` or `Ctrl+Shift+I` (Windows/Linux) and `Cmd+Option+I` (Mac)).
-4. Paste the contents of [espn-import-helper.js](https://raw.githubusercontent.com/blackary/bracket-picker/refs/heads/main/espn-import-helper.js) and press Enter.
-5. Pick your Bracket Parade JSON export when the helper asks for it.
-6. Add an optional tiebreaker in the prompt, then review and save the bracket on ESPN.
+4. Switch to the Console tab on the bottom.
+5. Paste the contents of [espn-import-helper.js](https://raw.githubusercontent.com/blackary/bracket-picker/refs/heads/main/espn-import-helper.js) and press Enter.
+6. Pick your Bracket Parade JSON export when the helper asks for it.
+7. Add an optional tiebreaker in the prompt, then review and save the bracket on ESPN.
 
 Notes:
 
