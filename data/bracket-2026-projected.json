@@ -1,13 +1,13 @@
 {
   "meta": {
-    "tournamentId": "2026-men-ncaa-official-2026-03-15",
+    "tournamentId": "2026-men-ncaa-official-2026-03-15-v2",
     "season": 2026,
     "tournament": "NCAA Men's Basketball Tournament",
     "officialBracket": true,
     "sourceName": "NCAA March Madness Live",
     "sourceUrl": "https://www.ncaa.com/march-madness-live/bracket",
     "sourceUpdatedLabel": "Released March 15, 2026",
-    "generatedAt": "2026-03-16T10:12:47.825Z",
+    "generatedAt": "2026-03-17T01:56:06.025Z",
     "note": "Official NCAA bracket released Sunday, March 15, 2026. First Four games are March 17-18, 2026.",
     "hotStreakSource": "Team records and recent form come from each team's current CBS Sports schedule page. NCAA NET rankings come from the NCAA bracket IQ team stats feed."
   },
@@ -3490,7 +3490,7 @@
       "roundLabel": "Final Four",
       "region": "Final Four",
       "order": 65,
-      "title": "East champion vs Midwest champion",
+      "title": "East champion vs South champion",
       "seedLine": null,
       "slots": [
         {
@@ -3499,7 +3499,7 @@
         },
         {
           "type": "winner",
-          "gameId": "midwest-elite8"
+          "gameId": "south-elite8"
         }
       ]
     },
@@ -3509,16 +3509,16 @@
       "roundLabel": "Final Four",
       "region": "Final Four",
       "order": 66,
-      "title": "South champion vs West champion",
+      "title": "West champion vs Midwest champion",
       "seedLine": null,
       "slots": [
         {
           "type": "winner",
-          "gameId": "south-elite8"
+          "gameId": "west-elite8"
         },
         {
           "type": "winner",
-          "gameId": "west-elite8"
+          "gameId": "midwest-elite8"
         }
       ]
     },

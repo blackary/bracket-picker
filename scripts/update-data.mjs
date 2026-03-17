@@ -39,8 +39,8 @@ const STANDARD_MATCHUP_ORDER = [
 ];
 
 const FINAL_FOUR_PAIRINGS = [
-  ["East", "Midwest"],
-  ["South", "West"],
+  ["East", "South"],
+  ["West", "Midwest"],
 ];
 
 const FIRST_FOUR_REGION_MAP = {
@@ -594,7 +594,7 @@ async function main() {
 
   const data = {
     meta: {
-      tournamentId: "2026-men-ncaa-official-2026-03-15",
+      tournamentId: "2026-men-ncaa-official-2026-03-15-v2",
       season: 2026,
       tournament: "NCAA Men's Basketball Tournament",
       officialBracket: true,
