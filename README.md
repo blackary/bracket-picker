@@ -52,3 +52,21 @@ That script rewrites:
 - `data/bracket-2026.json`
 - `data/bracket-2026-projected.json`
 - `assets/logos/*.svg`
+
+## Import into ESPN
+
+ESPN does not offer a native JSON import for Tournament Challenge, but this repo includes a standalone helper script that can fill ESPN's bracket page from a Bracket Parade JSON export:
+
+1. Export your picks as JSON from Bracket Parade.
+2. Open ESPN's men's bracket page:
+   `https://fantasy.espn.com/games/tournament-challenge-bracket-2026/bracket`
+3. Open DevTools console in that tab.
+4. Paste the contents of `espn-import-helper.js` and press Enter.
+5. Pick your Bracket Parade JSON export when the helper asks for it.
+6. Add an optional tiebreaker in the prompt, then review and save the bracket on ESPN.
+
+Notes:
+
+- ESPN's bracket only supports 63 picks, so the First Four are collapsed into combo slots like `TEX/NCSU` and `PV/LEH`.
+- Blindfold JSON exports must be revealed before they can be imported.
+- Use a fresh export from the official 2026 bracket, not an old projected-bracket export.
