@@ -8,8 +8,8 @@ Usage:
 4. Pick a Bracket Parade JSON export when prompted.
 
 The helper fills ESPN's 63-pick bracket from a Bracket Parade export.
-ESPN collapses the First Four into combo slots, so those picks cannot be
-imported one-for-one.
+ESPN may show First Four slots either as combo labels or as resolved winners.
+The helper maps Bracket Parade picks onto ESPN's live board state.
 */
 
 (function () {
@@ -19,16 +19,18 @@ imported one-for-one.
   const AUTORUN_FLAG = "__BRACKET_PARADE_ESPN_IMPORT_AUTORUN__";
   const STATUS_ID = "bracket-parade-espn-import-status";
   const EXPECTED_DATASET_ID = "2026-men-ncaa-official-2026-03-15-v2";
-  const PLAY_IN_COMBO_BY_NAME = new Map([
-    ["texas", "TEX/NCSU"],
-    ["ncstate", "TEX/NCSU"],
-    ["prairieviewam", "PV/LEH"],
-    ["lehigh", "PV/LEH"],
-    ["umbc", "UMBC/HOW"],
-    ["howard", "UMBC/HOW"],
-    ["miamiohio", "M-OH/SMU"],
-    ["smu", "M-OH/SMU"],
-  ]);
+  const PLAY_IN_GROUPS = [
+    { comboLabel: "TEX/NCSU", members: ["Texas", "NC State"] },
+    { comboLabel: "PV/LEH", members: ["Prairie View A&M", "Lehigh"] },
+    { comboLabel: "UMBC/HOW", members: ["UMBC", "Howard"] },
+    { comboLabel: "M-OH/SMU", members: ["Miami (Ohio)", "SMU"] },
+  ];
+  const PLAY_IN_GROUP_BY_NAME = new Map(
+    PLAY_IN_GROUPS.flatMap((group) => [
+      [normalizeName(group.comboLabel), group],
+      ...group.members.map((name) => [normalizeName(name), group]),
+    ])
+  );
   const ESPN_NAME_ALIASES = new Map([
     ["cabaptist", "CA Baptist"],
     ["calbaptist", "CA Baptist"],
@@ -102,7 +104,8 @@ imported one-for-one.
     showStatus("Loading ESPN matchup data…", "info");
     const propositions = await fetchEspnPropositions();
     const espnLookup = buildEspnLookup(propositions);
-    const steps = buildImportSteps(snapshot, espnLookup);
+    const playInState = buildPlayInState(propositions, espnLookup);
+    const { steps, adjustments } = buildImportSteps(snapshot, espnLookup, playInState);
 
     if (!steps.length) {
       throw new Error("This JSON export has no visible winners to import yet.");
@@ -110,10 +113,7 @@ imported one-for-one.
 
     for (let index = 0; index < steps.length; index += 1) {
       const step = steps[index];
-      showStatus(
-        `Importing ${index + 1}/${steps.length}: ${step.teams.join(" vs ")} -> ${step.winner}`,
-        "info"
-      );
+      showStatus(`Importing ${index + 1}/${steps.length}: ${step.teams.join(" vs ")} -> ${step.winner}`, "info");
 
       const section = await waitForMatchupSection(step);
       const selected = clickWinner(section, step.winnerCandidates);
@@ -128,11 +128,13 @@ imported one-for-one.
       setTiebreaker(options.tiebreaker);
     }
 
-    const doneMessage = Number.isFinite(options.tiebreaker)
+    const baseMessage = Number.isFinite(options.tiebreaker)
       ? "ESPN picks imported. Review the bracket, then save it on ESPN."
       : "ESPN picks imported. Add a tiebreaker on ESPN if you want, then save it.";
+    const adjustmentMessage = formatAdjustmentMessage(adjustments);
+    const doneMessage = adjustmentMessage ? `${baseMessage} ${adjustmentMessage}` : baseMessage;
     showStatus(doneMessage, "success");
-    return { stepsImported: steps.length };
+    return { stepsImported: steps.length, adjustments };
   }
 
   function validateSnapshot(snapshot) {
@@ -276,16 +278,23 @@ imported one-for-one.
     return lookup;
   }
 
-  function buildImportSteps(snapshot, espnLookup) {
-    return snapshot.picks
+  function buildImportSteps(snapshot, espnLookup, playInState) {
+    const adjustments = new Set();
+    const steps = snapshot.picks
       .filter((pick) => pick && pick.round !== "First Four" && pick.winnerName)
       .map((pick) => {
         const teamCandidates = (pick.teams || []).map((team) =>
-          getEspnLabelCandidates(team, espnLookup)
+          getEspnLabelCandidates(team, espnLookup, playInState)
         );
-        const winnerCandidates = getEspnLabelCandidates(pick.winnerName, espnLookup);
-        const teams = teamCandidates.map((candidates) => candidates[0] || "");
-        const winner = winnerCandidates[0] || "";
+        const winnerCandidates = getEspnLabelCandidates(pick.winnerName, espnLookup, playInState);
+        const teams = (pick.teams || []).map((team) =>
+          getEspnDisplayLabel(team, espnLookup, playInState)
+        );
+        const winner = getEspnDisplayLabel(pick.winnerName, espnLookup, playInState);
+        const adjustment = describePlayInAdjustment(pick.winnerName, espnLookup, playInState);
+        if (adjustment) {
+          adjustments.add(adjustment);
+        }
 
         if (teams.length !== 2 || !teams[0] || !teams[1]) {
           throw new Error(`Could not read the matchup teams for ${pick.round}: ${pick.title}.`);
@@ -305,6 +314,42 @@ imported one-for-one.
           winnerCandidates: winnerCandidates.map(normalizeName),
         };
       });
+
+    return { steps, adjustments: [...adjustments] };
+  }
+
+  function buildPlayInState(propositions, espnLookup) {
+    const state = new Map(
+      PLAY_IN_GROUPS.map((group) => [
+        group.comboLabel,
+        {
+          comboLabel: group.comboLabel,
+          currentLabel: group.comboLabel,
+          canonicalMembers: group.members
+            .map((member) => toEspnCanonicalLabel(member, espnLookup))
+            .filter(Boolean),
+        },
+      ])
+    );
+
+    for (const proposition of propositions) {
+      if (proposition?.scoringPeriodId !== 1) {
+        continue;
+      }
+
+      const labels = (proposition.possibleOutcomes || [])
+        .map((outcome) => String(outcome?.name || "").trim())
+        .filter(Boolean);
+
+      for (const group of PLAY_IN_GROUPS) {
+        const current = labels.find((label) => isPlayInGroupLabel(group, label));
+        if (current) {
+          state.get(group.comboLabel).currentLabel = current;
+        }
+      }
+    }
+
+    return state;
   }
 
   function toEspnCanonicalLabel(name, espnLookup) {
@@ -324,19 +369,75 @@ imported one-for-one.
     return String(name).trim();
   }
 
-  function getEspnLabelCandidates(name, espnLookup) {
+  function getEspnLabelCandidates(name, espnLookup, playInState) {
     const canonical = toEspnCanonicalLabel(name, espnLookup);
     if (!canonical) {
       return [];
     }
 
-    const candidates = [canonical];
-    const comboLabel = PLAY_IN_COMBO_BY_NAME.get(normalizeName(name));
-    if (comboLabel) {
-      candidates.push(comboLabel);
+    const group = getPlayInGroup(name);
+    if (!group) {
+      return [canonical];
     }
 
-    return [...new Set(candidates)];
+    const state = playInState?.get(group.comboLabel);
+    const candidates = new Set([canonical, group.comboLabel]);
+    if (state?.currentLabel) {
+      candidates.add(state.currentLabel);
+    }
+    for (const member of state?.canonicalMembers || group.members) {
+      const canonicalMember = toEspnCanonicalLabel(member, espnLookup);
+      if (canonicalMember) {
+        candidates.add(canonicalMember);
+      }
+    }
+
+    return [...candidates];
+  }
+
+  function getEspnDisplayLabel(name, espnLookup, playInState) {
+    const canonical = toEspnCanonicalLabel(name, espnLookup);
+    if (!canonical) {
+      return "";
+    }
+
+    const group = getPlayInGroup(name);
+    if (!group) {
+      return canonical;
+    }
+
+    return playInState?.get(group.comboLabel)?.currentLabel || canonical;
+  }
+
+  function describePlayInAdjustment(name, espnLookup, playInState) {
+    const group = getPlayInGroup(name);
+    if (!group) {
+      return null;
+    }
+
+    const original = toEspnCanonicalLabel(name, espnLookup);
+    const current = playInState?.get(group.comboLabel)?.currentLabel;
+    if (!original || !current || normalizeName(original) === normalizeName(current)) {
+      return null;
+    }
+
+    return `${original} -> ${current}`;
+  }
+
+  function formatAdjustmentMessage(adjustments) {
+    if (!adjustments || !adjustments.length) {
+      return "";
+    }
+
+    if (adjustments.length === 1) {
+      return `First Four slot mapped to ESPN's live board: ${adjustments[0]}.`;
+    }
+
+    if (adjustments.length <= 3) {
+      return `First Four slots mapped to ESPN's live board: ${adjustments.join(", ")}.`;
+    }
+
+    return `Adjusted ${adjustments.length} First Four slots to ESPN's live board.`;
   }
 
   async function waitForMatchupSection(step) {
@@ -387,6 +488,28 @@ imported one-for-one.
         };
       })
       .filter((option) => option.labelText);
+  }
+
+  function getPlayInGroup(nameOrLabels) {
+    if (Array.isArray(nameOrLabels)) {
+      for (const value of nameOrLabels) {
+        const group = PLAY_IN_GROUP_BY_NAME.get(normalizeName(value));
+        if (group) {
+          return group;
+        }
+      }
+      return null;
+    }
+
+    return PLAY_IN_GROUP_BY_NAME.get(normalizeName(nameOrLabels)) || null;
+  }
+
+  function isPlayInGroupLabel(group, label) {
+    const normalizedLabel = normalizeName(label);
+    return (
+      normalizedLabel === normalizeName(group.comboLabel) ||
+      group.members.some((member) => normalizeName(member) === normalizedLabel)
+    );
   }
 
   function clickWinner(section, winnerCandidates) {
