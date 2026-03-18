@@ -3325,6 +3325,12 @@ async function drawPosterCenterBracket(ctx, layout, bracket, regionAnchors) {
     )
   );
 
+  // Mask the center-lane connectors so they don't bleed through the semi-transparent
+  // championship box styling.
+  ctx.fillStyle = "#ffffff";
+  roundRect(ctx, titleRect.x, titleRect.y, titleRect.width, titleRect.height, 18);
+  ctx.fill();
+
   await drawPosterGameBox(ctx, titleGame, titleRect, bracket, {
     neutralColor: CHAMPIONSHIP_THEME.color,
     emphasize: true,
