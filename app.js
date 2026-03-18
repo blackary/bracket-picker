@@ -3098,7 +3098,7 @@ function drawPosterRegionPanel(ctx, regionLayout, theme, positions) {
 }
 
 function buildRegionBracketPositions(regionLayout) {
-  const boxHeight = 60;
+  const boxHeight = 56;
   const boxWidths = {
     1: 210,
     2: 194,
@@ -3106,8 +3106,8 @@ function buildRegionBracketPositions(regionLayout) {
     4: 166,
   };
   const gap = 18;
-  const startY = regionLayout.y + 112;
-  const firstRoundGap = 12;
+  const startY = regionLayout.y + 90;
+  const firstRoundGap = 8;
   const positions = new Map();
   const roundOneGames = getPosterGamesForRound(regionLayout.name, 1);
   const roundColumns = {};
