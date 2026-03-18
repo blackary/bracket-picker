@@ -116,7 +116,7 @@ imported one-for-one.
       );
 
       const section = await waitForMatchupSection(step);
-      const selected = clickWinner(section, step.winner);
+      const selected = clickWinner(section, step.winnerCandidates);
       if (!selected) {
         throw new Error(`Could not select "${step.winner}" for ${step.teams.join(" vs ")}.`);
       }
@@ -280,8 +280,12 @@ imported one-for-one.
     return snapshot.picks
       .filter((pick) => pick && pick.round !== "First Four" && pick.winnerName)
       .map((pick) => {
-        const teams = (pick.teams || []).map((team) => toEspnTeamLabel(team, espnLookup));
-        const winner = toEspnTeamLabel(pick.winnerName, espnLookup);
+        const teamCandidates = (pick.teams || []).map((team) =>
+          getEspnLabelCandidates(team, espnLookup)
+        );
+        const winnerCandidates = getEspnLabelCandidates(pick.winnerName, espnLookup);
+        const teams = teamCandidates.map((candidates) => candidates[0] || "");
+        const winner = winnerCandidates[0] || "";
 
         if (teams.length !== 2 || !teams[0] || !teams[1]) {
           throw new Error(`Could not read the matchup teams for ${pick.round}: ${pick.title}.`);
@@ -297,20 +301,16 @@ imported one-for-one.
           title: pick.title,
           teams,
           winner,
-          normalizedTeams: teams.map(normalizeName),
-          normalizedWinner: normalizeName(winner),
+          teamCandidates: teamCandidates.map((candidates) => candidates.map(normalizeName)),
+          winnerCandidates: winnerCandidates.map(normalizeName),
         };
       });
   }
 
-  function toEspnTeamLabel(name, espnLookup) {
+  function toEspnCanonicalLabel(name, espnLookup) {
     const normalized = normalizeName(name);
     if (!normalized) {
       return null;
-    }
-
-    if (PLAY_IN_COMBO_BY_NAME.has(normalized)) {
-      return PLAY_IN_COMBO_BY_NAME.get(normalized);
     }
 
     if (ESPN_NAME_ALIASES.has(normalized)) {
@@ -324,10 +324,25 @@ imported one-for-one.
     return String(name).trim();
   }
 
+  function getEspnLabelCandidates(name, espnLookup) {
+    const canonical = toEspnCanonicalLabel(name, espnLookup);
+    if (!canonical) {
+      return [];
+    }
+
+    const candidates = [canonical];
+    const comboLabel = PLAY_IN_COMBO_BY_NAME.get(normalizeName(name));
+    if (comboLabel) {
+      candidates.push(comboLabel);
+    }
+
+    return [...new Set(candidates)];
+  }
+
   async function waitForMatchupSection(step) {
     const startedAt = Date.now();
     while (Date.now() - startedAt < 5000) {
-      const section = findMatchupSection(step.normalizedTeams);
+      const section = findMatchupSection(step.teamCandidates);
       if (section) {
         return section;
       }
@@ -337,7 +352,7 @@ imported one-for-one.
     throw new Error(`Could not find ESPN matchup: ${step.teams.join(" vs ")}.`);
   }
 
-  function findMatchupSection(normalizedTeams) {
+  function findMatchupSection(teamCandidates) {
     const sections = Array.from(document.querySelectorAll("[data-proposition-id]"));
 
     for (const section of sections) {
@@ -346,7 +361,11 @@ imported one-for-one.
         continue;
       }
 
-      if (optionLabels.includes(normalizedTeams[0]) && optionLabels.includes(normalizedTeams[1])) {
+      if (
+        teamCandidates.every((candidates) =>
+          optionLabels.some((optionLabel) => candidates.includes(optionLabel))
+        )
+      ) {
         return section;
       }
     }
@@ -370,12 +389,11 @@ imported one-for-one.
       .filter((option) => option.labelText);
   }
 
-  function clickWinner(section, winnerLabel) {
-    const winnerNormalized = normalizeName(winnerLabel);
+  function clickWinner(section, winnerCandidates) {
     const options = getSectionOptions(section);
 
     for (const option of options) {
-      if (option.normalizedLabel !== winnerNormalized) {
+      if (!winnerCandidates.includes(option.normalizedLabel)) {
         continue;
       }
 
