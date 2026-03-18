@@ -15,6 +15,7 @@ const STRONG_MID_MAJORS = new Set([
   "Missouri Valley",
   "West Coast",
 ]);
+const OFFICIAL_REGION_DISPLAY_ORDER = ["East", "South", "West", "Midwest"];
 
 const CHAMPIONSHIP_THEME = { color: "#ff8a5b", glow: "#ffd699" };
 const BRACKET_ZOOM_STEP = 0.15;
@@ -2017,7 +2018,7 @@ function renderBracketMobileBoard(bracket) {
     );
   }
 
-  for (const region of state.data.regions) {
+  for (const region of getDisplayRegions(state.data.regions)) {
     sections.push(renderMobileRegionSection(region, bracket));
   }
 
@@ -2070,6 +2071,14 @@ function renderMobileRegionSection(region, bracket) {
       </div>
     </section>
   `;
+}
+
+function getDisplayRegions(regions) {
+  return [...regions].sort((left, right) => {
+    const leftIndex = OFFICIAL_REGION_DISPLAY_ORDER.indexOf(left.name);
+    const rightIndex = OFFICIAL_REGION_DISPLAY_ORDER.indexOf(right.name);
+    return (leftIndex === -1 ? 99 : leftIndex) - (rightIndex === -1 ? 99 : rightIndex);
+  });
 }
 
 function renderMobileBracketSection(title, note, games, bracket) {
@@ -2788,7 +2797,7 @@ function buildPosterLayout(width, height) {
         height: regionHeight,
       },
       {
-        name: "Midwest",
+        name: "South",
         orientation: "left",
         x: leftX,
         y: bottomY,
@@ -2796,7 +2805,7 @@ function buildPosterLayout(width, height) {
         height: regionHeight,
       },
       {
-        name: "South",
+        name: "West",
         orientation: "right",
         x: rightX,
         y: topY,
@@ -2804,7 +2813,7 @@ function buildPosterLayout(width, height) {
         height: regionHeight,
       },
       {
-        name: "West",
+        name: "Midwest",
         orientation: "right",
         x: rightX,
         y: bottomY,
